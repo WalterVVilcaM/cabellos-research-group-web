@@ -1,0 +1,196 @@
+---
+/** Publicación en formato de cita académica. Los autores del grupo se resaltan. */
+import ExternalLink from '../ui/ExternalLink.astro';
+import RichText from '../ui/RichText.astro';
+import { useTranslations, type Lang } from '../../i18n/utils';
+import type { NumberedPublication } from '../../utils/content';
+
+interface Props {
+  pub: NumberedPublication;
+  lang: Lang;
+  highlight?: string[];
+  showNumber?: boolean;
+  as?: 'li' | 'div';
+}
+const { pub, lang, highlight = [], showNumber = true, as: Tag = 'li' } = Astro.props;
+const t = useTranslations(lang);
+const d = pub.data;
+const norm = (s: string) =>
+  s
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase();
+const hl = new Set(highlight.map(norm));
+const href = d.doi ? `https://doi.org/${d.doi}` : d.url;
+const plainTitle = d.title.replace(/[_^]\{([^}]*)\}/g, '$1');
+const citation = [
+  `${d.authors.join(', ')}.`,
+  `${plainTitle}.`,
+  `${d.journal}${d.volume ? ` ${d.volume}` : ''}${d.issue ? `(${d.issue})` : ''}${d.pages ? `, ${d.pages}` : ''} (${d.year}).`,
+  href ?? '',
+]
+  .join(' ')
+  .trim();
+const searchText = norm([plainTitle, d.authors.join(' '), d.journal, d.year, d.doi ?? ''].join(' '));
+const lines = d.researchAreas.map((r) => r.id).join(' ');
+const typeLabel =
+  d.type === 'review' ? t('pubs.type.review') : d.type === 'chapter' ? t('pubs.type.chapter') : d.type === 'conference' ? t('pubs.type.conference') : null;
+---
+
+<Tag class="pub" id={`pub-${pub.id}`} data-pub data-search={searchText} data-lines={lines} data-year={d.year}>
+  {showNumber && <span class="pub__num" aria-hidden="true">{pub.number}.</span>}
+  <div class="pub__body">
+    <p class="pub__authors">
+      {
+        d.authors.map((a, i) => (
+          <>
+            {hl.has(norm(a)) ? <strong>{a}</strong> : a}
+            {i < d.authors.length - 1 ? ', ' : ''}
+          </>
+        ))
+      }
+    </p>
+    <p class="pub__title" lang="en"><RichText text={d.title} /></p>
+    <p class="pub__source">
+      <cite lang="en">{d.journal}</cite>
+      {d.volume && <span class="pub__vol"> {d.volume}</span>}
+      {d.issue && <span>({d.issue})</span>}
+      {d.pages && <span>, {d.pages}</span>}
+      <span> ({d.year})</span>
+      {typeLabel && <span class="pub__badge">{typeLabel}</span>}
+    </p>
+    <p class="pub__link">
+      {
+        href && (
+          <ExternalLink href={href} lang={lang}>
+            {d.doi ? `doi:${d.doi}` : href}
+          </ExternalLink>
+        )
+      }
+      <button type="button" class="pub__copy" data-copy={citation} data-done={t('pubs.copied')}>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" /><path d="M10.5 3.5v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" /></svg>
+        <span data-label aria-live="polite">{t('pubs.copy')}</span>
+      </button>
+    </p>
+  </div>
+</Tag>
+
+<style>
+  .pub {
+    display: grid;
+    grid-template-columns: 2.75rem 1fr;
+    gap: var(--space-2);
+    padding-block: var(--space-4);
+    border-top: var(--border);
+  }
+  .pub:not(:has(.pub__num)) {
+    grid-template-columns: 1fr;
+  }
+  .pub__num {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+    padding-top: 0.15em;
+  }
+  .pub__body {
+    min-width: 0;
+    max-width: 78ch;
+  }
+  .pub__body > * + * {
+    margin-top: var(--space-1);
+  }
+  .pub__authors {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .pub__authors strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .pub__title {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .pub__source {
+    font-size: var(--text-sm);
+  }
+  .pub__title :global(sub),
+  .pub__title :global(sup) {
+    font-size: 0.7em;
+    line-height: 0;
+  }
+  cite {
+    font-style: italic;
+  }
+  .pub__vol {
+    font-weight: 600;
+  }
+  .pub__badge {
+    display: inline-block;
+    margin-left: var(--space-2);
+    padding: 0 var(--space-2);
+    border: var(--border);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    vertical-align: 1px;
+  }
+  .pub__link {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-4);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    overflow-wrap: anywhere;
+  }
+  .pub__copy {
+    display: none;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: 32px;
+    padding: 0 var(--space-2);
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    cursor: pointer;
+  }
+  :global(html.js) .pub__copy {
+    display: inline-flex;
+  }
+  .pub__copy:hover {
+    color: var(--color-primary);
+    background: var(--color-surface-alt);
+  }
+  .pub__copy.is-done {
+    color: var(--color-success);
+  }
+  .pub[hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  document.addEventListener('click', async (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-copy]');
+    if (!btn || !navigator.clipboard) return;
+    const label = btn.querySelector('[data-label]');
+    const original = label?.textContent ?? '';
+    try {
+      await navigator.clipboard.writeText(btn.dataset.copy ?? '');
+      btn.classList.add('is-done');
+      if (label) label.textContent = btn.dataset.done ?? original;
+      setTimeout(() => {
+        btn.classList.remove('is-done');
+        if (label) label.textContent = original;
+      }, 2000);
+    } catch {
+      /* sin permiso de portapapeles: no hacemos nada */
+    }
+  });
+</script>

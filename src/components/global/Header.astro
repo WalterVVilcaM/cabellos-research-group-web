@@ -1,0 +1,242 @@
+---
+import BrandMark from './BrandMark.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import Icon from '../ui/Icon.astro';
+import {
+  useTranslations,
+  navOrder,
+  sectionPath,
+  type Lang,
+  type Alternates,
+  type SectionKey,
+} from '../../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  alternates: Alternates;
+  current?: SectionKey;
+}
+const { lang, alternates, current } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<header class="site-header" data-header>
+  <div class="container site-header__inner">
+    <a href={sectionPath('home', lang)} class="brand">
+      <BrandMark size={34} />
+      <span class="brand__text">
+        <span class="brand__name">Cabellos</span>
+        <span class="brand__sub">Research Group</span>
+      </span>
+    </a>
+
+    <button
+      type="button"
+      class="menu-toggle"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      data-menu-toggle
+    >
+      <span class="menu-toggle__open"><Icon name="menu" />{t('nav.menu')}</span>
+      <span class="menu-toggle__close"><Icon name="close" />{t('nav.close')}</span>
+    </button>
+
+    <div class="nav-panel" id="site-nav" data-menu-panel>
+      <nav aria-label={t('a11y.mainNav')}>
+        <ul role="list" class="nav-list">
+          {
+            navOrder.map((key) => (
+              <li>
+                <a href={sectionPath(key, lang)} aria-current={current === key ? 'page' : undefined}>
+                  {t(`nav.${key}`)}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <LanguageSwitcher lang={lang} alternates={alternates} />
+    </div>
+  </div>
+</header>
+
+<script>
+  // Menú móvil: mejora progresiva. Sin JS, el panel se muestra siempre.
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const panel = header?.querySelector<HTMLElement>('[data-menu-panel]');
+  if (header && toggle && panel) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      header.classList.toggle('is-open', open);
+    };
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && header.classList.contains('is-open')) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+    matchMedia('(min-width: 900px)').addEventListener('change', (e) => {
+      if (e.matches) setOpen(false);
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: var(--border);
+  }
+  .site-header__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-6);
+    min-height: var(--header-h);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--color-ink);
+    text-decoration: none;
+    min-height: 44px;
+  }
+  .brand:hover {
+    color: var(--color-primary);
+  }
+  .brand__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.05;
+  }
+  .brand__name {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.2rem;
+    letter-spacing: var(--tracking-tight);
+  }
+  .brand__sub {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--space-3);
+    border: var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .menu-toggle span {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .menu-toggle__close,
+  .is-open .menu-toggle__open {
+    display: none !important;
+  }
+  .is-open .menu-toggle__close {
+    display: inline-flex !important;
+  }
+
+  .nav-panel {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+  }
+  .nav-list {
+    display: flex;
+    gap: var(--space-1);
+  }
+  .nav-list a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: var(--space-3);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .nav-list a::after {
+    content: '';
+    position: absolute;
+    left: var(--space-3);
+    right: var(--space-3);
+    bottom: 8px;
+    height: 2px;
+    background: var(--color-accent-deco);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration) var(--ease);
+  }
+  .nav-list a:hover {
+    color: var(--color-primary);
+  }
+  .nav-list a:hover::after,
+  .nav-list a[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+  .nav-list a[aria-current='page'] {
+    color: var(--color-primary);
+  }
+
+  /* Móvil */
+  @media (max-width: 899.98px) {
+    .nav-panel {
+      flex-basis: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-2);
+      padding-bottom: var(--space-4);
+    }
+    .nav-list {
+      flex-direction: column;
+    }
+    .nav-list a {
+      width: 100%;
+      padding-inline: 0;
+      font-size: var(--text-base);
+      border-bottom: var(--border);
+    }
+    .nav-list a::after {
+      left: 0;
+      right: auto;
+      width: 2rem;
+    }
+    :global(html.js) .nav-panel {
+      display: none;
+    }
+    :global(html.js) .is-open .nav-panel {
+      display: flex;
+    }
+  }
+  /* Sin JS no hay botón: el panel queda visible (mejora progresiva) */
+  :global(html:not(.js)) .menu-toggle {
+    display: none;
+  }
+  @media (min-width: 900px) {
+    .menu-toggle {
+      display: none;
+    }
+  }
+</style>

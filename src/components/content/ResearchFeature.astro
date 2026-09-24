@@ -1,0 +1,114 @@
+---
+import ResearchFigure from './ResearchFigure.astro';
+import Tag from '../ui/Tag.astro';
+import Button from '../ui/Button.astro';
+import { researchPath, useTranslations, type Lang } from '../../i18n/utils';
+import type { Research } from '../../utils/content';
+
+interface Props {
+  item: Research;
+  lang: Lang;
+  pubCount: number;
+  reverse?: boolean;
+}
+const { item, lang, pubCount, reverse = false } = Astro.props;
+const t = useTranslations(lang);
+const num = String(item.data.order).padStart(2, '0');
+const href = researchPath(item.data.slug, lang);
+const headingId = `line-${item.id}`;
+---
+
+<article class:list={['feature', { 'feature--reverse': reverse }]} aria-labelledby={headingId} data-reveal data-line={item.data.order}>
+  {item.data.cover && (
+    <ResearchFigure item={item} lang={lang} sizes="(min-width: 1100px) 460px, (min-width: 900px) 40vw, 100vw" />
+  )}
+  <div class="feature__body">
+    <p class="feature__num"><span>{num}</span>{t('research.line')}</p>
+    <h2 id={headingId}><a href={href}>{item.data.title[lang]}</a></h2>
+    <p class="feature__summary">{item.data.summary[lang]}</p>
+    <ul role="list" class="feature__tags" aria-label={t('research.keywords')}>
+      {item.data.keywords[lang].slice(0, 5).map((k) => <li><Tag>{k}</Tag></li>)}
+    </ul>
+    <div class="feature__footer">
+      <Button href={href} variant="secondary" arrow>{t('research.readMore')}</Button>
+      <span class="muted feature__count">
+        {pubCount === 1 ? t('research.pubCountOne') : t('research.pubCount', { n: pubCount })}
+      </span>
+    </div>
+  </div>
+</article>
+
+<style>
+  .feature {
+    display: grid;
+    gap: var(--space-6) var(--space-12);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .feature {
+      grid-template-columns: 5fr 7fr;
+    }
+    .feature--reverse {
+      grid-template-columns: 7fr 5fr;
+    }
+    .feature--reverse > :first-child {
+      order: 2;
+    }
+  }
+  .feature__num {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .feature__num span {
+    display: inline-grid;
+    place-items: center;
+    min-width: 2.25rem;
+    height: 1.75rem;
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-pill);
+    background: var(--line-bg);
+    color: var(--line-fg);
+    letter-spacing: 0;
+  }
+  .feature__body > * + * {
+    margin-top: var(--space-4);
+  }
+  h2 a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  h2 a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+  .feature__summary {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    max-width: 60ch;
+  }
+  .feature__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .feature__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4) var(--space-6);
+    padding-top: var(--space-2);
+  }
+  .feature__count {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+</style>

@@ -1,43 +1,52 @@
-# Astro Starter Kit: Minimal
+# Cabellos Research Group — sitio web
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Sitio académico bilingüe (ES/EN) del Cabellos Research Group, Universidad Politécnica de Tapachula.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- **Stack:** Astro 7 (estático) + TypeScript + Content Collections
+- **Dominio previsto:** cabellosresearchgroup.org (Cloudflare Pages)
+- **Vista previa:** https://waltervvilcam.github.io/cabellos-research-group-web/ (GitHub Pages; se publica sola en cada push a `main` vía `.github/workflows/deploy.yml`)
+- **Documento rector:** [`docs/00-orquestador-maestro.md`](docs/00-orquestador-maestro.md) · índice en [`docs/README.md`](docs/README.md)
 
-## 🚀 Project Structure
+## Requisitos
 
-Inside of your Astro project, you'll see the following folders and files:
+Node.js ≥ 22.12
+
+## Comandos
+
+| Comando | Acción |
+|---|---|
+| `npm install` | Instala dependencias |
+| `npm run dev` | Servidor de desarrollo en `localhost:4321` |
+| `npm run check` | Verifica tipos y componentes |
+| `npm run build` | Genera el sitio en `dist/` |
+| `npm run preview` | Sirve `dist/` localmente |
+
+El dominio y la subruta salen de las variables `SITE` y `BASE_PATH` (por defecto, `https://cabellosresearchgroup.org` en la raíz). Todo enlace interno debe pasar por `sectionPath`/`researchPath`/`memberPath` o `withBase` (`src/i18n/utils.ts`) para funcionar también bajo `/cabellos-research-group-web/`.
+
+## Dónde se edita el contenido
+
+| Qué | Archivo |
+|---|---|
+| Identidad, institución, contacto | `src/config/site.ts` |
+| Textos de la interfaz y páginas (ES/EN) | `src/i18n/ui.ts` |
+| Líneas de investigación | `src/content/data/research.yaml` + `src/content/texts/{es,en}/research/*.md` |
+| Integrantes | `src/content/data/members.yaml` + `src/content/texts/{es,en}/members/*.md` |
+| Publicaciones | `src/content/data/publications.yaml` |
+
+El modelo completo está en [`docs/07-content-model.md`](docs/07-content-model.md). Si una referencia es inválida, el build falla y lo indica.
+
+## Estructura
 
 ```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+docs/        documentación del proyecto (fases, ADR, QA)
+public/      favicon, og-image, robots.txt
+src/
+  components/  global · ui · content
+  content/     datos (YAML) y textos (Markdown ES/EN)
+  i18n/        diccionario y rutas por idioma
+  layouts/     BaseLayout
+  pages/       rutas EN (raíz) y /es/ (delgadas)
+  styles/      tokens y estilos globales
+  utils/       consultas de contenido
+  views/       una vista por página, compartida entre idiomas
 ```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).

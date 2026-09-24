@@ -1,0 +1,46 @@
+---
+/** Iconos SVG en línea (trazo 1.5, currentColor). Decorativos por defecto. */
+interface Props {
+  name: 'arrow-right' | 'external' | 'mail' | 'pin' | 'menu' | 'close' | 'building' | 'phone' | 'cpu';
+  size?: number;
+  label?: string;
+}
+const { name, size = 20, label } = Astro.props;
+const paths: Record<Props['name'], string> = {
+  'arrow-right': 'M4 10h11M11 5.5 15.5 10 11 14.5',
+  external: 'M8 4H4.75A.75.75 0 0 0 4 4.75v10.5c0 .41.34.75.75.75h10.5c.41 0 .75-.34.75-.75V12M11 4h5v5M16 4 9 11',
+  mail: 'M3 5.5h14v9H3zM3.5 6l6.5 5 6.5-5',
+  pin: 'M10 17s5.5-4.9 5.5-9A5.5 5.5 0 0 0 4.5 8c0 4.1 5.5 9 5.5 9ZM10 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z',
+  menu: 'M3 6h14M3 10h14M3 14h14',
+  close: 'M5 5l10 10M15 5 5 15',
+  building: 'M4 17V4.5h8V17M12 8h4v9M2.5 17h15M6.5 7.5h3M6.5 10.5h3M6.5 13.5h3',
+  cpu: 'M6 6h8v8H6zM8.5 8.5h3v3h-3zM8 3v3M12 3v3M8 14v3M12 14v3M3 8h3M3 12h3M14 8h3M14 12h3',
+  phone: 'M6.5 3h-2A1.5 1.5 0 0 0 3 4.5C3 11.4 8.6 17 15.5 17a1.5 1.5 0 0 0 1.5-1.5v-2l-3.5-1.5-1.5 1.5A8 8 0 0 1 7 8.5L8.5 7Z',
+};
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 20 20"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden={label ? undefined : 'true'}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  focusable="false"
+  class="icon"
+>
+  <path d={paths[name]}></path>
+</svg>
+
+<style>
+  .icon {
+    flex: none;
+    display: inline-block;
+    vertical-align: middle;
+  }
+</style>

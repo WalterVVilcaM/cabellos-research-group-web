@@ -1,0 +1,118 @@
+# Líneas de investigación. Textos largos en src/content/texts/<es|en>/research/<clave>.md
+# Estado: BORRADOR redactado a partir de la producción publicada (validación en Fase 10).
+
+structure-prediction:
+  cover:
+    image: ../../assets/research/au10-isomers.webp
+    figure: "Fig. 1"
+    source: 2024-rojas-gonzalez-au10
+    alt:
+      es: "Doce isómeros de baja energía del nanoclúster Au10 en vista frontal y lateral, con su energía relativa, simetría y población de Boltzmann; el isómero plano de simetría C2v domina con 88.78 %."
+      en: "Twelve low-energy isomers of the Au10 nanocluster in front and side view, with relative energy, symmetry and Boltzmann population; the planar C2v isomer dominates at 88.78%."
+    caption:
+      es: "Isómeros de baja energía del clúster Au_{10} obtenidos con optimización global y DFT."
+      en: "Low-energy isomers of the Au_{10} cluster found with global optimization and DFT."
+  motif: cluster
+  order: 1
+  slug:
+    es: prediccion-estructural-de-clusteres
+    en: cluster-structure-prediction
+  title:
+    es: Predicción estructural de clústeres
+    en: Cluster structure prediction
+  shortTitle:
+    es: Predicción estructural
+    en: Structure prediction
+  summary:
+    es: Búsqueda del mínimo global en superficies de energía potencial de clústeres atómicos y moleculares mediante algoritmos evolutivos acoplados a la teoría del funcional de la densidad.
+    en: Global-minimum searches on the potential energy surfaces of atomic and molecular clusters using evolutionary algorithms coupled to density functional theory.
+  keywords:
+    es: [optimización global, algoritmos genéticos, GLOMOS, DFT, nanoclústeres]
+    en: [global optimization, genetic algorithms, GLOMOS, DFT, nanoclusters]
+
+finite-temperature:
+  cover:
+    image: ../../assets/research/be6b11-population.webp
+    figure: "Fig. 4"
+    source: 2020-buelna-garcia-be6b11
+    alt:
+      es: "Gráfica de población relativa frente a temperatura, de 0 a 1500 K, para los isómeros del clúster Be6B11 negativo calculada con PBE0/Def2TZVP/GD3; el isómero 1 domina a baja temperatura y el 8 por encima de unos 800 K."
+      en: "Plot of relative population versus temperature, from 0 to 1500 K, for the isomers of the anionic Be6B11 cluster computed at PBE0/Def2TZVP/GD3; isomer 1 dominates at low temperature and isomer 8 above roughly 800 K."
+    caption:
+      es: "Poblaciones de Boltzmann de los isómeros de Be_{6}B_{11}^{−} entre 0 y 1500 K."
+      en: "Boltzmann populations of the Be_{6}B_{11}^{−} isomers between 0 and 1500 K."
+  motif: thermal
+  order: 2
+  slug:
+    es: efectos-de-temperatura-y-termodinamica-estadistica
+    en: finite-temperature-effects
+  title:
+    es: Efectos de temperatura y termodinámica estadística
+    en: Finite-temperature effects and statistical thermodynamics
+  shortTitle:
+    es: Efectos de temperatura
+    en: Finite temperature
+  summary:
+    es: Superficies de energía libre, poblaciones de Boltzmann y espectros IR y VCD dependientes de la temperatura para explicar la fluxionalidad y la quiralidad de clústeres.
+    en: Free-energy surfaces, Boltzmann populations and temperature-dependent IR and VCD spectra that explain cluster fluxionality and chirality.
+  keywords:
+    es: [energía libre, poblaciones de Boltzmann, espectroscopía IR, VCD, fluxionalidad]
+    en: [free energy, Boltzmann populations, IR spectroscopy, VCD, fluxionality]
+
+chemical-bonding:
+  cover:
+    image: ../../assets/research/au10-adndp.webp
+    figure: "Fig. 2"
+    source: 2024-rojas-gonzalez-au10
+    alt:
+      es: "Análisis AdNDP del clúster plano Au10: pares solitarios de oro de un centro y dos electrones, y enlaces sigma deslocalizados de seis, siete y diez centros, con números de ocupación cercanos a 2."
+      en: "AdNDP analysis of the planar Au10 cluster: one-center two-electron gold lone pairs and delocalized six-, seven- and ten-center sigma bonds, with occupation numbers close to 2."
+    caption:
+      es: "Enlace químico del Au_{10} plano: análisis AdNDP con enlaces σ multicéntricos."
+      en: "Chemical bonding in planar Au_{10}: AdNDP analysis with multicenter σ bonds."
+  motif: planar
+  order: 3
+  slug:
+    es: enlace-quimico-y-aromaticidad
+    en: chemical-bonding-and-aromaticity
+  title:
+    es: Enlace químico y aromaticidad
+    en: Chemical bonding and aromaticity
+  shortTitle:
+    es: Enlace y aromaticidad
+    en: Bonding and aromaticity
+  summary:
+    es: Diseño y análisis de especies con enlaces no convencionales, como carbonos planos hipercoordinados, estrellas moleculares y motivos tubulares de boro.
+    en: Design and analysis of species with unconventional bonding, such as planar hypercoordinate carbons, molecular stars and tubular boron motifs.
+  keywords:
+    es: [carbonos planos hipercoordinados, clústeres de boro, aromaticidad, mecanismos de reacción]
+    en: [planar hypercoordinate carbon, boron clusters, aromaticity, reaction mechanisms]
+
+optical-properties:
+  cover:
+    image: ../../assets/research/kcl-structure.webp
+    figure: "Fig. 1"
+    source: 2020-castillo-quevedo-kcl-cu
+    alt:
+      es: "Celdas del cloruro de potasio: (a) celda primitiva, (b) supercelda y (c) supercelda con un átomo de cobre sustituyendo a un potasio."
+      en: "Potassium chloride cells: (a) primitive cell, (b) supercell and (c) supercell with one copper atom replacing a potassium atom."
+    caption:
+      es: "Celdas de KCl puro y dopado con Cu usadas para calcular bandas desplegadas y respuesta óptica."
+      en: "Pure and Cu-doped KCl cells used to compute unfolded bands and optical response."
+  motif: lattice
+  order: 4
+  slug:
+    es: propiedades-opticas-y-electronicas
+    en: optical-and-electronic-properties
+  title:
+    es: Propiedades ópticas y electrónicas de materiales
+    en: Optical and electronic properties of materials
+  shortTitle:
+    es: Propiedades ópticas
+    en: Optical properties
+  summary:
+    es: Cálculo de respuestas ópticas lineales y no lineales, estructura de bandas y propiedades termoeléctricas de sólidos, superficies y sistemas bidimensionales.
+    en: Linear and nonlinear optical response, band structure and thermoelectric properties of solids, surfaces and two-dimensional systems.
+  keywords:
+    es: [generación de segundo armónico, estructura de bandas, óptica no lineal, termoeléctricos]
+    en: [second-harmonic generation, band structure, nonlinear optics, thermoelectrics]

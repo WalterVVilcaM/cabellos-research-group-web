@@ -1,0 +1,225 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/ui/Breadcrumb.astro';
+import Tag from '../components/ui/Tag.astro';
+import Button from '../components/ui/Button.astro';
+import ResearchFigure from '../components/content/ResearchFigure.astro';
+import MemberCard from '../components/content/MemberCard.astro';
+import PublicationItem from '../components/content/PublicationItem.astro';
+import ResearchCard from '../components/content/ResearchCard.astro';
+import { useTranslations, sectionPath, researchPath, type Lang } from '../i18n/utils';
+import {
+  getResearch,
+  getMembers,
+  getPublications,
+  getText,
+  publicationsByResearch,
+  membersByResearch,
+  type Research,
+} from '../utils/content';
+
+interface Props {
+  lang: Lang;
+  item: Research;
+}
+const { lang, item } = Astro.props;
+const t = useTranslations(lang);
+const d = item.data;
+const [allResearch, members, pubs, text] = await Promise.all([
+  getResearch(),
+  getMembers(),
+  getPublications(),
+  getText(lang, 'research', item.id),
+]);
+if (!text) throw new Error(`Falta el texto ${lang}/research/${item.id}.md`);
+const { Content } = await render(text);
+const people = membersByResearch(members, item.id);
+const linePubs = publicationsByResearch(pubs, item.id);
+const others = allResearch.filter((r) => r.id !== item.id);
+const highlight = members.flatMap((m) => [m.data.name, ...m.data.citationNames]);
+const num = String(d.order).padStart(2, '0');
+---
+
+<BaseLayout
+  lang={lang}
+  title={d.title[lang]}
+  description={d.summary[lang]}
+  alternates={{ es: researchPath(d.slug, 'es'), en: researchPath(d.slug, 'en') }}
+  current="research"
+  ogType="article"
+>
+  <header class="detail-header" data-line={d.order}>
+    <div class="container">
+      <Breadcrumb
+        lang={lang}
+        items={[
+          { label: t('nav.home'), href: sectionPath('home', lang) },
+          { label: t('nav.research'), href: sectionPath('research', lang) },
+          { label: d.shortTitle[lang] },
+        ]}
+      />
+      <div class="detail-header__grid">
+        <div class="detail-header__text">
+          <p class="eyebrow line-pill">{t('research.line')} {num}</p>
+          <h1>{d.title[lang]}</h1>
+          <p class="lead">{d.summary[lang]}</p>
+          <ul role="list" class="tags" aria-label={t('research.keywords')}>
+            {d.keywords[lang].map((k) => <li><Tag>{k}</Tag></li>)}
+          </ul>
+        </div>
+        {d.cover && (
+          <ResearchFigure item={item} lang={lang} loading="eager" sizes="(min-width: 1100px) 460px, (min-width: 900px) 40vw, 100vw" />
+        )}
+      </div>
+    </div>
+  </header>
+
+  <div class="section">
+    <div class="container detail-grid">
+      <div class="prose">
+        <Content />
+      </div>
+      {
+        people.length > 0 && (
+          <aside class="detail-aside" aria-labelledby="people-title">
+            <h2 id="people-title" class="aside-title">{t('research.people')}</h2>
+            <ul role="list" class="people">
+              {people.map((m) => (
+                <li>
+                  <MemberCard member={m} lang={lang} variant="compact" />
+                </li>
+              ))}
+            </ul>
+          </aside>
+        )
+      }
+    </div>
+  </div>
+
+  {
+    linePubs.length > 0 && (
+      <section class="section section--alt" aria-labelledby="line-pubs-title">
+        <div class="container">
+          <div class="pubs-head">
+            <h2 id="line-pubs-title" class="accent-title">{t('research.pubsTitle')}</h2>
+            <p class="muted">
+              {linePubs.length === 1 ? t('research.pubCountOne') : t('research.pubCount', { n: linePubs.length })}
+            </p>
+          </div>
+          <ul role="list">
+            {linePubs.map((p) => (
+              <PublicationItem pub={p} lang={lang} highlight={highlight} />
+            ))}
+          </ul>
+          <div class="pubs-more">
+            <Button href={sectionPath('publications', lang)} variant="ghost" arrow>
+              {t('research.toPublications')}
+            </Button>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section" aria-labelledby="others-title">
+    <div class="container">
+      <h2 id="others-title" class="others-title accent-title">{t('research.otherLines')}</h2>
+      <ul role="list" class="others">
+        {others.map((r, i) => <li data-reveal style={`--i: ${i}`}><ResearchCard item={r} lang={lang} /></li>)}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .detail-header {
+    padding-block: var(--space-6) clamp(2rem, 5vw, 3.5rem);
+    border-top: 4px solid var(--color-primary);
+    border-bottom: var(--border);
+    background: var(--color-bg);
+  }
+  .detail-header__grid {
+    display: grid;
+    gap: var(--space-8);
+    align-items: center;
+    margin-top: var(--space-8);
+  }
+  @media (min-width: 900px) {
+    .detail-header__grid {
+      grid-template-columns: 6fr 5fr;
+    }
+  }
+  .detail-header__text > * + * {
+    margin-top: var(--space-4);
+  }
+  .lead {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    max-width: 60ch;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .detail-grid {
+    display: grid;
+    gap: var(--space-12);
+  }
+  @media (min-width: 900px) {
+    .detail-grid {
+      grid-template-columns: 8fr 4fr;
+    }
+  }
+  @media (min-width: 1100px) {
+    .detail-aside {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-6));
+      align-self: start;
+    }
+  }
+  .aside-title {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: var(--space-4);
+  }
+  .people {
+    display: grid;
+    gap: var(--space-3);
+  }
+  .pubs-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-6);
+    margin-bottom: var(--space-6);
+  }
+  .pubs-more {
+    margin-top: var(--space-6);
+  }
+  .others-title {
+    margin-bottom: var(--space-6);
+  }
+  .others {
+    display: grid;
+    gap: var(--space-4);
+  }
+  @media (min-width: 700px) {
+    .others {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .line-pill {
+    display: inline-flex;
+    padding: 0.2rem 0.75rem;
+    border-radius: var(--radius-pill);
+    background: var(--line-bg);
+    color: var(--line-fg);
+  }
+</style>

@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/ui/Button.astro';
+import { ui } from '../i18n/ui';
+import { sectionAlternates, sectionPath } from '../i18n/utils';
+
+const en = ui.en;
+const es = ui.es;
+---
+
+<BaseLayout
+  lang="en"
+  title={`404 · ${en['notFound.title']}`}
+  description={en['notFound.text']}
+  alternates={sectionAlternates('home')}
+  noindex
+>
+  <section class="section nf">
+    <div class="container nf__inner">
+      <p class="nf__code" aria-hidden="true">404</p>
+      <h1>{en['notFound.title']}</h1>
+      <p class="muted">{en['notFound.text']}</p>
+      <div lang="es" class="nf__alt">
+        <p class="nf__alt-title">{es['notFound.title']}</p>
+        <p class="muted">{es['notFound.text']}</p>
+      </div>
+      <div class="nf__actions">
+        <Button href={sectionPath('home', 'en')} arrow>{en['notFound.home']}</Button>
+        <Button href={sectionPath('home', 'es')} variant="secondary"><span lang="es">{es['notFound.home']}</span></Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf__inner {
+    max-width: 36rem;
+    text-align: center;
+  }
+  .nf__inner > * + * {
+    margin-top: var(--space-4);
+  }
+  .nf__code {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    letter-spacing: 0.3em;
+    color: var(--color-accent);
+  }
+  .nf__alt {
+    padding-top: var(--space-4);
+    border-top: var(--border);
+  }
+  .nf__alt-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 600;
+  }
+  .nf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+    padding-top: var(--space-4);
+  }
+</style>

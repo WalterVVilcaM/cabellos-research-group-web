@@ -1,0 +1,464 @@
+---
+/**
+ * Carrusel accesible con mejora progresiva.
+ * - Sin JS: pista con scroll-snap horizontal (todo el contenido es alcanzable).
+ * - Con JS: botones anterior/siguiente, puntos, autoplay pausable
+ *   (se pausa al pasar el mouse, al enfocar y con la pestaña oculta).
+ * - `prefers-reduced-motion: reduce` desactiva el autoplay.
+ * Los hijos deben ser `<div class="carousel__slide">`.
+ */
+import Icon from './Icon.astro';
+import { useTranslations, type Lang } from '../../i18n/utils';
+
+interface Props {
+  label: string;
+  lang: Lang;
+  /** Milisegundos entre diapositivas; 0 desactiva el autoplay. */
+  interval?: number;
+  /** Diapositivas visibles en desktop (≥ 900 px). */
+  perView?: number;
+  variant?: 'framed' | 'plain';
+  class?: string;
+}
+const { label, lang, interval = 0, perView = 1, variant = 'plain', class: className } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section
+  class:list={['carousel', `carousel--${variant}`, className]}
+  aria-roledescription="carousel"
+  aria-label={label}
+  data-carousel
+  data-interval={interval}
+  data-slide-label={t('carousel.slide')}
+  data-goto-label={t('carousel.goTo')}
+  style={`--per-view: ${perView}`}
+>
+  <slot name="heading" />
+  <div class="carousel__track" data-track tabindex="-1">
+    <slot />
+  </div>
+  <p class="visually-hidden" data-status aria-live="polite" aria-atomic="true"></p>
+  <div class="carousel__controls" data-controls>
+    {
+      interval > 0 && (
+        <button
+          type="button"
+          class="carousel__btn carousel__play"
+          data-play
+          data-label-pause={t('carousel.pause')}
+          data-label-play={t('carousel.play')}
+          aria-label={t('carousel.pause')}
+        >
+          <svg class="i-pause" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3v10M11 3v10" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+          <svg class="i-play" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9l7-4.5z" fill="currentColor" /></svg>
+        </button>
+      )
+    }
+    <ol class="carousel__dots" role="list" data-dots></ol>
+    <span class="carousel__count" data-count-label aria-hidden="true"></span>
+    <div class="carousel__arrows">
+      <button type="button" class="carousel__btn" data-prev aria-label={t('carousel.prev')}>
+        <span class="flip"><Icon name="arrow-right" size={18} /></span>
+      </button>
+      <button type="button" class="carousel__btn" data-next aria-label={t('carousel.next')}>
+        <Icon name="arrow-right" size={18} />
+      </button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .carousel {
+    --gap: var(--space-4);
+    position: relative;
+    min-width: 0;
+  }
+  .carousel__track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    gap: var(--gap);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding: 0;
+    margin: 0;
+  }
+  .carousel__track::-webkit-scrollbar {
+    display: none;
+  }
+  .carousel__track:focus {
+    outline: none;
+  }
+  @media (min-width: 640px) {
+    .carousel__track {
+      grid-auto-columns: calc((100% - (min(var(--per-view), 2) - 1) * var(--gap)) / min(var(--per-view), 2));
+    }
+  }
+  @media (min-width: 900px) {
+    .carousel__track {
+      grid-auto-columns: calc((100% - (var(--per-view) - 1) * var(--gap)) / var(--per-view));
+    }
+  }
+  .carousel__track > :global(.carousel__slide) {
+    scroll-snap-align: start;
+    min-width: 0;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .carousel__track {
+      scroll-behavior: smooth;
+    }
+  }
+
+  .carousel__controls {
+    display: none;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+  }
+  :global(html.js) .carousel__controls {
+    display: flex;
+  }
+  .carousel__arrows {
+    display: flex;
+    gap: var(--space-2);
+    margin-left: auto;
+  }
+  .carousel__btn {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: var(--border);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    color: var(--color-primary);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease),
+      border-color var(--duration-fast) var(--ease);
+  }
+  .carousel__btn:hover {
+    background: var(--color-surface-alt);
+    border-color: var(--color-primary);
+  }
+  .carousel__btn[disabled] {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .carousel [hidden] { display: none !important; }
+  .carousel__count {
+    font-size: var(--text-xs);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    color: var(--color-text-muted);
+  }
+  .carousel--framed .carousel__controls {
+    flex-wrap: wrap;
+    border-top: var(--border);
+    padding-top: var(--space-4);
+  }
+  .carousel--framed .carousel__dots {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+    flex-basis: 100%;
+    order: -1;
+    margin-bottom: var(--space-2);
+  }
+  .carousel--framed .carousel__dots :global(button) {
+    width: 100%;
+    height: 100%;
+    min-height: 52px;
+    text-align: left;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    line-height: 1.4;
+    transition: background-color var(--duration) var(--ease), border-color var(--duration) var(--ease);
+  }
+  .carousel--framed .carousel__dots :global(button)::before { display: none; }
+  .carousel--framed .carousel__dots :global(button[aria-current='true']) {
+    background: var(--color-surface-alt);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    box-shadow: inset 3px 0 var(--color-primary);
+    font-weight: 600;
+  }
+  .carousel--framed .carousel__dots :global(button:hover) {
+    background: var(--color-surface-alt);
+    border-color: var(--color-accent-deco);
+  }
+  .carousel--framed .carousel__dots :global(.carousel__number) {
+    font-variant-numeric: tabular-nums;
+    opacity: 0.7;
+  }
+  .carousel__btn:focus-visible, .carousel__dots :global(button:focus-visible) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+  .flip {
+    display: inline-flex;
+    transform: scaleX(-1);
+  }
+  .carousel__play .i-play {
+    display: none;
+  }
+  .carousel__play[aria-pressed='true'] .i-play {
+    display: block;
+  }
+  .carousel__play[aria-pressed='true'] .i-pause {
+    display: none;
+  }
+  .carousel__dots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    padding: 0;
+    margin: 0;
+  }
+  .carousel__dots :global(button) {
+    position: relative;
+    width: 28px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .carousel__dots :global(button)::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    top: 50%;
+    height: 4px;
+    margin-top: -2px;
+    border-radius: var(--radius-pill);
+    background: var(--color-border);
+    transition: background-color var(--duration) var(--ease);
+  }
+  .carousel__dots :global(button[aria-current='true'])::before {
+    background: var(--color-primary);
+  }
+  .carousel__dots :global(button:hover)::before {
+    background: var(--color-accent-deco);
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function setup(root: HTMLElement) {
+    const track = root.querySelector<HTMLElement>('[data-track]');
+    const dotsEl = root.querySelector<HTMLElement>('[data-dots]');
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]');
+    const next = root.querySelector<HTMLButtonElement>('[data-next]');
+    const play = root.querySelector<HTMLButtonElement>('[data-play]');
+    if (!track || !dotsEl || !prev || !next) return;
+    const slides = [...track.children] as HTMLElement[];
+    const total = slides.length;
+    if (!total) {
+      root.querySelector<HTMLElement>('[data-controls]')?.setAttribute('hidden', '');
+      return;
+    }
+    const counter = root.querySelector<HTMLElement>('[data-count-label]');
+    const status = root.querySelector<HTMLElement>('[data-status]');
+    const named = root.classList.contains('carousel--framed');
+    const slideLabel = root.dataset.slideLabel ?? '{n} / {total}';
+    const gotoLabel = root.dataset.gotoLabel ?? '{n}';
+    const interval = Number(root.dataset.interval) || 0;
+
+    slides.forEach((s, i) => {
+      s.setAttribute('role', 'group');
+      s.setAttribute('aria-roledescription', 'slide');
+      s.setAttribute('aria-label', slideLabel.replace('{n}', String(i + 1)).replace('{total}', String(total)));
+    });
+
+    const perPage = () => {
+      const w = slides[0]?.getBoundingClientRect().width || 1;
+      return Math.max(1, Math.round(track.clientWidth / w));
+    };
+    const pages = () => Math.max(1, total - perPage() + 1);
+    let index = 0;
+
+    const dots: HTMLButtonElement[] = [];
+    const renderDots = () => {
+      dotsEl.replaceChildren();
+      dots.length = 0;
+      for (let i = 0; i < pages(); i++) {
+        const li = document.createElement('li');
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-label', gotoLabel.replace('{n}', String(i + 1)));
+        if (named) {
+          const number = document.createElement('span');
+          number.className = 'carousel__number';
+          number.textContent = String(i + 1).padStart(2, '0');
+          number.setAttribute('aria-hidden', 'true');
+          const title = slides[i]?.dataset.title ?? '';
+          const text = document.createElement('span');
+          text.textContent = title;
+          b.append(number, text);
+          b.setAttribute('aria-label', `${gotoLabel.replace('{n}', String(i + 1))}: ${title}`);
+        }
+        b.addEventListener('click', () => {
+          go(i);
+          stop(true);
+        });
+        li.append(b);
+        dotsEl.append(li);
+        dots.push(b);
+      }
+      dotsEl.hidden = dots.length < 2;
+      prev.disabled = next.disabled = dots.length < 2;
+      update();
+    };
+
+    const update = () => {
+      dots.forEach((d, i) => d.setAttribute('aria-current', String(i === index)));
+      if (counter) counter.textContent = `${String(index + 1).padStart(2, '0')} / ${String(pages()).padStart(2, '0')}`;
+      if (status && userPaused) status.textContent = `${slideLabel.replace('{n}', String(index + 1)).replace('{total}', String(total))}. ${slides[index]?.dataset.title ?? ''}`;
+      slides.forEach((s, i) => {
+        const visible = i >= index && i < index + perPage();
+        s.toggleAttribute('inert', !visible);
+      });
+    };
+
+    const go = (i: number) => {
+      const n = pages();
+      index = ((i % n) + n) % n;
+      track.scrollTo({ left: slides[index]!.offsetLeft - slides[0]!.offsetLeft, behavior: reduce.matches ? 'instant' : 'smooth' });
+      update();
+    };
+
+    prev.addEventListener('click', () => {
+      go(index - 1);
+      stop(true);
+    });
+    next.addEventListener('click', () => {
+      go(index + 1);
+      stop(true);
+    });
+
+    // Sincroniza el índice cuando el usuario desliza con el dedo o el trackpad
+    let scrollTimer = 0;
+    track.addEventListener(
+      'scroll',
+      () => {
+        window.clearTimeout(scrollTimer);
+        scrollTimer = window.setTimeout(() => {
+          const w = slides[1] ? slides[1].offsetLeft - slides[0]!.offsetLeft : track.clientWidth;
+          const i = Math.round(track.scrollLeft / (w || 1));
+          if (i !== index && i >= 0 && i < pages()) {
+            index = i;
+            update();
+          }
+        }, 120);
+      },
+      { passive: true },
+    );
+
+    // Autoplay
+    let timer = 0;
+    let userPaused = false;
+    let hover = false;
+    let focused = false;
+    let inView = false;
+    const canPlay = () => interval > 0 && !reduce.matches && !userPaused && !hover && !focused && inView && !document.hidden && pages() > 1;
+    const start = () => {
+      window.clearInterval(timer);
+      if (canPlay()) timer = window.setInterval(() => go(index + 1), interval);
+    };
+    const stop = (byUser = false) => {
+      window.clearInterval(timer);
+      if (byUser) {
+        userPaused = true;
+        syncPlay();
+      }
+    };
+    const syncPlay = () => {
+      if (!play) return;
+      play.setAttribute('aria-pressed', String(userPaused));
+      play.setAttribute('aria-label', (userPaused ? play.dataset.labelPlay : play.dataset.labelPause) ?? '');
+    };
+    if (play) {
+      if (reduce.matches || interval === 0) play.hidden = true;
+      play.addEventListener('click', () => {
+        userPaused = !userPaused;
+        syncPlay();
+        userPaused ? stop() : start();
+      });
+      syncPlay();
+    }
+    track.addEventListener('pointerdown', () => stop(true), { passive: true });
+    track.addEventListener('wheel', () => stop(true), { passive: true });
+    root.addEventListener('mouseenter', () => {
+      hover = true;
+      stop();
+    });
+    root.addEventListener('mouseleave', () => {
+      hover = false;
+      start();
+    });
+    root.addEventListener('focusin', () => {
+      focused = true;
+      stop(true);
+    });
+    root.addEventListener('focusout', (e) => {
+      if (!root.contains(e.relatedTarget as Node)) {
+        focused = false;
+        start();
+      }
+    });
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+    reduce.addEventListener('change', () => {
+      if (play) play.hidden = reduce.matches || interval === 0;
+      reduce.matches ? stop() : start();
+    });
+    new IntersectionObserver(([entry]) => {
+      inView = entry?.isIntersecting ?? false;
+      inView ? start() : stop();
+    }, { threshold: 0.25 }).observe(root);
+
+    // Teclado en la pista
+    root.addEventListener('keydown', (e) => {
+      if ((e.target as HTMLElement).closest('input, textarea, select, [contenteditable]')) return;
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        go(index + 1);
+        stop(true);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        go(index - 1);
+        stop(true);
+      } else if (e.key === 'Home' || e.key === 'End') {
+        e.preventDefault();
+        go(e.key === 'Home' ? 0 : pages() - 1);
+        stop(true);
+      }
+    });
+
+    let lastPages = pages();
+    new ResizeObserver(() => {
+      if (pages() !== lastPages) {
+        lastPages = pages();
+        index = Math.min(index, lastPages - 1);
+        renderDots();
+      }
+      track.scrollTo({ left: slides[index]!.offsetLeft - slides[0]!.offsetLeft, behavior: 'instant' });
+    }).observe(track);
+
+    renderDots();
+    start();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach(setup);
+</script>

@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import MemberCard from '../components/content/MemberCard.astro';
+import { useTranslations, sectionAlternates, type Lang } from '../i18n/utils';
+import { getMembers, roleOrder } from '../utils/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const members = await getMembers();
+// Solo grupos con integrantes (no se muestran categorías vacías)
+const groups = roleOrder
+  .map((role) => ({ role, items: members.filter((m) => m.data.role === role) }))
+  .filter((g) => g.items.length > 0);
+---
+
+<BaseLayout
+  lang={lang}
+  title={t('team.title')}
+  description={t('team.description')}
+  alternates={sectionAlternates('team')}
+  current="team"
+>
+  <PageHeader title={t('team.title')} lead={t('team.lead')} lang={lang} />
+
+  <div class="section">
+    <div class="container groups">
+      {
+        groups.map((g) => (
+          <section aria-labelledby={`role-${g.role}`}>
+            <h2 id={`role-${g.role}`} class="group-title">
+              {t(`team.role.${g.role}`)}
+            </h2>
+            <ul role="list" class:list={['grid', { 'grid--pi': g.role === 'pi' }]}>
+              {g.items.map((m) => (
+                <li>
+                  <MemberCard
+                    member={m}
+                    lang={lang}
+                    variant={g.role === 'pi' ? 'featured' : 'default'}
+                    excerpt={g.role === 'pi' ? t('home.piExcerpt') : undefined}
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .groups {
+    display: grid;
+    gap: var(--space-16);
+  }
+  .group-title {
+    font-size: var(--text-xl);
+    padding-bottom: var(--space-3);
+    margin-bottom: var(--space-6);
+    border-bottom: var(--border);
+  }
+  .grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  }
+  .grid--pi {
+    grid-template-columns: 1fr;
+  }
+</style>

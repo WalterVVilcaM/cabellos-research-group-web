@@ -1,0 +1,109 @@
+---
+import '../styles/global.css';
+import { Font } from 'astro:assets';
+import Seo from '../components/global/Seo.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import { useTranslations, withBase, type Lang, type Alternates, type SectionKey } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  alternates: Alternates;
+  current?: SectionKey;
+  noindex?: boolean;
+  ogType?: 'website' | 'profile' | 'article';
+}
+const { lang, title, description, alternates, current, noindex, ogType } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<!doctype html>
+<html lang={t('meta.htmlLang')}>
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <link rel="icon" href={withBase('/favicon.ico')} sizes="32x32" />
+    <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
+    <Font cssVariable="--font-sans" preload={[{ weight: '400', style: 'normal' }]} />
+    <Seo
+      lang={lang}
+      title={title}
+      description={description}
+      alternates={alternates}
+      noindex={noindex}
+      ogType={ogType}
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t('a11y.skip')}</a>
+    <Header lang={lang} alternates={alternates} current={current} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <a href="#main" class="to-top" data-to-top aria-label={t('a11y.toTop')}>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 16V4M5 9l5-5 5 5" /></svg>
+    </a>
+    <script>
+      import '../scripts/enhance.ts';
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    left: var(--space-4);
+    top: -100px;
+    z-index: var(--z-skip);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-ink);
+    color: var(--color-on-ink);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+  }
+  .skip-link:focus {
+    top: var(--space-2);
+  }
+  main:focus {
+    outline: none;
+  }
+  .to-top {
+    position: fixed;
+    right: clamp(1rem, 3vw, 1.5rem);
+    bottom: clamp(1rem, 3vw, 1.5rem);
+    z-index: var(--z-header);
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary);
+    color: #fff;
+    box-shadow: 0 8px 24px -10px rgb(18 58 45 / 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition:
+      opacity var(--duration) var(--ease),
+      transform var(--duration) var(--ease),
+      visibility 0s linear var(--duration),
+      background-color var(--duration-fast) var(--ease);
+  }
+  .to-top:hover {
+    background: var(--color-primary-hover);
+    color: #fff;
+  }
+  .to-top:global(.is-visible) {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition-delay: 0s;
+  }
+</style>

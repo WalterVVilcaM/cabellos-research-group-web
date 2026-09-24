@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import ResearchFeature from '../components/content/ResearchFeature.astro';
+import { useTranslations, sectionAlternates, type Lang } from '../i18n/utils';
+import { getResearch, getPublications, publicationsByResearch } from '../utils/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const [research, pubs] = await Promise.all([getResearch(), getPublications()]);
+---
+
+<BaseLayout
+  lang={lang}
+  title={t('research.title')}
+  description={t('research.description')}
+  alternates={sectionAlternates('research')}
+  current="research"
+>
+  <PageHeader title={t('research.title')} lead={t('research.lead')} lang={lang} />
+
+  <div class="section">
+    <div class="container features">
+      {
+        research.map((r, i) => (
+          <ResearchFeature
+            item={r}
+            lang={lang}
+            pubCount={publicationsByResearch(pubs, r.id).length}
+            reverse={i % 2 === 1}
+          />
+        ))
+      }
+    </div>
+  </div>
+
+</BaseLayout>
+
+<style>
+  .features {
+    display: grid;
+    gap: clamp(3rem, 8vw, 5rem);
+  }
+</style>

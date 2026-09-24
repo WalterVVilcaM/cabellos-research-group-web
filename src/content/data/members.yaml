@@ -1,0 +1,64 @@
+# Integrantes. Biografías en src/content/texts/<es|en>/members/<clave>.md
+# Pendiente (D-10): estudiantes, colaboradores y egresados.
+
+jose-luis-cabellos:
+  name: José Luis Cabellos Quiroz
+  citationNames: [José Luis Cabellos, Jose Luis Cabellos, J. L. Cabellos, Jose Luis Cabellos-Quiroz]
+  academicTitle: Dr.
+  role: pi
+  position:
+    es: Investigador principal
+    en: Principal investigator
+  affiliation: Universidad Politécnica de Tapachula
+  # PROVISIONAL: foto pública de su perfil de Google Scholar (baja resolución). Sustituir por la foto que entregue el grupo.
+  photo: ../../assets/members/jose-luis-cabellos.webp
+  education:
+    - es: Doctorado, Centro de Investigaciones en Óptica (CIO), 2009
+      en: PhD, Centro de Investigaciones en Óptica (CIO), 2009
+  distinctions:
+    - es: Sistema Nacional de Investigadoras e Investigadores (SNII), Nivel II
+      en: National System of Researchers (SNII), Level II
+  researchAreas: [structure-prediction, finite-temperature, chemical-bonding, optical-properties]
+  links:
+    email: jose.luis@uptapachula.edu.mx
+    orcid: 0000-0002-9438-8725
+    googleScholar: EwYPXrAAAAAJ
+  order: 1
+  featured: true
+
+# Investigadores del grupo.
+bolillo:
+  name: Bolillo
+  academicTitle: Dr.
+  role: researcher
+  position:
+    es: Dr. PTC · Predicción estructural de clústeres
+    en: Dr. PTC · Cluster structure prediction
+  affiliation: Universidad Politécnica de Tapachula
+  photo: ../../assets/members/bolillo.webp
+  researchAreas: [structure-prediction, chemical-bonding]
+  order: 2
+
+solita:
+  name: Solita
+  academicTitle: Dra.
+  role: researcher
+  position:
+    es: Dra. PTC · Termodinámica y dinámica molecular
+    en: Dr. PTC · Thermodynamics and molecular dynamics
+  affiliation: Universidad Politécnica de Tapachula
+  photo: ../../assets/members/solita.webp
+  researchAreas: [finite-temperature, structure-prediction]
+  order: 3
+
+osa:
+  name: Osa
+  academicTitle: Dra.
+  role: researcher
+  position:
+    es: Dra. PTC · Propiedades ópticas y enlace químico
+    en: Dr. PTC · Optical properties and chemical bonding
+  affiliation: Universidad Politécnica de Tapachula
+  photo: ../../assets/members/osa.webp
+  researchAreas: [optical-properties, chemical-bonding]
+  order: 4

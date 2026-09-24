@@ -1,0 +1,71 @@
+---
+import { languages, type Lang } from '../../i18n/ui';
+import { useTranslations, type Alternates } from '../../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  alternates: Alternates;
+}
+const { lang, alternates } = Astro.props;
+const t = useTranslations(lang);
+const langs = Object.keys(languages) as Lang[];
+---
+
+<ul class="lang" role="list" aria-label={t('a11y.langSwitch')}>
+  {
+    langs.map((l) => (
+      <li>
+        {l === lang ? (
+          <span class="lang__current" aria-current="true" lang={l}>
+            <abbr title={languages[l]}>{l.toUpperCase()}</abbr>
+          </span>
+        ) : (
+          <a href={alternates[l]} hreflang={l} lang={l}>
+            <span aria-hidden="true">{l.toUpperCase()}</span>
+            <span class="visually-hidden">{languages[l]}</span>
+          </a>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .lang {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+  }
+  .lang li + li::before {
+    content: '/';
+    color: var(--color-text-muted);
+    margin-right: var(--space-1);
+  }
+  .lang a,
+  .lang__current {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    min-height: 36px;
+  }
+  .lang a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+  }
+  .lang a:hover {
+    color: var(--color-primary);
+    background: var(--color-surface-alt);
+  }
+  .lang__current {
+    font-weight: 600;
+    color: var(--color-text);
+  }
+  abbr {
+    text-decoration: none;
+  }
+</style>

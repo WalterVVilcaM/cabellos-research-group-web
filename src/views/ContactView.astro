@@ -1,0 +1,147 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import Icon from '../components/ui/Icon.astro';
+import ExternalLink from '../components/ui/ExternalLink.astro';
+import { site } from '../config/site';
+import { useTranslations, sectionAlternates, type Lang } from '../i18n/utils';
+import campus from '../assets/gallery/campus-explanada.webp';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const { contact, institution } = site;
+const mapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  `${institution.name}, ${institution.city}, ${institution.state}`,
+)}`;
+---
+
+<BaseLayout
+  lang={lang}
+  title={t('contact.title')}
+  description={t('contact.description')}
+  alternates={sectionAlternates('contact')}
+  current="contact"
+>
+  <PageHeader title={t('contact.title')} lead={t('contact.lead')} lang={lang} />
+
+  <section class="section contact" aria-label={t('contact.title')}>
+    <div class="container contact__grid">
+      <div class="card">
+        <dl class="info">
+          <div class="info__row">
+            <dt><Icon name="pin" size={20} /> {t('contact.whereTitle')}</dt>
+            <dd>
+              <address>
+                {institution.name}<br />
+                {institution.unit[lang]}<br />
+                {contact.streetAddress && <>{contact.streetAddress}<br /></>}
+                {institution.postalCode} {institution.city}, {institution.state}, {institution.country[lang]}
+              </address>
+              <ExternalLink href={mapHref} lang={lang} class="info__map">{t('contact.mapLink')}</ExternalLink>
+            </dd>
+          </div>
+          {contact.email && (
+            <div class="info__row">
+              <dt><Icon name="mail" size={20} /> {t('team.email')}</dt>
+              <dd><a href={`mailto:${contact.email}`}>{contact.email}</a></dd>
+            </div>
+          )}
+          {contact.phone && (
+            <div class="info__row">
+              <dt><Icon name="phone" size={20} /> {t('contact.phoneTitle')}</dt>
+              <dd><a href={`tel:${contact.phoneIntl ?? contact.phone}`}>{contact.phone}</a></dd>
+            </div>
+          )}
+        </dl>
+      </div>
+      <figure class="contact__photo">
+        <Image src={campus} alt={t('about.photoCaption')} widths={[480, 800, 1200]} sizes="(min-width: 900px) 45vw, 100vw" />
+        <figcaption>{t('about.photoCaption')} · {t('carousel.photo')}: UPTap</figcaption>
+      </figure>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact {
+    padding-top: var(--space-4);
+  }
+  .contact__grid {
+    display: grid;
+    gap: var(--space-8);
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .contact__grid {
+      grid-template-columns: 6fr 5fr;
+      gap: clamp(2.5rem, 5vw, 4rem);
+    }
+  }
+  .card {
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    background: var(--color-surface);
+    border: 1px solid rgb(16 24 20 / 0.06);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+  .info {
+    display: grid;
+  }
+  .info__row {
+    display: grid;
+    gap: var(--space-2);
+    padding-block: var(--space-6);
+    border-bottom: var(--border);
+  }
+  .info__row:first-child {
+    padding-top: 0;
+  }
+  .info__row:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+  .info dt {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .info dd {
+    font-size: var(--text-lg);
+    overflow-wrap: anywhere;
+  }
+  .info address {
+    font-style: normal;
+    font-size: var(--text-base);
+    line-height: 1.7;
+  }
+  .info dd :global(.info__map) {
+    display: inline-block;
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+  .contact__photo {
+    margin: 0;
+  }
+  .contact__photo :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+  }
+  .contact__photo figcaption {
+    margin-top: var(--space-3);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+</style>

@@ -1,0 +1,25 @@
+---
+/** Enlace externo con indicador visual y texto accesible. */
+import Icon from './Icon.astro';
+import { useTranslations, type Lang } from '../../i18n/utils';
+
+interface Props {
+  href: string;
+  lang: Lang;
+  class?: string;
+}
+const { href, lang, class: className } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<a href={href} class:list={['ext', className]} rel="noopener noreferrer" target="_blank"
+  ><slot /><Icon name="external" size={14} /><span class="visually-hidden"> {t('a11y.external')}</span></a
+>
+
+<style>
+  .ext :global(.icon) {
+    display: inline;
+    margin-left: 0.2em;
+    vertical-align: -0.1em;
+  }
+</style>

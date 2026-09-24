@@ -1,0 +1,44 @@
+---
+/** Metadatos de cabecera: title, description, canonical, hreflang, Open Graph. */
+import { site } from '../../config/site';
+import { useTranslations, withBase, type Lang, type Alternates } from '../../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  alternates?: Alternates;
+  noindex?: boolean;
+  ogType?: 'website' | 'profile' | 'article';
+}
+const { lang, title, description, alternates, noindex = false, ogType = 'website' } = Astro.props;
+const t = useTranslations(lang);
+const base = Astro.site ?? new URL(site.url);
+const canonical = new URL(Astro.url.pathname, base).href;
+const fullTitle = title === site.brand ? title : `${title} · ${site.brand}`;
+const ogImage = new URL(withBase('/og-image.png'), base).href;
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+{noindex && <meta name="robots" content="noindex" />}
+{!noindex && <link rel="canonical" href={canonical} />}
+{
+  !noindex && alternates && (
+    <>
+      <link rel="alternate" hreflang="en" href={new URL(alternates.en, base).href} />
+      <link rel="alternate" hreflang="es" href={new URL(alternates.es, base).href} />
+      <link rel="alternate" hreflang="x-default" href={new URL(alternates.en, base).href} />
+    </>
+  )
+}
+<meta property="og:site_name" content={site.brand} />
+<meta property="og:type" content={ogType} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={t('meta.ogLocale')} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />

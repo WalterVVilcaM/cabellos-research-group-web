@@ -1,0 +1,377 @@
+---
+/**
+ * Carrusel fotográfico del hero (fundido cruzado, sin botones de reproducción).
+ * - Sin JS: se muestra la primera fotografía con su pie.
+ * - Con JS: avance automático marcado por la barra de progreso de cada marca;
+ *   se detiene al pasar el mouse, al enfocar, fuera de pantalla o con la pestaña oculta.
+ *   Marcas clicables, flechas del teclado y deslizamiento táctil.
+ * - `prefers-reduced-motion: reduce`: sin avance automático ni zoom lento.
+ * El tiempo lo lleva la animación CSS de la marca activa (evento animationend),
+ * así la barra y el cambio de foto nunca se desincronizan.
+ */
+import { Image } from 'astro:assets';
+import { useTranslations, type Lang } from '../../i18n/utils';
+import type { GalleryPhoto } from '../../config/gallery';
+
+interface Props {
+  photos: GalleryPhoto[];
+  lang: Lang;
+  label: string;
+  /** Milisegundos por fotografía. */
+  interval?: number;
+  class?: string;
+}
+const { photos, lang, label, interval = 6000, class: className } = Astro.props;
+const t = useTranslations(lang);
+const total = photos.length;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<section
+  class:list={['pc', className]}
+  aria-roledescription="carousel"
+  aria-label={label}
+  data-photo-carousel
+  style={`--pc-interval: ${interval}ms`}
+>
+  <div class="pc__stage">
+    {
+      photos.map((p, i) => (
+        <figure
+          class:list={['pc__slide', { 'is-active': i === 0 }]}
+          data-slide
+          data-caption={`${p.caption[lang]}\u00a0·\u00a0${p.year}`}
+          role="group"
+          aria-roledescription="slide"
+          aria-label={t('carousel.slide', { n: i + 1, total })}
+          aria-hidden={i === 0 ? undefined : 'true'}
+        >
+          <Image
+            src={p.image}
+            alt={p.alt[lang]}
+            widths={[640, 960, 1280, 1600].filter((w) => w <= p.image.width)}
+            sizes="(min-width: 900px) 60vw, 100vw"
+            loading={i === 0 ? 'eager' : 'lazy'}
+            fetchpriority={i === 0 ? 'high' : undefined}
+            style={p.focus ? `object-position: ${p.focus}` : undefined}
+          />
+        </figure>
+      ))
+    }
+  </div>
+
+  <div class="pc__bar">
+    <p class="pc__caption" data-caption-out>
+      <span class="pc__num" data-num aria-hidden="true">{pad(1)}<span class="pc__total">/{pad(total)}</span></span>
+      <span class="pc__text" data-text>{`${photos[0]!.caption[lang]}\u00a0·\u00a0${photos[0]!.year}`}</span>
+      <span class="pc__credit">{t('carousel.photo')}: {photos[0]!.credit}</span>
+    </p>
+    <ol class="pc__ticks" role="list" data-ticks>
+      {
+        photos.map((p, i) => (
+          <li>
+            <button
+              type="button"
+              class="pc__tick"
+              data-tick={i}
+              aria-current={i === 0 ? 'true' : 'false'}
+              aria-label={t('carousel.goToPhoto', { n: i + 1, total, caption: p.caption[lang] })}
+            >
+              <span class="pc__fill" />
+            </button>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .pc {
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--color-ink);
+    isolation: isolate;
+  }
+
+  /* Escenario: las fotos se apilan y se funden entre sí */
+  .pc__stage {
+    position: relative;
+    display: grid;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: var(--color-ink);
+    touch-action: pan-y;
+  }
+  .pc__slide {
+    grid-area: 1 / 1;
+    margin: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 1100ms var(--ease),
+      visibility 0s linear 1100ms;
+  }
+  .pc__slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 1100ms var(--ease),
+      visibility 0s;
+  }
+  .pc__slide :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform-origin: 50% 50%;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .pc__slide.is-active :global(img) {
+      animation: pc-drift calc(var(--pc-interval) + 1200ms) linear both;
+    }
+    .pc[data-paused] .pc__slide.is-active :global(img) {
+      animation-play-state: paused;
+    }
+  }
+  @keyframes pc-drift {
+    from {
+      transform: scale(1.06);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  /* Pie superpuesto sobre la foto, con degradado para asegurar el contraste */
+  .pc__bar {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-6);
+    padding: clamp(2rem, 6vw, 4.5rem) clamp(1rem, 3vw, 1.5rem) clamp(0.25rem, 1vw, 0.5rem);
+    background: linear-gradient(to top, rgb(8 20 15 / 0.78), rgb(8 20 15 / 0.35) 55%, transparent);
+    color: #fff;
+    pointer-events: none;
+  }
+  .pc__bar > * {
+    pointer-events: auto;
+  }
+  /* En teléfono la leyenda pasa a otra fila encima de las marcas: el degradado sube y se oscurece */
+  @media (max-width: 639px) {
+    .pc__bar {
+      padding-top: 4.5rem;
+      background: linear-gradient(to top, rgb(8 20 15 / 0.88), rgb(8 20 15 / 0.7) 55%, transparent);
+    }
+    .pc__caption {
+      text-shadow: 0 1px 3px rgb(0 0 0 / 0.6);
+    }
+  }
+  .pc__caption {
+    flex: 1 1 16rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--space-3);
+    min-width: 0;
+    padding-bottom: 0.75rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.35);
+  }
+  .pc__num {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-accent-on-ink);
+  }
+  .pc__total {
+    color: rgb(255 255 255 / 0.7);
+    font-weight: 400;
+  }
+  .pc__text {
+    transition: opacity 300ms var(--ease);
+  }
+  .pc__text.is-swapping {
+    opacity: 0;
+  }
+  .pc__credit {
+    font-size: var(--text-xs);
+    font-weight: 400;
+    color: rgb(255 255 255 / 0.75);
+  }
+
+  .pc__ticks {
+    flex-shrink: 0;
+    display: none;
+    gap: var(--space-1);
+    margin: 0;
+  }
+  :global(html.js) .pc__ticks {
+    display: flex;
+  }
+  .pc__tick {
+    position: relative;
+    width: 2.25rem;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .pc__tick::before,
+  .pc__fill {
+    content: '';
+    position: absolute;
+    left: 3px;
+    right: 3px;
+    top: 50%;
+    height: 2px;
+    margin-top: -1px;
+  }
+  .pc__tick::before {
+    background: rgb(255 255 255 / 0.35);
+    transition: background-color var(--duration) var(--ease);
+  }
+  .pc__tick[aria-current='true']::before,
+  .pc__tick:hover::before {
+    background: rgb(255 255 255 / 0.55);
+  }
+  .pc__fill {
+    background: #fff;
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  .pc__tick[aria-current='true'] .pc__fill {
+    transform: scaleX(1);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .pc[data-autoplay] .pc__tick[aria-current='true'] .pc__fill {
+      animation: pc-progress var(--pc-interval) linear both;
+    }
+    .pc[data-paused] .pc__tick[aria-current='true'] .pc__fill {
+      animation-play-state: paused;
+    }
+  }
+  @keyframes pc-progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+  .pc__tick:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 0;
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function setup(root: HTMLElement) {
+    const slides = [...root.querySelectorAll<HTMLElement>('[data-slide]')];
+    const ticks = [...root.querySelectorAll<HTMLButtonElement>('[data-tick]')];
+    const num = root.querySelector<HTMLElement>('[data-num]');
+    const text = root.querySelector<HTMLElement>('[data-text]');
+    const out = root.querySelector<HTMLElement>('[data-caption-out]');
+    const stage = root.querySelector<HTMLElement>('.pc__stage');
+    const total = slides.length;
+    if (total < 2 || !stage) {
+      root.querySelector('[data-ticks]')?.remove();
+      return;
+    }
+    const pad = (n: number) => String(n).padStart(2, '0');
+    let index = 0;
+
+    const reasons = new Set<string>();
+    const syncPaused = () => root.toggleAttribute('data-paused', reasons.size > 0);
+    const pause = (why: string) => {
+      reasons.add(why);
+      syncPaused();
+    };
+    const resume = (why: string) => {
+      reasons.delete(why);
+      syncPaused();
+    };
+    const syncAutoplay = () => root.toggleAttribute('data-autoplay', !reduce.matches);
+
+    const go = (i: number, announce = false) => {
+      const next = ((i % total) + total) % total;
+      if (next === index) return;
+      slides[index]!.classList.remove('is-active');
+      slides[index]!.setAttribute('aria-hidden', 'true');
+      ticks[index]!.setAttribute('aria-current', 'false');
+      index = next;
+      const s = slides[index]!;
+      s.classList.add('is-active');
+      s.removeAttribute('aria-hidden');
+      // Reinicia la animación de la marca activa aunque se repita el índice
+      const fill = ticks[index]!.firstElementChild as HTMLElement | null;
+      if (fill) {
+        fill.style.animation = 'none';
+        void fill.offsetWidth;
+        fill.style.animation = '';
+      }
+      ticks[index]!.setAttribute('aria-current', 'true');
+      if (num) num.firstChild!.textContent = pad(index + 1);
+      if (text) {
+        text.classList.add('is-swapping');
+        window.setTimeout(() => {
+          text.textContent = s.dataset.caption ?? '';
+          text.classList.remove('is-swapping');
+        }, reduce.matches ? 0 : 280);
+      }
+      if (out) out.setAttribute('aria-live', announce ? 'polite' : 'off');
+    };
+
+    // El avance automático lo dispara el final de la barra de progreso
+    ticks.forEach((tick, i) => {
+      tick.firstElementChild?.addEventListener('animationend', () => {
+        if (i === index && !reduce.matches) go(index + 1);
+      });
+      tick.addEventListener('click', () => go(i, true));
+    });
+
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        go(index + (e.key === 'ArrowRight' ? 1 : -1), true);
+        ticks[index]!.focus();
+      }
+    });
+
+    // Deslizamiento táctil / con el mouse sobre la foto
+    let x0: number | null = null;
+    stage.addEventListener('pointerdown', (e) => {
+      x0 = e.clientX;
+    });
+    stage.addEventListener('pointerup', (e) => {
+      if (x0 === null) return;
+      const dx = e.clientX - x0;
+      x0 = null;
+      if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1), true);
+    });
+    stage.addEventListener('pointercancel', () => (x0 = null));
+
+    root.addEventListener('mouseenter', () => pause('hover'));
+    root.addEventListener('mouseleave', () => resume('hover'));
+    root.addEventListener('focusin', () => pause('focus'));
+    root.addEventListener('focusout', (e) => {
+      if (!root.contains(e.relatedTarget as Node)) resume('focus');
+    });
+    document.addEventListener('visibilitychange', () => (document.hidden ? pause('hidden') : resume('hidden')));
+    new IntersectionObserver(([entry]) => (entry?.isIntersecting ? resume('offscreen') : pause('offscreen')), {
+      threshold: 0.2,
+    }).observe(root);
+    reduce.addEventListener('change', syncAutoplay);
+    syncAutoplay();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-photo-carousel]').forEach(setup);
+</script>

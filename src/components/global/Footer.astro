@@ -1,0 +1,208 @@
+---
+import BrandMark from './BrandMark.astro';
+import ExternalLink from '../ui/ExternalLink.astro';
+import Icon from '../ui/Icon.astro';
+import { site } from '../../config/site';
+import { useTranslations, navOrder, sectionPath, type Lang } from '../../i18n/utils';
+import { getMembers } from '../../utils/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const pi = (await getMembers()).find((m) => m.data.role === 'pi');
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <a href={sectionPath('home', lang)} class="brand">
+        <BrandMark size={36} />
+        <span class="brand__name">{site.brand}</span>
+      </a>
+      <p>{site.descriptiveName[lang]}</p>
+      <p class="site-footer__inst">
+        {site.institution.name}<br />
+        {site.institution.unit[lang]}
+      </p>
+    </div>
+
+    <div>
+      <h2 class="site-footer__title">{t('team.contactTitle')}</h2>
+      <ul role="list" class="site-footer__contact">
+        {
+          site.contact.email && (
+            <li>
+              <Icon name="mail" size={18} />
+              <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+            </li>
+          )
+        }
+        {
+          site.contact.phone && (
+            <li>
+              <Icon name="phone" size={18} />
+              <a href={`tel:${site.contact.phoneIntl ?? site.contact.phone}`}>{site.contact.phone}</a>
+            </li>
+          )
+        }
+        <li>
+          <Icon name="pin" size={18} />
+          <span>
+            {site.contact.streetAddress && <>{site.contact.streetAddress}<br /></>}
+            {site.institution.postalCode} {site.institution.city}, {site.institution.state}, {site.institution.country[lang]}
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <nav aria-label={t('a11y.footerNav')}>
+      <h2 class="site-footer__title">{t('footer.sections')}</h2>
+      <ul role="list">
+        {
+          navOrder.map((key) => (
+            <li>
+              <a href={sectionPath(key, lang)}>{t(`nav.${key}`)}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    {
+      pi && (
+        <div>
+          <h2 class="site-footer__title">{t('footer.profiles')}</h2>
+          <ul role="list">
+            {pi.data.links.orcid && (
+              <li>
+                <ExternalLink href={`https://orcid.org/${pi.data.links.orcid}`} lang={lang}>
+                  ORCID
+                </ExternalLink>
+              </li>
+            )}
+            {pi.data.links.googleScholar && (
+              <li>
+                <ExternalLink
+                  href={`https://scholar.google.com/citations?user=${pi.data.links.googleScholar}`}
+                  lang={lang}
+                >
+                  Google Scholar
+                </ExternalLink>
+              </li>
+            )}
+            <li>
+              <ExternalLink href={site.institution.url} lang={lang}>
+                {site.institution.shortName}
+              </ExternalLink>
+            </li>
+          </ul>
+        </div>
+      )
+    }
+  </div>
+  <div class="container site-footer__bottom">
+    <p>© {year} {site.brand}. {t('footer.rights')}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    --mark-accent: var(--color-accent-on-ink);
+    background: var(--color-ink);
+    color: var(--color-on-ink-muted);
+    font-size: var(--text-sm);
+    padding-top: var(--space-12);
+  }
+  .site-footer :global(a) {
+    color: var(--color-on-ink);
+    text-decoration: none;
+  }
+  .site-footer :global(a:hover) {
+    color: var(--color-accent-on-ink);
+    text-decoration: underline;
+  }
+  .site-footer__grid {
+    display: grid;
+    gap: var(--space-8) var(--space-12);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 700px) {
+    .site-footer__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1000px) {
+    .site-footer__grid {
+      grid-template-columns: 1.3fr 1.5fr 0.8fr 0.8fr;
+    }
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--color-on-ink);
+  }
+  .site-footer .brand {
+    --color-bg: var(--color-ink);
+  }
+  .brand__name {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  .site-footer__brand > * + * {
+    margin-top: var(--space-3);
+  }
+  .site-footer__inst {
+    line-height: 1.7;
+  }
+  .site-footer__contact li {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+  .site-footer__contact :global(.icon) {
+    margin-top: 2px;
+    color: var(--color-accent-on-ink);
+  }
+  .site-footer__contact a {
+    overflow-wrap: anywhere;
+  }
+  /* Correo y teléfono ocupan 32 px de alto: el ícono se centra con ellos */
+  .site-footer__contact li:has(a) {
+    align-items: center;
+  }
+  .site-footer__contact li:has(a) :global(.icon) {
+    margin-top: 0;
+  }
+  .site-footer__title {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-accent-on-ink);
+    margin-bottom: var(--space-3);
+  }
+  li + li {
+    margin-top: var(--space-1);
+  }
+  li :global(a) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25em;
+    min-height: 2rem;
+  }
+  .site-footer__bottom {
+    margin-top: var(--space-12);
+    padding-bottom: var(--space-6);
+  }
+  .site-footer__bottom p {
+    padding-top: var(--space-6);
+    border-top: 1px solid rgb(238 245 241 / 0.16);
+  }
+</style>

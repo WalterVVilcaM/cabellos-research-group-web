@@ -1,0 +1,53 @@
+---
+/**
+ * Encabezado de página interna: ruta de navegación, h1 único y entradilla.
+ * Fondo blanco con barra superior de acento. Sin ilustraciones generadas.
+ */
+import Breadcrumb from './Breadcrumb.astro';
+import { useTranslations, sectionPath, type Lang } from '../../i18n/utils';
+
+interface Props {
+  title: string;
+  lead?: string;
+  eyebrow?: string;
+  /** Si se indica, muestra "Inicio › título". */
+  lang?: Lang;
+}
+const { title, lead, eyebrow, lang } = Astro.props;
+const t = lang ? useTranslations(lang) : null;
+---
+
+<header class="page-header">
+  <div class="container page-header__text">
+    {t && lang && <Breadcrumb lang={lang} items={[{ label: t('nav.home'), href: sectionPath('home', lang) }, { label: title }]} />}
+    <slot name="before" />
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{title}</h1>
+    {lead && <p class="page-header__lead">{lead}</p>}
+    <slot />
+  </div>
+</header>
+
+<style>
+  .page-header {
+    padding-block: clamp(1.25rem, 3vw, 2rem) clamp(1.5rem, 4vw, 2.5rem);
+    border-top: 4px solid var(--color-primary);
+    background: var(--color-bg);
+  }
+  .page-header__text > * + * {
+    margin-top: var(--space-3);
+  }
+  .page-header__text > :global(.breadcrumb) + * {
+    margin-top: var(--space-8);
+  }
+  h1 {
+    max-width: 22ch;
+    font-size: var(--text-4xl);
+    letter-spacing: -0.02em;
+  }
+  .page-header__lead {
+    max-width: 60ch;
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+  }
+</style>

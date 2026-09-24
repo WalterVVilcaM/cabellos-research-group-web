@@ -1,0 +1,312 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/ui/Breadcrumb.astro';
+import Tag from '../components/ui/Tag.astro';
+import Icon from '../components/ui/Icon.astro';
+import ExternalLink from '../components/ui/ExternalLink.astro';
+import Button from '../components/ui/Button.astro';
+import Avatar from '../components/content/Avatar.astro';
+import PublicationItem from '../components/content/PublicationItem.astro';
+import { useTranslations, sectionPath, memberPath, researchPath, type Lang } from '../i18n/utils';
+import { site } from '../config/site';
+import {
+  getResearch,
+  getPublications,
+  getText,
+  publicationsByMember,
+  type Member,
+} from '../utils/content';
+
+interface Props {
+  lang: Lang;
+  member: Member;
+}
+const { lang, member } = Astro.props;
+const t = useTranslations(lang);
+const d = member.data;
+const fullName = [d.academicTitle, d.name].filter(Boolean).join(' ');
+const [research, pubs, text] = await Promise.all([
+  getResearch(),
+  getPublications(),
+  getText(lang, 'members', member.id),
+]);
+const bio = text ? await render(text) : null;
+const lines = research.filter((r) => d.researchAreas.some((ref) => ref.id === r.id));
+const myPubs = publicationsByMember(pubs, member.id);
+const highlight = [d.name, ...d.citationNames];
+const recent = [...myPubs].sort((a, b) => b.number - a.number).slice(0, 5);
+const isPi = d.role === 'pi';
+
+const links = [
+  d.links.orcid && { label: 'ORCID', value: d.links.orcid, href: `https://orcid.org/${d.links.orcid}` },
+  d.links.googleScholar && {
+    label: 'Google Scholar',
+    href: `https://scholar.google.com/citations?user=${d.links.googleScholar}`,
+  },
+  d.links.researchGate && { label: 'ResearchGate', href: d.links.researchGate },
+  d.links.scopus && {
+    label: 'Scopus',
+    href: `https://www.scopus.com/authid/detail.uri?authorId=${d.links.scopus}`,
+  },
+  d.links.website && { label: 'Web', href: d.links.website },
+].filter(Boolean) as { label: string; value?: string; href: string }[];
+---
+
+<BaseLayout
+  lang={lang}
+  title={fullName}
+  description={`${fullName} — ${d.position[lang]}, ${d.affiliation}.`}
+  alternates={{ es: memberPath(member.id, 'es'), en: memberPath(member.id, 'en') }}
+  current="team"
+  ogType="profile"
+>
+  <header class="profile-header">
+    <div class="container">
+      <Breadcrumb
+        lang={lang}
+        items={[
+          { label: t('nav.home'), href: sectionPath('home', lang) },
+          { label: t('nav.team'), href: sectionPath('team', lang) },
+          { label: d.name },
+        ]}
+      />
+      <div class="profile">
+        <Avatar name={d.name} photo={d.photo} size="lg" loading="eager" />
+        <div class="profile__body">
+          <p class="eyebrow">{d.position[lang]}</p>
+          <h1>{fullName}</h1>
+          <p class="profile__aff">{d.affiliation}</p>
+          {
+            (links.length > 0 || d.links.email) && (
+              <ul role="list" class="profile__links" aria-label={t('team.links')}>
+                {d.links.email && (
+                  <li>
+                    <a href={`mailto:${d.links.email}`} class="plink">
+                      <Icon name="mail" size={18} />
+                      {d.links.email}
+                    </a>
+                  </li>
+                )}
+                {links.map((l) => (
+                  <li>
+                    <ExternalLink href={l.href} lang={lang} class="plink">
+                      {l.label}
+                    </ExternalLink>
+                  </li>
+                ))}
+              </ul>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="section">
+    <div class="container profile-grid">
+      {
+        bio && (
+          <section aria-labelledby="bio-title" class="prose">
+            <h2 id="bio-title" class="accent-title">{t('team.bio')}</h2>
+            <bio.Content />
+          </section>
+        )
+      }
+      <aside class="profile-aside">
+        {d.education.length > 0 && (
+          <section aria-labelledby="edu-title">
+            <h2 id="edu-title" class="aside-title">{t('team.education')}</h2>
+            <ul role="list" class="facts">
+              {d.education.map((e) => <li>{e[lang]}</li>)}
+            </ul>
+          </section>
+        )}
+        {d.distinctions.length > 0 && (
+          <section aria-labelledby="dist-title">
+            <h2 id="dist-title" class="aside-title">{t('team.distinctions')}</h2>
+            <ul role="list" class="facts">
+              {d.distinctions.map((e) => <li>{e[lang]}</li>)}
+            </ul>
+          </section>
+        )}
+        {lines.length > 0 && (
+          <section aria-labelledby="lines-title">
+            <h2 id="lines-title" class="aside-title">{t('team.lines')}</h2>
+            <ul role="list" class="lines">
+              {lines.map((r) => (
+                <li>
+                  <Tag href={researchPath(r.data.slug, lang)}>{r.data.shortTitle[lang]}</Tag>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+        {(d.links.email || isPi) && (
+          <section aria-labelledby="mcontact-title">
+            <h2 id="mcontact-title" class="aside-title">{t('team.contactTitle')}</h2>
+            <ul role="list" class="mcontact">
+              {d.links.email && (
+                <li>
+                  <Icon name="mail" size={18} />
+                  <a href={`mailto:${d.links.email}`}>{d.links.email}</a>
+                </li>
+              )}
+              {isPi && site.contact.phone && (
+                <li>
+                  <Icon name="phone" size={18} />
+                  <a href={`tel:${site.contact.phoneIntl ?? site.contact.phone}`}>{site.contact.phone}</a>
+                </li>
+              )}
+              <li>
+                <Icon name="building" size={18} />
+                <span>{d.affiliation}</span>
+              </li>
+            </ul>
+          </section>
+        )}
+      </aside>
+    </div>
+  </div>
+
+  {
+    recent.length > 0 && (
+      <section class="section section--alt" aria-labelledby="mpubs-title">
+        <div class="container">
+          <h2 id="mpubs-title" class="pubs-title accent-title">{t('team.recentPubs')}</h2>
+          <ul role="list">
+            {recent.map((p) => (
+              <PublicationItem pub={p} lang={lang} highlight={highlight} />
+            ))}
+          </ul>
+          {myPubs.length > recent.length && (
+            <div class="pubs-more">
+              <Button href={sectionPath('publications', lang)} variant="secondary" arrow>
+                {t('team.allPubs', { n: myPubs.length })}
+              </Button>
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .profile-header {
+    padding-block: var(--space-6) clamp(2rem, 5vw, 3.5rem);
+    border-top: 4px solid var(--color-primary);
+    border-bottom: var(--border);
+    background: var(--color-bg);
+  }
+  .profile :global(.avatar) {
+    border: 0;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+  .profile {
+    display: grid;
+    gap: var(--space-8);
+    align-items: center;
+    margin-top: var(--space-8);
+  }
+  @media (min-width: 700px) {
+    .profile {
+      grid-template-columns: 240px 1fr;
+    }
+  }
+  @media (max-width: 699.98px) {
+    .profile :global(.avatar--lg) {
+      width: 160px;
+    }
+  }
+  .profile__body > * + * {
+    margin-top: var(--space-3);
+  }
+  .profile__aff {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+  }
+  .profile__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding-top: var(--space-2);
+  }
+  .profile__links :global(.plink) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 40px;
+    padding: 0 var(--space-4);
+    border: var(--border);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .profile__links :global(.plink:hover) {
+    border-color: var(--color-primary);
+  }
+  .profile-grid {
+    display: grid;
+    gap: var(--space-12);
+  }
+  @media (min-width: 900px) {
+    .profile-grid {
+      grid-template-columns: 8fr 4fr;
+    }
+  }
+  .aside-title {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: var(--space-4);
+  }
+  .profile-aside {
+    display: grid;
+    gap: var(--space-8);
+    align-content: start;
+  }
+  @media (min-width: 900px) {
+    .profile-aside {
+      padding-left: var(--space-8);
+      border-left: var(--border);
+    }
+  }
+  .mcontact {
+    display: grid;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+  }
+  .mcontact li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    overflow-wrap: anywhere;
+    color: var(--color-primary);
+  }
+  .mcontact span {
+    color: var(--color-text);
+  }
+  .facts {
+    display: grid;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+  }
+  .lines {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .pubs-title {
+    margin-bottom: var(--space-6);
+  }
+  .pubs-more {
+    margin-top: var(--space-6);
+  }
+</style>

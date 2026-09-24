@@ -1,0 +1,136 @@
+---
+import Avatar from './Avatar.astro';
+import Icon from '../ui/Icon.astro';
+import { memberPath, useTranslations, type Lang } from '../../i18n/utils';
+import type { Member } from '../../utils/content';
+
+interface Props {
+  member: Member;
+  lang: Lang;
+  variant?: 'featured' | 'default' | 'compact';
+  excerpt?: string;
+  headingLevel?: 'h2' | 'h3';
+}
+const { member, lang, variant = 'default', excerpt, headingLevel: H = 'h3' } = Astro.props;
+const t = useTranslations(lang);
+const d = member.data;
+const fullName = [d.academicTitle, d.name].filter(Boolean).join(' ');
+---
+
+<article class:list={['mcard', `mcard--${variant}`]}>
+  <Avatar name={d.name} photo={d.photo} size={variant === 'featured' ? 'md' : 'sm'} />
+  <div class="mcard__body">
+    <H class="mcard__name">
+      <a href={memberPath(member.id, lang)}>{fullName}</a>
+    </H>
+    <p class="mcard__role">{d.position[lang]}</p>
+    {variant !== 'compact' && <p class="mcard__aff muted">{d.affiliation}</p>}
+    {excerpt && variant === 'featured' && <p class="mcard__excerpt">{excerpt}</p>}
+    {
+      variant !== 'compact' && (
+        <span class="mcard__more" aria-hidden="true">
+          {t('team.viewProfile')}
+          <Icon name="arrow-right" size={18} />
+        </span>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .mcard {
+    position: relative;
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid rgb(16 24 20 / 0.06);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    height: 100%;
+    transition:
+      box-shadow var(--duration) var(--ease),
+      transform var(--duration) var(--ease);
+  }
+  .mcard:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mcard:hover {
+      transform: none;
+    }
+  }
+  .mcard:focus-within {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+  .mcard--featured {
+    padding: var(--space-6);
+    gap: var(--space-6);
+  }
+  @media (max-width: 480px) {
+    .mcard--featured {
+      flex-direction: column;
+    }
+  }
+  .mcard--compact {
+    align-items: center;
+    padding: var(--space-3);
+  }
+  .mcard__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+  .mcard__name {
+    font-size: var(--text-lg);
+  }
+  .mcard--featured .mcard__name {
+    font-size: var(--text-xl);
+  }
+  .mcard__name a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .mcard__name a:focus-visible {
+    outline: none;
+  }
+  .mcard__name a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .mcard__role {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .mcard__aff {
+    font-size: var(--text-sm);
+  }
+  .mcard__excerpt {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    max-width: 60ch;
+  }
+  .mcard__more {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-primary);
+  }
+  .mcard__more :global(.icon) {
+    transition: transform var(--duration) var(--ease);
+  }
+  .mcard:hover .mcard__more :global(.icon) {
+    transform: translateX(4px);
+  }
+</style>

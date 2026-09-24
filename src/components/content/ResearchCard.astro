@@ -1,0 +1,166 @@
+---
+import Icon from '../ui/Icon.astro';
+import { Image } from 'astro:assets';
+import { researchPath, useTranslations, type Lang } from '../../i18n/utils';
+import type { Research } from '../../utils/content';
+
+interface Props {
+  item: Research;
+  lang: Lang;
+  headingLevel?: 'h3' | 'h2';
+  compact?: boolean;
+}
+const { item, lang, headingLevel: H = 'h3', compact = false } = Astro.props;
+const t = useTranslations(lang);
+const num = String(item.data.order).padStart(2, '0');
+const cover = item.data.cover;
+---
+
+<article class:list={['rcard', { 'rcard--compact': compact }]} data-line={item.data.order}>
+  {
+    !compact && (
+      <div class="rcard__art">
+        {cover && (
+          <Image
+            src={cover.image}
+            alt=""
+            widths={[340, 680]}
+            sizes="(min-width: 1100px) 270px, (min-width: 640px) 50vw, 100vw"
+            class="rcard__img"
+          />
+        )}
+        <span class="rcard__num" aria-hidden="true">{num}</span>
+      </div>
+    )
+  }
+  <div class="rcard__body">
+    <H class="rcard__title">
+      <a href={researchPath(item.data.slug, lang)} class="rcard__link">
+        {compact ? item.data.shortTitle[lang] : item.data.title[lang]}
+      </a>
+    </H>
+    {!compact && <p class="rcard__summary">{item.data.summary[lang]}</p>}
+    <span class="rcard__more" aria-hidden="true">
+      {t('research.readMore')}
+      <Icon name="arrow-right" size={18} />
+    </span>
+  </div>
+</article>
+
+<style>
+  .rcard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    background: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    transition: border-color var(--duration) var(--ease);
+  }
+  .rcard:hover {
+    border-color: var(--color-primary);
+  }
+  .rcard:focus-within {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+  .rcard__art {
+    grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+    position: relative;
+    aspect-ratio: 4 / 3;
+    display: grid;
+    place-items: center;
+    padding: var(--space-6) var(--space-4) var(--space-4);
+    background: #fff;
+    border-bottom: var(--border);
+    overflow: hidden;
+  }
+  .rcard__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 400ms var(--ease);
+  }
+  .rcard:hover .rcard__img {
+    transform: scale(1.04);
+  }
+  .rcard__num {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    display: inline-grid;
+    place-items: center;
+    min-width: 2.25rem;
+    height: 1.75rem;
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-pill);
+    background: var(--line-bg);
+    color: var(--line-fg);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .rcard {
+    transition:
+      border-color var(--duration) var(--ease),
+      box-shadow var(--duration) var(--ease),
+      transform var(--duration) var(--ease);
+  }
+  .rcard:hover {
+    box-shadow: 0 10px 30px -18px rgb(18 58 45 / 0.45);
+    transform: translateY(-2px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rcard:hover,
+    .rcard:hover .rcard__img {
+      transform: none;
+    }
+  }
+  .rcard__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    flex: 1;
+    padding: var(--space-6);
+  }
+  .rcard--compact .rcard__body {
+    padding: var(--space-4) var(--space-6);
+  }
+  .rcard__title {
+    font-size: var(--text-lg);
+  }
+  .rcard__link {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .rcard__link:focus-visible {
+    outline: none;
+  }
+  .rcard__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .rcard__summary {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+  .rcard__more {
+    margin-top: auto;
+    padding-top: var(--space-2);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-primary);
+  }
+  .rcard__more :global(.icon) {
+    transition: transform var(--duration) var(--ease);
+  }
+  .rcard:hover .rcard__more :global(.icon) {
+    transform: translateX(4px);
+  }
+</style>

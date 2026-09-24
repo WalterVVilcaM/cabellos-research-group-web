@@ -1,0 +1,39 @@
+---
+/** Encabezado de sección: h2 + entradilla opcional + acción opcional (slot "action"). */
+interface Props {
+  title: string;
+  intro?: string;
+  id?: string;
+  eyebrow?: string;
+}
+const { title, intro, id, eyebrow } = Astro.props;
+---
+
+<div class="section-header">
+  <div class="section-header__text">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h2 id={id} class="accent-title">{title}</h2>
+    {intro && <p class="section-header__intro muted">{intro}</p>}
+  </div>
+  {Astro.slots.has('action') && <div class="section-header__action"><slot name="action" /></div>}
+</div>
+
+<style>
+  .section-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-4) var(--space-8);
+    margin-bottom: var(--space-8);
+  }
+  .section-header__text {
+    max-width: 44rem;
+  }
+  .section-header__text > * + * {
+    margin-top: var(--space-2);
+  }
+  .section-header__intro {
+    font-size: var(--text-lg);
+  }
+</style>

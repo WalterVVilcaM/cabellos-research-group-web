@@ -1,0 +1,17 @@
+---
+/**
+ * Texto con notación química mínima: `_{…}` → subíndice, `^{…}` → superíndice.
+ * Ejemplo: "Be_{6}B_{11}^{−}". Se usa en títulos de publicaciones.
+ */
+interface Props {
+  text: string;
+}
+const { text } = Astro.props;
+const parts = text.split(/(_\{[^}]*\}|\^\{[^}]*\})/).filter(Boolean);
+---
+
+{
+  parts.map((p) =>
+    p.startsWith('_{') ? <sub>{p.slice(2, -1)}</sub> : p.startsWith('^{') ? <sup>{p.slice(2, -1)}</sup> : p,
+  )
+}
