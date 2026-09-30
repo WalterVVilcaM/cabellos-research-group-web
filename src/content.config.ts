@@ -1,7 +1,6 @@
 import { defineCollection, reference } from 'astro:content';
 import { file, glob } from 'astro/loaders';
 import { z } from 'astro/zod';
-import { noteCategoryIds } from './config/notes';
 
 /** Texto corto localizado: debe existir en ambos idiomas. */
 const localized = z.object({ es: z.string().min(1), en: z.string().min(1) });
@@ -121,61 +120,5 @@ const texts = defineCollection({
 });
 
 
-/**
- * Notas (VIEW-007): un archivo Markdown por nota en src/content/notes/<slug>.md.
- * Cada nota está en un solo idioma (`lang`); ver ADR-008 y ADR-009.
- */
-const noteFile = z
-  .string()
-  .regex(
-    /^(?:\d{4}|test)\/[a-z0-9]+(?:-[a-z0-9]+)*\.pdf$/,
-    'archivo: "<año>/<nombre>.pdf" o "test/<nombre>.pdf", en minúsculas, números y guiones',
-  );
 
-const notes = defineCollection({
-  loader: glob({ pattern: '[!_]*.md', base: 'src/content/notes' }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string().min(1),
-      /** Idioma del contenido de la nota (no de la interfaz). */
-      lang: z.enum(['en', 'es']),
-      summary: z.string().min(1).max(320),
-      author: reference('members'),
-      category: z.enum(noteCategoryIds),
-      tags: z.array(z.string().min(1)).default([]),
-      status: z.enum(['draft', 'published', 'archived']).default('draft'),
-      /** Nota de prueba: solo en desarrollo y vista previa (SHOW_TEST_NOTES). */
-      isTest: z.boolean().default(false),
-      featured: z.boolean().default(false),
-      publishedAt: z.coerce.date(),
-      updatedAt: z.coerce.date().optional(),
-      cover: z.object({ src: image(), alt: z.string().min(1) }).optional(),
-      researchAreas: z.array(reference('research')).default([]),
-      /** Si esta nota es una traducción: la nota original. */
-      translationOf: reference('notes').optional(),
-      links: z
-        .array(
-          z.object({
-            title: z.string().min(1),
-            url: z.url({ protocol: /^https?$/ }),
-            kind: z.enum(['doi', 'publisher', 'open-access', 'book', 'other']).default('other'),
-            description: z.string().optional(),
-          }),
-        )
-        .default([]),
-      attachments: z
-        .array(
-          z.object({
-            title: z.string().min(1),
-            /** Ruta dentro de public/files/notes/. */
-            file: noteFile,
-            /** Derecho de distribución (obligatorio). Sin derecho, se enlaza en vez de subir el PDF. */
-            rights: z.enum(['open-access', 'public-domain', 'author', 'permission']),
-            description: z.string().optional(),
-          }),
-        )
-        .default([]),
-    }),
-});
-
-export const collections = { research, members, publications, texts, notes };
+export const collections = { research, members, publications, texts };

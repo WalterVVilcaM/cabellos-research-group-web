@@ -1,5 +1,10 @@
 ---
+export const prerender = false; // Notes se lee de D1 en cada visita (ADR-011)
 import View from '../../views/NotesView.astro';
+import { loadNotesListing, notFound } from '../../utils/notes';
+
+const data = await loadNotesListing(1);
+if (!data) return notFound(Astro.url);
 ---
 
-<View lang="en" />
+<View lang="en" data={data} />

@@ -1,14 +1,21 @@
-// Cloudflare Workers con Static Assets (NOTES-F2, docs/13-notes-editorial-module.md §50).
-// Etapa actual: réplica estática del sitio en *.workers.dev; GitHub Pages sigue como respaldo.
-// En NOTES-F3/F4 se añaden aquí los bindings DB (D1) y NOTES_FILES (R2).
+// Cloudflare Workers (ADR-010). Todo el sitio es estático salvo Notes, que se lee de D1 (ADR-011).
+// El adaptador @astrojs/cloudflare añade al build el Worker (main) y los assets estáticos.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "cabellos-research-group",
   "compatibility_date": "2026-09-01",
-  "assets": {
-    "directory": "./dist",
-    "html_handling": "auto-trailing-slash",
-    "not_found_handling": "404-page"
+  "observability": { "enabled": true },
+  "vars": {
+    // "true" = vista previa: se muestran las notas de prueba. Se quita antes del lanzamiento (Gate 8).
+    "SHOW_TEST_NOTES": "true"
   },
-  "observability": { "enabled": true }
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "cabellos-notes",
+      // Lo reemplaza scripts/cf-setup-d1.mjs con el id real de la base remota.
+      "database_id": "4199cb18-8d71-4ba9-b3d5-31503613b8e3",
+      "migrations_dir": "migrations"
+    }
+  ]
 }

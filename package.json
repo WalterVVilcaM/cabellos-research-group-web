@@ -13,17 +13,26 @@
     "astro": "astro",
     "sync:pubs": "node scripts/sync-publications.mjs",
     "cf:deploy": "wrangler deploy",
-    "cf:dev": "wrangler dev"
+    "cf:dev": "wrangler dev",
+    "db:setup": "node scripts/cf-setup-d1.mjs",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local -c wrangler.jsonc",
+    "db:seed:local": "wrangler d1 execute DB --local -c wrangler.jsonc --file seeds/test-notes.sql",
+    "db:migrate:remote": "wrangler d1 migrations apply DB --remote -c wrangler.jsonc",
+    "db:seed:remote": "wrangler d1 execute DB --remote -c wrangler.jsonc --file seeds/test-notes.sql"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^14.3.3",
     "@astrojs/sitemap": "^3.7.4",
-    "astro": "^7.3.4"
+    "astro": "^7.3.4",
+    "micromark": "^4.0.3",
+    "micromark-extension-gfm": "^3.0.0"
   },
   "allowScripts": {
     "esbuild": true
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@cloudflare/workers-types": "^5.20260930.1",
     "typescript": "^6.0.3",
     "wrangler": "^4.144.0"
   }

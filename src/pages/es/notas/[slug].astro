@@ -1,15 +1,10 @@
 ---
-import type { GetStaticPaths } from 'astro';
+export const prerender = false; // Notes se lee de D1 en cada visita (ADR-011)
 import View from '../../../views/NoteDetailView.astro';
-import { getNotes } from '../../../utils/notes';
+import { loadNoteDetail, notFound } from '../../../utils/notes';
 
-/** Todas las notas, en cualquier idioma, con la interfaz en español (ADR-009). */
-export const getStaticPaths = (async () => {
-  const notes = await getNotes();
-  return notes.map((note) => ({ params: { slug: note.slug }, props: { note } }));
-}) satisfies GetStaticPaths;
-
-const { note } = Astro.props;
+const data = await loadNoteDetail(Astro.params.slug ?? '');
+if (!data) return notFound(Astro.url);
 ---
 
-<View lang="es" note={note} />
+<View lang="es" data={data} />

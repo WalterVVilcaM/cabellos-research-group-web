@@ -3,8 +3,6 @@
  * Detalle de nota (VIEW-007-D). Ficha: docs/views/VIEW-007-D-note.md.
  * El contenido está en el idioma de la nota; la interfaz, en `lang` (ADR-009).
  */
-import { Image } from 'astro:assets';
-import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/ui/Breadcrumb.astro';
 import Tag from '../components/ui/Tag.astro';
@@ -14,36 +12,23 @@ import AttachmentList from '../components/content/AttachmentList.astro';
 import { site } from '../config/site';
 import { noteCategories } from '../config/notes';
 import { useTranslations, sectionPath, notesListPath, notePath, researchPath, type Lang } from '../i18n/utils';
-import {
-  getNotes,
-  getResearch,
-  noteUrls,
-  categoryPath,
-  authorPath,
-  formatNoteDate,
-  isoDate,
-  type Note,
-} from '../utils/content';
+import { getResearch } from '../utils/content';
+import { noteUrls, categoryPath, authorPath, formatNoteDate, isoDate, type NoteDetail } from '../utils/notes';
 
 interface Props {
   lang: Lang;
-  note: Note;
+  data: NoteDetail;
 }
-const { lang, note } = Astro.props;
+const { lang, data } = Astro.props;
+const { note, older, newer } = data;
 const t = useTranslations(lang);
 const tc = useTranslations(note.lang);
 
-const [all, research] = await Promise.all([getNotes(), getResearch()]);
-const { Content } = await render(note.entry);
-const urls = noteUrls(note, all);
+const research = await getResearch();
+const urls = noteUrls(note, data.translation);
 const otherLang = note.lang !== lang;
 const contentLang = otherLang ? note.lang : undefined;
 const lines = research.filter((r) => note.researchAreas.includes(r.id));
-
-// Orden cronológico inverso: "anterior" = más antigua, "siguiente" = más reciente.
-const idx = all.indexOf(note);
-const older = all[idx + 1];
-const newer = idx > 0 ? all[idx - 1] : undefined;
 
 const base = Astro.site ?? new URL(site.url);
 const jsonLd = {
@@ -126,13 +111,13 @@ const jsonLd = {
         {
           note.cover && (
             <figure class="note-cover">
-              <Image src={note.cover.src} alt={note.cover.alt} widths={[640, 960, 1280]} sizes="(min-width: 800px) 768px, 100vw" loading="eager" />
+              <img src={note.cover.url} alt={note.cover.alt} loading="eager" decoding="async" />
             </figure>
           )
         }
 
         <div class="prose note-body" lang={contentLang}>
-          <Content />
+          <Fragment set:html={note.html} />
         </div>
 
         {
@@ -344,10 +329,11 @@ const jsonLd = {
     border-top: var(--border);
     margin-block: var(--space-8);
   }
-  .note-body :global(table) {
-    display: block;
+  .note-body :global(.table-wrap) {
     max-width: 100%;
     overflow-x: auto;
+  }
+  .note-body :global(table) {
     border-collapse: collapse;
     font-size: var(--text-base);
   }

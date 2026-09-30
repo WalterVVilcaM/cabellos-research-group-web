@@ -1,15 +1,14 @@
 ---
-import type { GetStaticPaths } from 'astro';
+export const prerender = false; // Notes se lee de D1 en cada visita (ADR-011)
 import View from '../../../../views/NotesView.astro';
-import { getNotes, listedNotes, paginate } from '../../../../utils/notes';
+import { notesListPath } from '../../../../i18n/utils';
+import { loadNotesListing, parsePage, notFound } from '../../../../utils/notes';
 
-/** Páginas 2…n del listado general (la 1 es /es/notas/). */
-export const getStaticPaths = (async () => {
-  const pages = paginate(listedNotes(await getNotes()));
-  return pages.slice(1).map(({ page }) => ({ params: { page: String(page) }, props: { page } }));
-}) satisfies GetStaticPaths;
-
-const { page } = Astro.props;
+const page = parsePage(Astro.params.page);
+// La página 1 vive en la raíz de la sección.
+if (page === 1) return Astro.redirect(notesListPath('es'), 301);
+const data = await loadNotesListing(page);
+if (!data) return notFound(Astro.url);
 ---
 
-<View lang="es" page={page} />
+<View lang="es" data={data} />

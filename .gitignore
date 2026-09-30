@@ -38,3 +38,5 @@ publicar-notes.log
 .wrangler/
 publicar-cloudflare.cmd
 publicar-cloudflare.log
+publicar-d1.cmd
+publicar-d1.log

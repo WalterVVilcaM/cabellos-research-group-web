@@ -9,9 +9,9 @@ El Dr. Cabellos publicará notas desde un panel propio (`docs/13-notes-editorial
 ## Decisión
 1. El sitio se sirve desde **Cloudflare Workers con Static Assets** (`wrangler.jsonc`, carpeta `dist/`). Worker: `cabellos-research-group`.
 2. Cuenta de Cloudflare: la del responsable técnico (definitiva). El Dr. no necesita cuenta.
-3. **NOTES-F2:** réplica estática en `https://cabellos-research-group.<subdominio>.workers.dev`, con `html_handling: auto-trailing-slash` y `not_found_handling: 404-page`. Sin código de Worker todavía. GitHub Pages sigue activo como respaldo hasta NOTES-F8.
+3. **NOTES-F2 (hecho):** réplica en `https://cabellos-research-group.cabellos.workers.dev/`. Desde NOTES-F3 (ADR-011) el Worker ejecuta las rutas de Notes y **GitHub Pages deja de actualizarse** (queda congelado con la última versión estática); la vista previa oficial es la de `workers.dev`.
 4. En NOTES-F3 en adelante se añade el adaptador `@astrojs/cloudflare` solo para las rutas dinámicas (Notes, `/admin`, `/api`); el resto sigue estático.
-5. Despliegue: por ahora manual con `publicar-cloudflare.cmd` (`wrangler login` en el equipo del responsable técnico; ningún token pasa por el chat ni por el repositorio). Después, GitHub Actions con un token de API guardado como secreto del repositorio.
+5. Despliegue: por ahora manual con un `.cmd` (`wrangler login` en el equipo del responsable técnico; ningún token pasa por el chat ni por el repositorio). Después, **Workers Builds** (el repositorio conectado desde el panel de Cloudflare publica en cada push a `main`, sin tokens en GitHub).
 6. `SITE` sigue apuntando al dominio final, así que las canónicas de la réplica apuntan a `cabellosresearchgroup.org` y la réplica no compite en buscadores.
 
 ## Alternativas consideradas

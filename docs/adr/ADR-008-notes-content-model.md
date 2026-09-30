@@ -1,7 +1,7 @@
 # ADR-008 — Modelo de contenido de Notes (Content Collection `notes`)
 
 ## Estado
-Aprobado. Parte de NOTES-F0 (`docs/13-notes-editorial-module.md`).
+Aprobado. Parte de NOTES-F0 (`docs/13-notes-editorial-module.md`). **Reemplazado en parte por ADR-011** (2026-09-29): las notas viven en Cloudflare D1, no en `src/content/notes/`. Siguen vigentes los campos, las categorías en configuración, la regla de `rights` y las notas de prueba.
 
 ## Contexto
 El responsable técnico aprobó el 2026-09-29 una sección editorial pública, **Notes / Notas**, para la V1 (registro de cambio Tipo C en la especificación, §0.2). En la V1 el sitio sigue siendo estático en GitHub Pages; más adelante (Etapa B) las notas se administrarán con un CRUD sobre Cloudflare D1 + R2. El modelo de la V1 debe poder migrarse a D1 sin rediseñar las vistas.

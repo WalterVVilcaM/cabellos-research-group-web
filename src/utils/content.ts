@@ -168,5 +168,3 @@ export function yearSpan(from: number | null, to: number | null): string {
   return from === to ? String(from) : `${from}–${to}`;
 }
 
-/** Notes / Notas (ADR-008): la capa de datos vive en ./notes.ts. */
-export * from './notes';

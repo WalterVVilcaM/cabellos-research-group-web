@@ -11,21 +11,17 @@ import Pagination from '../components/ui/Pagination.astro';
 import NoteCard from '../components/content/NoteCard.astro';
 import { noteCategories, type NoteCategoryId } from '../config/notes';
 import { useTranslations, sectionPath, notesListPath, type Lang } from '../i18n/utils';
-import { getNotes, featuredNote, listedNotes, usedCategories, categoryPath, paginate } from '../utils/notes';
+import { categoryPath, type NotesListing } from '../utils/notes';
 
 interface Props {
   lang: Lang;
-  page?: number;
+  data: NotesListing;
   category?: NoteCategoryId;
 }
-const { lang, page = 1, category } = Astro.props;
+const { lang, data, category } = Astro.props;
 const t = useTranslations(lang);
-
-const all = await getNotes();
-// La destacada solo va arriba en la página 1 del listado general.
-const featured = !category && page === 1 ? featuredNote(all) : undefined;
-const pages = paginate(listedNotes(all, category));
-const current = pages[page - 1] ?? pages[0]!;
+const { page, featured } = data;
+const current = { items: data.items, page, total: data.totalPages };
 
 const pathFor = (l: Lang, p: number) => (category ? categoryPath(category, l, p) : notesListPath(l, p));
 const alternates = { en: pathFor('en', page), es: pathFor('es', page) };
@@ -36,13 +32,13 @@ const description = category ? noteCategories[category].description[lang] : t('n
 
 const filterItems = [
   { label: t('notes.all'), href: notesListPath(lang), current: !category },
-  ...usedCategories(all).map((c) => ({
+  ...data.categories.map((c) => ({
     label: noteCategories[c].name[lang],
     href: categoryPath(c, lang),
     current: c === category,
   })),
 ];
-const isEmpty = all.length === 0;
+const isEmpty = data.isEmpty;
 ---
 
 <BaseLayout

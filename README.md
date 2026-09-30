@@ -2,9 +2,9 @@
 
 Sitio académico bilingüe (ES/EN) del Cabellos Research Group, Universidad Politécnica de Tapachula.
 
-- **Stack:** Astro 7 (estático) + TypeScript + Content Collections
-- **Dominio previsto:** cabellosresearchgroup.org (Cloudflare Pages)
-- **Vista previa:** https://waltervvilcam.github.io/cabellos-research-group-web/ (GitHub Pages; se publica sola en cada push a `main` vía `.github/workflows/deploy.yml`)
+- **Stack:** Astro 7 (estático; Notes bajo demanda) + TypeScript + Content Collections + Cloudflare Workers y D1
+- **Dominio previsto:** cabellosresearchgroup.org (Cloudflare Workers)
+- **Vista previa:** https://cabellos-research-group.cabellos.workers.dev/ (Cloudflare Workers, ADR-010). La copia de GitHub Pages quedó congelada.
 - **Documento rector:** [`docs/00-orquestador-maestro.md`](docs/00-orquestador-maestro.md) · índice en [`docs/README.md`](docs/README.md)
 
 ## Requisitos
@@ -33,26 +33,31 @@ El dominio y la subruta salen de las variables `SITE` y `BASE_PATH` (por defecto
 | Líneas de investigación | `src/content/data/research.yaml` + `src/content/texts/{es,en}/research/*.md` |
 | Integrantes | `src/content/data/members.yaml` + `src/content/texts/{es,en}/members/*.md` |
 | Publicaciones | `src/content/data/publications.yaml` |
-| Notas (Notes / Notas) | `src/content/notes/<slug>.md` + PDF en `public/files/notes/<año>/` |
+| Notas (Notes / Notas) | Cloudflare D1 (panel en NOTES-F5); esquema en `migrations/` |
 
 ## Notas (Notes / Notas)
 
-1. Copia `src/content/notes/_PLANTILLA.md` como `src/content/notes/<slug>.md` (el slug es la URL: `/notes/<slug>/` y `/es/notas/<slug>/`).
-2. Llena el frontmatter: `lang` es el idioma en que está escrita la nota; `category` es `opinion`, `readings` o `books`.
-3. Si lleva PDF, cópialo a `public/files/notes/<año>/` y declara `rights` (solo con derecho de distribución; si no, usa un enlace).
-4. Cambia `status: draft` a `status: published` y publica.
+Las notas viven en **Cloudflare D1** (base `cabellos-notes`, ADR-011) y las páginas de Notes se generan en cada visita; el resto del sitio es estático. El panel para que el Dr. Cabellos publique llega en NOTES-F5.
 
-Las notas con `isTest: true` solo aparecen en `npm run dev` y en la vista previa de GitHub Pages (`SHOW_TEST_NOTES=true`). El build del dominio final las omite. Detalle: `docs/13-notes-editorial-module.md`, ADR-008 y ADR-009.
+| Comando | Qué hace |
+|---|---|
+| `npm run db:migrate:local` | Crea las tablas en la base local (`.wrangler/state`) |
+| `npm run db:seed:local` | Carga las notas de prueba en la base local |
+| `npm run dev` | Sitio en `localhost:4321` con la base local |
+| `npm run build` + `npm run cf:deploy` | Publica en Cloudflare |
+| `npm run db:migrate:remote` / `npm run db:seed:remote` | Lo mismo en la base de Cloudflare |
+
+Las notas de prueba (`is_test = 1`, `seeds/test-notes.sql`) solo se ven si la variable `SHOW_TEST_NOTES` de `wrangler.jsonc` es `"true"`. Antes del lanzamiento se quita esa variable y se borran (Gate 8). Detalle: `docs/13-notes-editorial-module.md`, ADR-008, ADR-009 y ADR-011.
 
 ## Publicaciones automáticas
 
-Cada lunes, `.github/workflows/deploy.yml` ejecuta `scripts/sync-publications.mjs`, que busca en OpenAlex (por el ORCID del Dr. Cabellos) y completa los datos con Crossref. Solo **agrega** entradas nuevas al final de `publications.yaml` (nunca modifica ni borra las existentes) y el sitio solo se publica si pasan `astro build` y `astro check`.
+Cada lunes, `.github/workflows/publications.yml` ejecuta `scripts/sync-publications.mjs`, que busca en OpenAlex (por el ORCID del Dr. Cabellos) y completa los datos con Crossref. Solo **agrega** entradas nuevas al final de `publications.yaml` (nunca modifica ni borra las existentes) y solo guarda el cambio si pasan `astro check` y `astro build`.
 
 - Se ignoran preprints, erratas, portadas, material suplementario, repositorios (Zenodo/Figshare) y duplicados por DOI o por título.
 - Si aparecen más de 12 de golpe o las APIs no responden, no se cambia nada.
 - Para quitar una publicación: bórrala de `publications.yaml` y agrega su DOI a `scripts/publications-ignore.txt`.
 - Las entradas automáticas llevan el comentario "Agregada automáticamente…": conviene revisar sus `researchAreas`.
-- También se puede lanzar a mano: pestaña **Actions → Deploy to GitHub Pages → Run workflow**.
+- También se puede lanzar a mano: pestaña **Actions → Buscar publicaciones → Run workflow**.
 
 El modelo completo está en [`docs/07-content-model.md`](docs/07-content-model.md). Si una referencia es inválida, el build falla y lo indica.
 

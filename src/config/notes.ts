@@ -1,6 +1,7 @@
 /**
  * Configuración de la sección Notes / Notas (VIEW-007).
- * Especificación: docs/13-notes-editorial-module.md · Modelo: ADR-008 · Idioma: ADR-009.
+ * Especificación: docs/13-notes-editorial-module.md · Modelo: ADR-008 · Idioma: ADR-009 · D1: ADR-011.
+ * Las notas de prueba se muestran solo si la variable SHOW_TEST_NOTES = "true" (wrangler.jsonc → vars).
  */
 import type { Lang } from '../i18n/ui';
 
@@ -41,16 +42,10 @@ export const noteCategories: Record<
 export const notesConfig = {
   /** Notas por página en el listado y en cada categoría. */
   perPage: 10,
-  /** Carpeta pública de los adjuntos (dentro de public/). */
+  /** Carpeta pública de los adjuntos estáticos (dentro de public/). En NOTES-F4 los archivos pasan a R2. */
   filesDir: '/files/notes/',
   /** Tamaño máximo de un adjunto. */
   maxAttachmentBytes: 20 * 1024 * 1024,
   /** Palabras que no pueden usarse como slug (chocan con rutas de la sección). */
   reservedSlugs: ['page', 'pagina', 'category', 'categoria'],
 } as const;
-
-/**
- * Notas de prueba (`isTest: true`): visibles en `astro dev` y cuando SHOW_TEST_NOTES=true
- * (despliegue de vista previa). Nunca en el build del dominio final.
- */
-export const showTestNotes = import.meta.env.DEV || process.env.SHOW_TEST_NOTES === 'true';

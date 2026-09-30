@@ -1,16 +1,11 @@
 ---
-import type { GetStaticPaths } from 'astro';
+export const prerender = false; // Notes se lee de D1 en cada visita (ADR-011)
 import View from '../../../../views/NotesView.astro';
-import { noteCategories } from '../../../../config/notes';
-import { getNotes, usedCategories } from '../../../../utils/notes';
+import { categoryBySlug, loadNotesListing, notFound } from '../../../../utils/notes';
 
-/** Una página por categoría con notas (las vacías no se generan). */
-export const getStaticPaths = (async () => {
-  const cats = usedCategories(await getNotes());
-  return cats.map((category) => ({ params: { category: noteCategories[category].slug.es }, props: { category } }));
-}) satisfies GetStaticPaths;
-
-const { category } = Astro.props;
+const category = categoryBySlug(Astro.params.category ?? '', 'es');
+const data = category ? await loadNotesListing(1, category) : null;
+if (!data || !category) return notFound(Astro.url);
 ---
 
-<View lang="es" category={category} />
+<View lang="es" data={data} category={category} />

@@ -2483,7 +2483,7 @@ Gate:
 - [ ] `astro check` sin errores y build correcto en GitHub Pages (con subruta);
 - [ ] sin regresiones en el resto del sitio (§148).
 
-## NOTES-F2 — PREPARACIÓN CLOUDFLARE (en curso, ADR-010)
+## NOTES-F2 — PREPARACIÓN CLOUDFLARE (hecho 2026-09-29, ADR-010)
 
 Objetivo: desplegar réplica del proyecto en Cloudflare.
 
@@ -2501,12 +2501,12 @@ GitHub Pages sigue activo.
 
 Gate:
 
-- [ ] misma web funciona;
-- [ ] URLs verificadas;
-- [ ] no regresiones;
-- [ ] la sincronización semanal de publicaciones sigue funcionando.
+- [x] misma web funciona (`https://cabellos-research-group.cabellos.workers.dev/`);
+- [x] URLs verificadas;
+- [x] no regresiones;
+- [ ] la sincronización semanal de publicaciones sigue funcionando (`publications.yml`; publicación automática con Workers Builds).
 
-## NOTES-F3 — D1
+## NOTES-F3 — D1 (implementada 2026-09-29, ADR-011)
 
 Objetivo: persistencia editorial.
 
@@ -2521,10 +2521,10 @@ Implementar:
 
 Gate:
 
-- [ ] CRUD;
-- [ ] validación;
-- [ ] queries paginadas;
-- [ ] backup plan.
+- [ ] CRUD (lectura hecha; escritura en NOTES-F5 con el panel);
+- [x] validación (restricciones en el esquema);
+- [x] queries paginadas;
+- [ ] backup plan (D1 Time Travel + exportación con `wrangler d1 export` antes de cargar contenido real).
 
 ## NOTES-F4 — R2
 
@@ -3274,11 +3274,11 @@ A 2026-09-29:
 Repositorio              LISTO
 GitHub Pages             ACTIVO (vista previa)
 Especificación Notes     ALCANCE APROBADO — NOTES-F0 cerrada
-Sección pública Notes    IMPLEMENTADA (V1, NOTES-F1) — en revisión visual
+Sección pública Notes    IMPLEMENTADA sobre D1 (NOTES-F3) — en revisión visual
 Notas reales             NINGUNA — se usan notas de prueba
 Dominio final            PENDIENTE
-Cloudflare               CUENTA CREADA (responsable técnico, 2FA) — réplica en *.workers.dev en curso (NOTES-F2)
-D1                       FUTURO
+Cloudflare               ACTIVO — https://cabellos-research-group.cabellos.workers.dev/ (NOTES-F2)
+D1                       IMPLEMENTADA (NOTES-F3)
 R2                       FUTURO
 Admin / CRUD             FUTURO
 Access                   FUTURO
