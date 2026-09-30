@@ -1,0 +1,59 @@
+# DOI que el sincronizador (scripts/sync-publications.mjs) NUNCA debe agregar.
+# Uno por línea; lo que va después de # es comentario.
+# Para quitar una publicación del sitio: bórrala de publications.yaml y agrega aquí su DOI.
+
+# Duplicados: edición alemana de Angewandte, ChemInform, portadas, otra versión
+10.1002/ange.201703979
+10.1002/ange.201800976
+10.1002/chin.201428001
+10.1002/chem.201490062  # Cover Picture
+10.1002/chem.201400429  # versión duplicada de chem.201304685
+
+# Erratas
+10.1039/d3cp90040a
+10.1103/qt5x-jp8q
+
+# Preprints de trabajos ya publicados
+10.20944/preprints202007.0433.v1
+10.48550/arxiv.2408.13451
+10.48550/arxiv.2106.15061
+10.48550/arxiv.2109.03981
+10.48550/arxiv.2203.10727
+10.48550/arxiv.2407.01339
+10.48550/arxiv.2410.22188
+10.48550/arxiv.2606.19571
+10.2139/ssrn.4518548
+10.26434/chemrxiv-2026-89bkg
+
+# Resúmenes de congreso duplicados (GLOMOS ya está con el DOI de Morressier)
+10.1021/scimeetings.3c00963
+10.1021/scimeetings.3c00925
+10.1021/scimeetings.3c01003
+10.1021/scimeetings.3c00653
+
+# Datasets, libro completo y registros de repositorio que no son artículos
+10.5281/zenodo.18626
+10.5517/ccdc.csd.cc1k8tf2
+10.22533/at.ed.585262406
+10.5281/zenodo.21927858
+10.5281/zenodo.21927857
+10.5281/zenodo.21961773
+10.5281/zenodo.21961772
+10.5281/zenodo.22294997
+10.5281/zenodo.22294998
+10.6084/m9.figshare.33389989
+10.6084/m9.figshare.33389989.v1
+10.6084/m9.figshare.33456970.v1
+10.6084/m9.figshare.33457075
+10.6084/m9.figshare.33457075.v1
+10.6084/m9.figshare.33387283
+10.6084/m9.figshare.33387283.v1
+10.6084/m9.figshare.33473407
+10.6084/m9.figshare.33473407.v1
+10.6084/m9.figshare.33826726
+10.6084/m9.figshare.33826726.v1
+10.6084/m9.figshare.33826726.v2
+10.6084/m9.figshare.33873139
+10.6084/m9.figshare.33873139.v1
+10.6084/m9.figshare.33942058
+10.6084/m9.figshare.33942058.v1

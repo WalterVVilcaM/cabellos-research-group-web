@@ -7,6 +7,8 @@
  */
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+const fmt = new Intl.NumberFormat(document.documentElement.lang || 'en');
+
 function animateCount(el: HTMLElement) {
   const target = Number(el.dataset.count);
   if (!Number.isFinite(target) || reduce) return;
@@ -15,7 +17,7 @@ function animateCount(el: HTMLElement) {
   const step = (now: number) => {
     const p = Math.min(1, (now - t0) / duration);
     const eased = 1 - Math.pow(1 - p, 3);
-    el.textContent = String(Math.round(target * eased));
+    el.textContent = fmt.format(Math.round(target * eased));
     if (p < 1) requestAnimationFrame(step);
   };
   requestAnimationFrame(step);

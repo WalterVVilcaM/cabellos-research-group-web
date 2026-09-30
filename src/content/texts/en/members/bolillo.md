@@ -2,7 +2,7 @@
 status: draft
 ---
 
-**Dr. Bolillo** is a full-time professor (PTC) at **Universidad Politécnica de Tapachula** and a member of the Cabellos Research Group. With a keen nose for energy minima, he explores nanocluster structure and stability within the research themes of Dr. José Luis Cabellos Quiroz.
+**Mr. Bolillo** is a member of the Cabellos Research Group. With a keen nose for energy minima, he explores nanocluster structure and stability within the research themes of Dr. José Luis Cabellos Quiroz.
 
 ## Education
 

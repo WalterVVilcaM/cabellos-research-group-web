@@ -35,6 +35,17 @@ export const site = {
     streetAddress: 'Carretera Tapachula–Puerto Madero km 24 + 300' as string | null,
   },
   startYear: 2026,
+  /**
+   * Métricas de citas del Dr. Cabellos según su perfil de Google Scholar (EwYPXrAAAAAJ).
+   * Scholar no tiene API: se actualizan a mano. Última consulta: `updated`.
+   */
+  metrics: {
+    citations: 2955,
+    hIndex: 29,
+    i10Index: 56,
+    source: 'Google Scholar',
+    updated: '2026-09-28',
+  },
 } as const;
 
 export type Site = typeof site;

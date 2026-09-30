@@ -2,7 +2,7 @@
 status: draft
 ---
 
-**Dr. Osa** is a full-time professor (PTC) at **Universidad Politécnica de Tapachula** and a member of the Cabellos Research Group. Her specialty connects optical and electronic properties of materials with chemical bonding analysis, following the research themes of Dr. José Luis Cabellos Quiroz. Always alert to a glimmer of light, she investigates how structure determines optical response.
+**Miss Osa** is a member of the Cabellos Research Group. Her specialty connects optical and electronic properties of materials with chemical bonding analysis, following the research themes of Dr. José Luis Cabellos Quiroz. Always alert to a glimmer of light, she investigates how structure determines optical response.
 
 ## Education
 

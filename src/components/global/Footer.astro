@@ -93,6 +93,13 @@ const year = new Date().getFullYear();
                 </ExternalLink>
               </li>
             )}
+            {pi.data.links.frontiersLoop && (
+              <li>
+                <ExternalLink href={pi.data.links.frontiersLoop} lang={lang}>
+                  Frontiers Loop
+                </ExternalLink>
+              </li>
+            )}
             <li>
               <ExternalLink href={site.institution.url} lang={lang}>
                 {site.institution.shortName}

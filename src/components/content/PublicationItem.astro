@@ -34,7 +34,7 @@ const citation = [
 const searchText = norm([plainTitle, d.authors.join(' '), d.journal, d.year, d.doi ?? ''].join(' '));
 const lines = d.researchAreas.map((r) => r.id).join(' ');
 const typeLabel =
-  d.type === 'review' ? t('pubs.type.review') : d.type === 'chapter' ? t('pubs.type.chapter') : d.type === 'conference' ? t('pubs.type.conference') : null;
+  d.type === 'review' ? t('pubs.type.review') : d.type === 'chapter' ? t('pubs.type.chapter') : d.type === 'conference' ? t('pubs.type.conference') : d.type === 'preprint' ? t('pubs.type.preprint') : d.type === 'thesis' ? t('pubs.type.thesis') : d.type === 'software' ? t('pubs.type.software') : null;
 ---
 
 <Tag class="pub" id={`pub-${pub.id}`} data-pub data-search={searchText} data-lines={lines} data-year={d.year}>
@@ -60,6 +60,13 @@ const typeLabel =
       {typeLabel && <span class="pub__badge">{typeLabel}</span>}
     </p>
     <p class="pub__link">
+      {
+        d.pdf && (
+          <ExternalLink href={d.pdf} lang={lang} class="pub__pdf">
+            {t('pubs.pdf')}
+          </ExternalLink>
+        )
+      }
       {
         href && (
           <ExternalLink href={href} lang={lang}>
@@ -146,6 +153,9 @@ const typeLabel =
     font-family: var(--font-body);
     font-size: var(--text-xs);
     overflow-wrap: anywhere;
+  }
+  .pub__link :global(.pub__pdf) {
+    font-weight: 600;
   }
   .pub__copy {
     display: none;

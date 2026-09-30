@@ -24,7 +24,7 @@ const fullName = [d.academicTitle, d.name].filter(Boolean).join(' ');
       <a href={memberPath(member.id, lang)}>{fullName}</a>
     </H>
     <p class="mcard__role">{d.position[lang]}</p>
-    {variant !== 'compact' && <p class="mcard__aff muted">{d.affiliation}</p>}
+    {variant !== 'compact' && d.affiliation && <p class="mcard__aff muted">{d.affiliation}</p>}
     {excerpt && variant === 'featured' && <p class="mcard__excerpt">{excerpt}</p>}
     {
       variant !== 'compact' && (

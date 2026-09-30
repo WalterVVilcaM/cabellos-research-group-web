@@ -2,7 +2,7 @@
 status: draft
 ---
 
-**Dr. Solita** is a full-time professor (PTC) at **Universidad Politécnica de Tapachula** and a member of the Cabellos Research Group. She studies how temperature changes cluster behavior, a research theme of Dr. José Luis Cabellos Quiroz. Her red bow identifies the specialist who stays calm as the system's energy rises.
+**Miss Chola** is a member of the Cabellos Research Group. She studies how temperature changes cluster behavior, a research theme of Dr. José Luis Cabellos Quiroz. Her red bow identifies the specialist who stays calm as the system's energy rises.
 
 ## Education
 

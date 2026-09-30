@@ -2,7 +2,7 @@
 status: draft
 ---
 
-El **Dr. Bolillo** es profesor de tiempo completo (PTC) de la **Universidad Politécnica de Tapachula** e integrante del Cabellos Research Group. Con un olfato privilegiado para encontrar mínimos de energía, explora la estructura y estabilidad de nanoclústeres en las líneas de investigación del Dr. José Luis Cabellos Quiroz.
+**Mr. Bolillo** es integrante del Cabellos Research Group. Con un olfato privilegiado para encontrar mínimos de energía, explora la estructura y estabilidad de nanoclústeres en las líneas de investigación del Dr. José Luis Cabellos Quiroz.
 
 ## Formación académica
 

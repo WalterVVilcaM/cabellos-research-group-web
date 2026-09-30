@@ -34,11 +34,14 @@ export async function getMembers(): Promise<Member[]> {
   );
 }
 
-/** Publicaciones en orden cronológico descendente, con número global (la más reciente = N). */
+/** Publicaciones de la más reciente a la más antigua (año, luego fecha), con número global (la más reciente = N). */
 export async function getPublications(): Promise<(Publication & { number: number })[]> {
   const items = await getCollection('publications');
   const sorted = items.sort(
-    (a, b) => b.data.year - a.data.year || a.data.title.localeCompare(b.data.title),
+    (a, b) =>
+      b.data.year - a.data.year ||
+      (b.data.date ?? '').localeCompare(a.data.date ?? '') ||
+      a.data.title.localeCompare(b.data.title),
   );
   return sorted.map((p, i) => ({ ...p, number: sorted.length - i }));
 }
@@ -70,6 +73,9 @@ export function groupByYear(pubs: NumberedPublication[]) {
   return [...map.entries()].sort((a, b) => b[0] - a[0]);
 }
 
+/** Revistas, libros y congresos (no tesis ni software): cuentan para "Dónde publicamos". */
+export const isVenue = (p: Publication) => p.data.type !== 'thesis' && p.data.type !== 'software';
+
 /** Métricas derivadas de los datos (RF-15). */
 export async function getStats() {
   const [pubs, research, members] = await Promise.all([getPublications(), getResearch(), getMembers()]);
@@ -77,7 +83,7 @@ export async function getStats() {
   const years = pubs.map((p) => p.data.year);
   const from = years.length ? Math.min(...years) : null;
   const to = years.length ? Math.max(...years) : null;
-  const journals = new Set(pubs.map((p) => p.data.journal)).size;
+  const journals = new Set(pubs.filter(isVenue).map((p) => p.data.journal)).size;
   return {
     publications: pubs.length,
     from,

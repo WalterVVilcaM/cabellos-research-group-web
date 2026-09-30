@@ -9,7 +9,7 @@ import Icon from '../components/ui/Icon.astro';
 import { site } from '../config/site';
 import { heroGallery } from '../config/gallery';
 import { useTranslations, sectionPath, sectionAlternates, researchPath, memberPath, type Lang } from '../i18n/utils';
-import { getResearch, getPublications, getMembers, getStats, shortAuthors } from '../utils/content';
+import { getResearch, getPublications, getMembers, getStats, shortAuthors, isVenue } from '../utils/content';
 import ExternalLink from '../components/ui/ExternalLink.astro';
 import ctaPhoto from '../assets/gallery/campus-explanada.webp';
 interface Props { lang: Lang }
@@ -20,8 +20,11 @@ const pi = members.find((m) => m.data.role === 'pi');
 const pubById = new Map(pubs.map((p) => [p.id, p]));
 const recent = pubs.slice(0, 3);
 const pad = (n: number) => String(n).padStart(2, '0');
-const journals = new Set(pubs.map((p) => p.data.journal)).size;
-const statItems = [
+const numberFmt = new Intl.NumberFormat(lang === 'es' ? 'es-MX' : 'en-US');
+const journals = new Set(pubs.filter(isVenue).map((p) => p.data.journal)).size;
+const scholarUrl = pi?.data.links.googleScholar ? `https://scholar.google.com/citations?user=${pi.data.links.googleScholar}` : undefined;
+const statItems: { value: number; label: string; note?: string; href?: string; lead?: boolean }[] = [
+  { value: site.metrics.citations, label: t('about.statCitations'), note: site.metrics.source, href: scholarUrl, lead: true },
   { value: stats.publications, label: t('about.statPapers') },
   { value: journals, label: t('about.statJournals') },
   { value: stats.coauthors, label: t('about.statCoauthors') },
@@ -67,9 +70,14 @@ const statItems = [
     <div class="container stats-wrap">
       <dl class="stats">
         {statItems.map((st, i) => (
-          <div class="stat" data-reveal style={`--i: ${i}`}>
-            <dt>{st.label}{st.note && <span class="stat__note"> · {st.note}</span>}</dt>
-            <dd data-count={st.value}>{st.value}</dd>
+          <div class:list={['stat', { 'stat--lead': st.lead }]} data-reveal style={`--i: ${i}`}>
+            <dt>
+              {st.label}
+              {st.note && (st.href
+                ? <a class="stat__note" href={st.href} rel="noopener noreferrer" target="_blank"> · {st.note}</a>
+                : <span class="stat__note"> · {st.note}</span>)}
+            </dt>
+            <dd data-count={st.value}>{numberFmt.format(st.value)}</dd>
           </div>
         ))}
       </dl>
@@ -484,18 +492,40 @@ const statItems = [
     z-index: 2;
     margin-top: calc(-1 * clamp(1rem, 3vw, 2rem));
   }
+  /* Las líneas divisorias son el hueco de 1px de la cuadrícula (funciona con cualquier número de cifras). */
   .stats {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
     overflow: hidden;
     border: 1px solid rgb(16 24 20 / 0.06);
     border-radius: var(--radius-lg);
-    background: var(--color-surface);
+    background: var(--color-border);
     box-shadow: var(--shadow-lg);
   }
-  @media (min-width: 800px) {
+  .stat--lead {
+    grid-column: 1 / -1;
+  }
+  /* Pantallas medianas: las citas ocupan una columna alta junto a un bloque de 2×2. */
+  @media (min-width: 700px) and (max-width: 1099.98px) {
     .stats {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1.2fr) repeat(2, minmax(0, 1fr));
+    }
+    .stats .stat--lead {
+      grid-column: 1;
+      grid-row: span 2;
+      justify-content: center;
+    }
+    .stats .stat--lead dd {
+      font-size: clamp(3rem, 2rem + 3vw, 4.25rem);
+    }
+  }
+  @media (min-width: 1100px) {
+    .stats {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+    .stat--lead {
+      grid-column: auto;
     }
   }
   .stat {
@@ -504,8 +534,16 @@ const statItems = [
     justify-content: flex-end;
     gap: var(--space-1);
     padding: clamp(1.25rem, 3vw, 2rem) clamp(1rem, 2.5vw, 2rem);
-    border-right: var(--border);
-    border-bottom: var(--border);
+    background: var(--color-surface);
+  }
+  a.stat__note {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--color-border);
+    text-underline-offset: 3px;
+  }
+  a.stat__note:hover {
+    color: var(--color-primary);
   }
   .stat dd {
     font-size: clamp(2.25rem, 1.6rem + 2vw, 3.25rem);
@@ -519,23 +557,9 @@ const statItems = [
     font-size: var(--text-sm);
     color: var(--color-text-muted);
   }
-  .stat__note {
-    white-space: nowrap;
-  }
-  @media (min-width: 800px) {
-    .stat {
-      border-bottom: 0;
-    }
-    .stat:last-child {
-      border-right: 0;
-    }
-  }
-  @media (max-width: 799.98px) {
-    .stat:nth-child(2n) {
-      border-right: 0;
-    }
-    .stat:nth-last-child(-n + 2) {
-      border-bottom: 0;
+  @media (min-width: 480px) {
+    .stat__note {
+      white-space: nowrap;
     }
   }
 

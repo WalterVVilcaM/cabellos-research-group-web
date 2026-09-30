@@ -44,6 +44,7 @@ const links = [
     label: 'Google Scholar',
     href: `https://scholar.google.com/citations?user=${d.links.googleScholar}`,
   },
+  d.links.frontiersLoop && { label: 'Frontiers Loop', href: d.links.frontiersLoop },
   d.links.researchGate && { label: 'ResearchGate', href: d.links.researchGate },
   d.links.scopus && {
     label: 'Scopus',
@@ -56,7 +57,7 @@ const links = [
 <BaseLayout
   lang={lang}
   title={fullName}
-  description={`${fullName} — ${d.position[lang]}, ${d.affiliation}.`}
+  description={`${fullName} — ${d.position[lang]}${d.affiliation ? `, ${d.affiliation}` : ''}.`}
   alternates={{ es: memberPath(member.id, 'es'), en: memberPath(member.id, 'en') }}
   current="team"
   ogType="profile"
@@ -76,7 +77,7 @@ const links = [
         <div class="profile__body">
           <p class="eyebrow">{d.position[lang]}</p>
           <h1>{fullName}</h1>
-          <p class="profile__aff">{d.affiliation}</p>
+          {d.affiliation && <p class="profile__aff">{d.affiliation}</p>}
           {
             (links.length > 0 || d.links.email) && (
               <ul role="list" class="profile__links" aria-label={t('team.links')}>
@@ -158,10 +159,12 @@ const links = [
                   <a href={`tel:${site.contact.phoneIntl ?? site.contact.phone}`}>{site.contact.phone}</a>
                 </li>
               )}
-              <li>
-                <Icon name="building" size={18} />
-                <span>{d.affiliation}</span>
-              </li>
+              {d.affiliation && (
+                <li>
+                  <Icon name="building" size={18} />
+                  <span>{d.affiliation}</span>
+                </li>
+              )}
             </ul>
           </section>
         )}

@@ -13,7 +13,7 @@ export function useTranslations(lang: Lang) {
   };
 }
 
-export type SectionKey = 'home' | 'about' | 'research' | 'team' | 'publications' | 'contact';
+export type SectionKey = 'home' | 'about' | 'research' | 'team' | 'publications' | 'gallery' | 'contact';
 
 /** Subruta de despliegue (`base` en astro.config), sin barra final: '' en la raíz, '/repo' en GitHub Pages. */
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -30,6 +30,7 @@ const rawSectionPaths: Record<SectionKey, Record<Lang, string>> = {
   research: { en: '/research/', es: '/es/investigacion/' },
   team: { en: '/team/', es: '/es/integrantes/' },
   publications: { en: '/publications/', es: '/es/publicaciones/' },
+  gallery: { en: '/gallery/', es: '/es/galeria/' },
   contact: { en: '/contact/', es: '/es/contacto/' },
 };
 
@@ -38,7 +39,7 @@ export const sectionPaths = Object.fromEntries(
   Object.entries(rawSectionPaths).map(([key, paths]) => [key, { en: withBase(paths.en), es: withBase(paths.es) }]),
 ) as Record<SectionKey, Record<Lang, string>>;
 
-export const navOrder: SectionKey[] = ['home', 'research', 'team', 'publications', 'contact'];
+export const navOrder: SectionKey[] = ['home', 'research', 'team', 'publications', 'gallery', 'contact'];
 
 export function sectionPath(section: SectionKey, lang: Lang): string {
   return sectionPaths[section][lang];

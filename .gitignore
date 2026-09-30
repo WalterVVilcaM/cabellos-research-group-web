@@ -34,3 +34,5 @@ Claude outputs/
 # script de publicación de un solo uso
 publicar-github-pages.cmd
 publicar-github-pages.log
+publicar-cambios.cmd
+publicar-cambios.log

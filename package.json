@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "astro": "astro"
+    "astro": "astro",
+    "sync:pubs": "node scripts/sync-publications.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

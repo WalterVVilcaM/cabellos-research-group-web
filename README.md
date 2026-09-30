@@ -20,6 +20,7 @@ Node.js ≥ 22.12
 | `npm run check` | Verifica tipos y componentes |
 | `npm run build` | Genera el sitio en `dist/` |
 | `npm run preview` | Sirve `dist/` localmente |
+| `npm run sync:pubs -- --dry-run` | Muestra qué publicaciones nuevas agregaría (sin escribir) |
 
 El dominio y la subruta salen de las variables `SITE` y `BASE_PATH` (por defecto, `https://cabellosresearchgroup.org` en la raíz). Todo enlace interno debe pasar por `sectionPath`/`researchPath`/`memberPath` o `withBase` (`src/i18n/utils.ts`) para funcionar también bajo `/cabellos-research-group-web/`.
 
@@ -32,6 +33,16 @@ El dominio y la subruta salen de las variables `SITE` y `BASE_PATH` (por defecto
 | Líneas de investigación | `src/content/data/research.yaml` + `src/content/texts/{es,en}/research/*.md` |
 | Integrantes | `src/content/data/members.yaml` + `src/content/texts/{es,en}/members/*.md` |
 | Publicaciones | `src/content/data/publications.yaml` |
+
+## Publicaciones automáticas
+
+Cada lunes, `.github/workflows/deploy.yml` ejecuta `scripts/sync-publications.mjs`, que busca en OpenAlex (por el ORCID del Dr. Cabellos) y completa los datos con Crossref. Solo **agrega** entradas nuevas al final de `publications.yaml` (nunca modifica ni borra las existentes) y el sitio solo se publica si pasan `astro build` y `astro check`.
+
+- Se ignoran preprints, erratas, portadas, material suplementario, repositorios (Zenodo/Figshare) y duplicados por DOI o por título.
+- Si aparecen más de 12 de golpe o las APIs no responden, no se cambia nada.
+- Para quitar una publicación: bórrala de `publications.yaml` y agrega su DOI a `scripts/publications-ignore.txt`.
+- Las entradas automáticas llevan el comentario "Agregada automáticamente…": conviene revisar sus `researchAreas`.
+- También se puede lanzar a mano: pestaña **Actions → Deploy to GitHub Pages → Run workflow**.
 
 El modelo completo está en [`docs/07-content-model.md`](docs/07-content-model.md). Si una referencia es inválida, el build falla y lo indica.
 

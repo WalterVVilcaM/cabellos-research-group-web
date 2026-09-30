@@ -1,0 +1,38 @@
+---
+/** Galería (VIEW-007). Vacía por ahora: muestra un aviso hasta que el grupo entregue fotografías. */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import { useTranslations, sectionAlternates, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<BaseLayout
+  lang={lang}
+  title={t('gallery.title')}
+  description={t('gallery.description')}
+  alternates={sectionAlternates('gallery')}
+  current="gallery"
+>
+  <PageHeader lang={lang} title={t('gallery.title')} lead={t('gallery.lead')} />
+
+  <div class="section">
+    <div class="container">
+      <p class="empty muted">{t('gallery.empty')}</p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .empty {
+    max-width: 60ch;
+    padding: var(--space-8);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-sm);
+    text-align: center;
+  }
+</style>

@@ -60,7 +60,7 @@ const members = defineCollection({
       academicTitle: z.string().optional(),
       role: z.enum(memberRoles),
       position: localized,
-      affiliation: z.string(),
+      affiliation: z.string().optional(),
       photo: image().optional(),
       /** Formación y distinciones verificables (se muestran en el perfil). */
       education: z.array(localized).default([]),
@@ -74,6 +74,7 @@ const members = defineCollection({
           researchGate: z.url().optional(),
           scopus: z.string().optional(),
           website: z.url().optional(),
+          frontiersLoop: z.url().optional(),
         })
         .default({}),
       order: z.number().int().default(100),
@@ -90,6 +91,8 @@ const publications = defineCollection({
     authors: z.array(z.string()).min(1),
     journal: z.string(),
     year: z.number().int().min(1990).max(2100),
+    /** Fecha de publicación (YYYY-MM-DD) para ordenar dentro del año; las más recientes primero. */
+    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'fecha YYYY-MM-DD').optional(),
     volume: z.string().optional(),
     issue: z.string().optional(),
     pages: z.string().optional(),
@@ -98,7 +101,9 @@ const publications = defineCollection({
       .regex(/^10\.\d{4,9}\/\S+$/i, 'DOI sin prefijo https://doi.org/')
       .optional(),
     url: z.url().optional(),
-    type: z.enum(['article', 'review', 'chapter', 'conference', 'other']).default('article'),
+    /** PDF de acceso abierto (versión legal y gratuita). Si no hay, se muestra solo el DOI. */
+    pdf: z.url().optional(),
+    type: z.enum(['article', 'review', 'chapter', 'conference', 'preprint', 'thesis', 'software', 'other']).default('article'),
     featured: z.boolean().default(false),
     researchAreas: z.array(reference('research')).default([]),
     members: z.array(reference('members')).default([]),

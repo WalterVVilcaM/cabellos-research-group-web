@@ -2,7 +2,7 @@
 status: draft
 ---
 
-La **Dra. Osa** es profesora de tiempo completo (PTC) de la **Universidad Politécnica de Tapachula** e integrante del Cabellos Research Group. Su especialidad reúne las propiedades ópticas y electrónicas de materiales con el análisis del enlace químico, en sintonía con el trabajo del Dr. José Luis Cabellos Quiroz. Siempre atenta a cualquier destello, busca entender cómo la estructura determina la respuesta a la luz.
+**Miss Osa** es integrante del Cabellos Research Group. Su especialidad reúne las propiedades ópticas y electrónicas de materiales con el análisis del enlace químico, en sintonía con el trabajo del Dr. José Luis Cabellos Quiroz. Siempre atenta a cualquier destello, busca entender cómo la estructura determina la respuesta a la luz.
 
 ## Formación académica
 

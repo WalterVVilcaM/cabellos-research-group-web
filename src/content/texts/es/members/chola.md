@@ -2,7 +2,7 @@
 status: draft
 ---
 
-La **Dra. Solita** es profesora de tiempo completo (PTC) de la **Universidad Politécnica de Tapachula** e integrante del Cabellos Research Group. Investiga cómo cambia el comportamiento de los clústeres con la temperatura, una de las líneas de trabajo del Dr. José Luis Cabellos Quiroz. Su moño rojo es el distintivo de la especialista en mantener la calma cuando sube la energía del sistema.
+**Miss Chola** es integrante del Cabellos Research Group. Investiga cómo cambia el comportamiento de los clústeres con la temperatura, una de las líneas de trabajo del Dr. José Luis Cabellos Quiroz. Su moño rojo es el distintivo de la especialista en mantener la calma cuando sube la energía del sistema.
 
 ## Formación académica
 

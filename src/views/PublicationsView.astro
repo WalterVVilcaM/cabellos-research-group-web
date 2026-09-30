@@ -2,12 +2,14 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/ui/PageHeader.astro';
 import PublicationItem from '../components/content/PublicationItem.astro';
+import ExternalLink from '../components/ui/ExternalLink.astro';
 import { useTranslations, sectionAlternates, type Lang } from '../i18n/utils';
 import {
   getPublications,
   getMembers,
   groupByYear,
   getStats,
+  isVenue,
 } from '../utils/content';
 
 interface Props {
@@ -21,8 +23,12 @@ const [pubs, members, stats] = await Promise.all([
   getStats(),
 ]);
 const years = groupByYear(pubs);
+const pi = members.find((m) => m.data.role === 'pi');
+const scholarUrl = pi?.data.links.googleScholar
+  ? `https://scholar.google.com/citations?user=${pi.data.links.googleScholar}`
+  : null;
 const highlight = members.flatMap((m) => [m.data.name, ...m.data.citationNames]);
-const journalCounts = [...pubs.reduce((m, p) => m.set(p.data.journal, (m.get(p.data.journal) ?? 0) + 1), new Map<string, number>())]
+const journalCounts = [...pubs.filter(isVenue).reduce((m, p) => m.set(p.data.journal, (m.get(p.data.journal) ?? 0) + 1), new Map<string, number>())]
   .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 ---
 
@@ -37,7 +43,17 @@ const journalCounts = [...pubs.reduce((m, p) => m.set(p.data.journal, (m.get(p.d
     lang={lang}
     title={t('pubs.title')}
     lead={pubs.length ? t('pubs.lead', { n: stats.publications, from: stats.from ?? '', to: stats.to ?? '' }) : undefined}
-  />
+  >
+    {
+      scholarUrl && (
+        <p class="scholar">
+          <ExternalLink href={scholarUrl} lang={lang} class="scholar__link">
+            {t('pubs.scholar')}
+          </ExternalLink>
+        </p>
+      )
+    }
+  </PageHeader>
 
   {
     pubs.length === 0 ? (
@@ -100,6 +116,23 @@ const journalCounts = [...pubs.reduce((m, p) => m.set(p.data.journal, (m.get(p.d
 </BaseLayout>
 
 <style>
+  .scholar :global(.scholar__link) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: 44px;
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    color: var(--color-primary);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .scholar :global(.scholar__link:hover) {
+    background: var(--color-primary);
+    color: #fff;
+  }
   .index {
     padding-block: var(--space-8);
     border-bottom: var(--border);

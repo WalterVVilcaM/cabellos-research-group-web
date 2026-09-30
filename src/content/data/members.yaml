@@ -3,7 +3,7 @@
 
 jose-luis-cabellos:
   name: José Luis Cabellos Quiroz
-  citationNames: [José Luis Cabellos, Jose Luis Cabellos, J. L. Cabellos, Jose Luis Cabellos-Quiroz]
+  citationNames: [José Luis Cabellos, Jose Luis Cabellos, J. L. Cabellos, Jose Luis Cabellos-Quiroz, José L. Cabellos-Quiroz, J. L. Cabellos-Quiroz]
   academicTitle: Dr.
   role: pi
   position:
@@ -23,42 +23,40 @@ jose-luis-cabellos:
     email: jose.luis@uptapachula.edu.mx
     orcid: 0000-0002-9438-8725
     googleScholar: EwYPXrAAAAAJ
+    frontiersLoop: https://loop.frontiersin.org/people/1208393/overview
   order: 1
   featured: true
 
 # Investigadores del grupo.
 bolillo:
   name: Bolillo
-  academicTitle: Dr.
+  academicTitle: Mr.
   role: researcher
   position:
-    es: Dr. PTC · Predicción estructural de clústeres
-    en: Dr. PTC · Cluster structure prediction
-  affiliation: Universidad Politécnica de Tapachula
+    es: Predicción estructural de clústeres
+    en: Cluster structure prediction
   photo: ../../assets/members/bolillo.webp
   researchAreas: [structure-prediction, chemical-bonding]
   order: 2
 
-solita:
-  name: Solita
-  academicTitle: Dra.
+chola:
+  name: Chola
+  academicTitle: Miss
   role: researcher
   position:
-    es: Dra. PTC · Termodinámica y dinámica molecular
-    en: Dr. PTC · Thermodynamics and molecular dynamics
-  affiliation: Universidad Politécnica de Tapachula
-  photo: ../../assets/members/solita.webp
+    es: Termodinámica y dinámica molecular
+    en: Thermodynamics and molecular dynamics
+  photo: ../../assets/members/chola.webp
   researchAreas: [finite-temperature, structure-prediction]
   order: 3
 
 osa:
   name: Osa
-  academicTitle: Dra.
+  academicTitle: Miss
   role: researcher
   position:
-    es: Dra. PTC · Propiedades ópticas y enlace químico
-    en: Dr. PTC · Optical properties and chemical bonding
-  affiliation: Universidad Politécnica de Tapachula
+    es: Propiedades ópticas y enlace químico
+    en: Optical properties and chemical bonding
   photo: ../../assets/members/osa.webp
   researchAreas: [optical-properties, chemical-bonding]
   order: 4

@@ -1,4 +1,9 @@
-# Publicaciones. Fuente: Crossref/ORCID 0000-0002-9438-8725 (consultado 2026-09-23).
+# Publicaciones. Fuente: Crossref/ORCID 0000-0002-9438-8725 (consultado 2026-09-23)
+# + OpenAlex A5001201662 y A5055480952 con metadatos de Crossref (consultado 2026-09-28).
+# Desde 2026-09-28 las nuevas se agregan solas cada lunes (scripts/sync-publications.mjs).
+# `pdf`: solo versiones de acceso abierto legales (OpenAlex best_oa_location). Sin PDF → se muestra el DOI.
+# Excluidos a propósito: duplicados (edición alemana de Angewandte, preprints ya publicados, ChemInform,
+# portadas, erratas), datasets y registros de Zenodo/Figshare que no son artículos (fotos, cartas, guías).
 # researchAreas: asignación BORRADOR por desarrollo. Validar con el PI (D-14).
 
 2026-flores-estrella-anaerobic:
@@ -13,6 +18,7 @@
     - "Abumale Cruz-Salomón"
   journal: "Processes"
   year: 2026
+  date: "2026-03-07"
   volume: "14"
   issue: "5"
   pages: "855"
@@ -35,6 +41,7 @@
     - "M. Cortez-Valadez"
   journal: "Surface Review and Letters"
   year: 2025
+  date: "2025-04-26"
   doi: "10.1142/S0218625X2530014X"
   type: review
   researchAreas: [structure-prediction]
@@ -50,6 +57,7 @@
     - "Salvador Barraza-Lopez"
   journal: "Physical Review Materials"
   year: 2024
+  date: "2024-11-15"
   volume: "8"
   issue: "11"
   pages: "116203"
@@ -72,6 +80,7 @@
     - "José Luis Cabellos"
   journal: "Molecules"
   year: 2024
+  date: "2024-07-18"
   volume: "29"
   issue: "14"
   pages: "3374"
@@ -90,6 +99,7 @@
     - "José Luis Cabellos"
   journal: "Journal of Computational Biophysics and Chemistry"
   year: 2024
+  date: "2024-04-05"
   volume: "23"
   issue: "05"
   pages: "605–622"
@@ -109,6 +119,7 @@
     - "R. D. Eithiraj"
   journal: "Journal of Physics and Chemistry of Solids"
   year: 2024
+  date: "2023-12-26"
   volume: "187"
   pages: "111858"
   doi: "10.1016/j.jpcs.2023.111858"
@@ -126,6 +137,7 @@
     - "Filiberto Ortiz-Chi"
   journal: "Royal Society Open Science"
   year: 2023
+  date: "2023-12-01"
   volume: "10"
   issue: "12"
   pages: "230908"
@@ -143,6 +155,7 @@
     - "R. D. Eithiraj"
   journal: "Chemical Physics"
   year: 2023
+  date: "2023-04-24"
   volume: "571"
   pages: "111942"
   doi: "10.1016/j.chemphys.2023.111942"
@@ -162,6 +175,7 @@
     - "Zhong-hua Cui"
   journal: "Inorganic Chemistry"
   year: 2022
+  date: "2022-09-08"
   volume: "61"
   issue: "37"
   pages: "14553–14559"
@@ -182,6 +196,7 @@
     - "Sudip Pan"
   journal: "ChemPhysChem"
   year: 2022
+  date: "2022-08-27"
   volume: "23"
   issue: "23"
   pages: "e202200587"
@@ -200,6 +215,7 @@
     - "Jose Luis Cabellos"
   journal: "Density Functional Theory – Recent Advances, New Perspectives and Applications (IntechOpen)"
   year: 2022
+  date: "2021-11-02"
   doi: "10.5772/intechopen.100771"
   type: chapter
   researchAreas: [structure-prediction, finite-temperature]
@@ -227,6 +243,7 @@
     - "Jose Luis Cabellos"
   journal: "Molecules"
   year: 2021
+  date: "2021-09-21"
   volume: "26"
   issue: "18"
   pages: "5710"
@@ -253,6 +270,7 @@
     - "Jose Luis Cabellos"
   journal: "Molecules"
   year: 2021
+  date: "2021-06-28"
   volume: "26"
   issue: "13"
   pages: "3953"
@@ -269,6 +287,7 @@
     - "Alvaro Posada-Amarillas"
   journal: "Theoretical Chemistry Accounts"
   year: 2021
+  date: "2021-06-10"
   volume: "140"
   issue: "7"
   doi: "10.1007/s00214-021-02771-8"
@@ -289,6 +308,7 @@
     - "Martha Fabiola Martin-del-Campo-Solis"
   journal: "Materials"
   year: 2020
+  date: "2020-12-29"
   volume: "14"
   issue: "1"
   pages: "112"
@@ -308,6 +328,7 @@
     - "Alvaro Posada-Amarillas"
   journal: "Materials"
   year: 2020
+  date: "2020-09-26"
   volume: "13"
   issue: "19"
   pages: "4300"
@@ -329,6 +350,7 @@
     - "Gabriel Merino"
   journal: "Chemical Communications"
   year: 2018
+  date: "2017-11-17"
   volume: "54"
   issue: "2"
   pages: "188–191"
@@ -347,6 +369,7 @@
     - "Gabriel Merino"
   journal: "Chemistry – A European Journal"
   year: 2017
+  date: "2017-06-16"
   volume: "23"
   issue: "47"
   pages: "11430–11436"
@@ -369,6 +392,7 @@
     - "Hua-Jin Zhai"
   journal: "Angewandte Chemie International Edition"
   year: 2017
+  date: "2017-07-08"
   volume: "56"
   issue: "34"
   pages: "10174–10177"
@@ -391,6 +415,7 @@
     - "Gabriel Merino"
   journal: "Chemical Communications"
   year: 2017
+  date: "2016-11-29"
   volume: "53"
   issue: "1"
   pages: "138–141"
@@ -412,6 +437,7 @@
     - "Gabriel Merino"
   journal: "Physical Chemistry Chemical Physics"
   year: 2016
+  date: "2016-02-15"
   volume: "18"
   issue: "17"
   pages: "11909–11918"
@@ -431,6 +457,7 @@
     - "Gabriel Merino"
   journal: "Chemistry – A European Journal"
   year: 2016
+  date: "2016-01-15"
   volume: "22"
   issue: "8"
   pages: "2812–2818"
@@ -450,6 +477,7 @@
     - "Gabriel Merino"
   journal: "Chemical Communications"
   year: 2016
+  date: "2016-01-20"
   volume: "52"
   issue: "16"
   pages: "3403–3405"
@@ -470,6 +498,7 @@
     - "Gabriel Merino"
   journal: "Physical Chemistry Chemical Physics"
   year: 2015
+  date: "2015-02-20"
   volume: "17"
   issue: "14"
   pages: "8769–8775"
@@ -488,10 +517,1732 @@
     - "J. E. Sipe"
   journal: "Physical Review B"
   year: 2009
+  date: "2009-10-28"
   volume: "80"
   issue: "15"
   pages: "155205"
   doi: "10.1103/PhysRevB.80.155205"
   type: article
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+# --- Agregadas 2026-09-28 (orden cronológico descendente) ---
+
+2026-paredes-sotelo-shift-current:
+  title: "First-principles calculations of shift-current response in III–V and II–VI zincblende semiconductors"
+  authors:
+    - "Edgar Paredes-Sotelo"
+    - "Carmelo Encinas-Encinas"
+    - "César Castillo-Quevedo"
+    - "Tzarara López-Luke"
+    - "Peter L. Rodríguez-Kessler"
+    - "José Luis Cabellos"
+  journal: "Optical and Quantum Electronics"
+  year: 2026
+  date: "2026-06-08"
+  volume: "58"
+  issue: "8"
+  doi: "10.1007/s11082-026-08937-7"
+  pdf: "https://link.springer.com/content/pdf/10.1007/s11082-026-08937-7.pdf"
+  type: article
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2026-castillo-quevedo-alsb:
+  title: "Unveiling AlSb as a Promising Zincblende Semiconductor for Visible-Light Shift-Current Generation"
+  authors:
+    - "César Castillo-Quevedo"
+    - "Edgar Paredes-Sotelo"
+    - "Peter L. Rodríguez-Kessler"
+    - "Gerardo Martínez-Guajardo"
+    - "José Luis Cabellos"
+  journal: "arXiv"
+  year: 2026
+  date: "2026-06-14"
+  doi: "10.48550/arxiv.2606.15613"
+  pdf: "https://arxiv.org/pdf/2606.15613"
+  type: preprint
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2026-lopez-martinez-graphane-spin:
+  title: "First-principles calculation of the optical spin injection in graphane and fluorographene"
+  authors:
+    - "Angélica Marina López-Martínez"
+    - "César Camas-Flores"
+    - "Analila Luna-Valenzuela"
+    - "César Castillo-Quevedo"
+    - "José Luis Cabellos"
+    - "Héber Vilchis-Bravo"
+  journal: "npj Spintronics"
+  year: 2026
+  date: "2026-06-17"
+  doi: "10.1038/s44306-026-00153-z"
+  type: article
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2026-cabellos-momentum-matrix:
+  title: "A Practical Derivation of Momentum Matrix Elements from ABINIT Wavefunctions"
+  authors:
+    - "José Luis Cabellos"
+  journal: "Figshare"
+  year: 2026
+  date: "2026-09-07"
+  doi: "10.6084/m9.figshare.33456970"
+  type: preprint
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2026-lopez-velazquez-calidad-agua:
+  title: "Construcción de un dispositivo de medición de los parámetros de la calidad del agua: Una contribución al bienestar y la salud en los ecosistemas urbanos de Chiapas"
+  authors:
+    - "Khirbet López Velázquez"
+    - "Adolfo López Sánchez"
+    - "Adrián E. Quinto Carrillo"
+    - "Fernando E. Ramos Hernández"
+    - "Óscar R. Chiu Nava"
+    - "José Luis Cabellos-Quiroz"
+  journal: "Territorio, comunidad y tecnología para la sustentabilidad: Vivienda, alimentación y ecosistemas urbanos en transformación"
+  year: 2026
+  date: "2026-06-24"
+  pages: "218–231"
+  doi: "10.22533/at.ed.58526240611"
+  pdf: "https://cdn.atenaeditora.com.br/atenaeditora/artigos_anexos/202606/OWCUxXDgE6XZJrLN8EUwaTa224e0gNnavHj1vihx.pdf"
+  type: chapter
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2026-lopez-sanchez-celdas-solares:
+  title: "Activación de celdas solares de películas delgadas CdS/CdTe mediante CdCl_{2} y CHClF_{2}: Implicaciones para la sostenibilidad y los ecosistemas urbanos"
+  authors:
+    - "Adolfo López Sánchez"
+    - "Ricardo Javier Mis Fernández"
+    - "Khirbet López Velázquez"
+    - "José Luis Cabellos-Quiroz"
+  journal: "Territorio, comunidad y tecnología para la sustentabilidad: Vivienda, alimentación y ecosistemas urbanos en transformación"
+  year: 2026
+  date: "2026-06-24"
+  pages: "206–217"
+  doi: "10.22533/at.ed.58526240610"
+  pdf: "https://cdn.atenaeditora.com.br/atenaeditora/artigos_anexos/202606/25HB0nkXFn8Qw0ifkSmljp7xwsj7gg7Hi0Krtq7r.pdf"
+  type: chapter
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2026-lopez-velazquez-microplastics-water:
+  title: "Microplastics in bottled water sold in Mexico: Occurrence, polymer composition and human exposure assessment"
+  authors:
+    - "Khirbet López-Velázquez"
+    - "Adolfo López-Sánchez"
+    - "Reynaldo González-Flores"
+    - "José Arturo Oleta-Barrios"
+    - "Carlos Gumaro García-Castillo"
+    - "Heber Vilchis-Bravo"
+    - "César Castillo-Quevedo"
+    - "José Luis Cabellos-Quiroz"
+    - "Minerva Villanueva-Rodríguez"
+  journal: "Journal of Hazardous Materials: Plastics"
+  year: 2026
+  date: "2026-09-01"
+  volume: "5"
+  pages: "100078"
+  doi: "10.1016/j.hazmp.2026.100078"
+  pdf: "https://www.sciencedirect.com/science/article/pii/S3051060026000417/pdf"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2025-avila-sierra-lysine:
+  title: "Theoretical Study of the Stabilization of Lysine Through Pseudocyclic Conformation"
+  authors:
+    - "Germán Ávila-Sierra"
+    - "Aned de Leon"
+    - "Ramón Ochoa-Landín"
+    - "Santos Jesús Castillo"
+    - "José Luis Cabellos"
+  journal: "Acta Chimica Slovenica"
+  year: 2025
+  date: "2025-06-11"
+  volume: "72"
+  issue: "2"
+  pages: "382–387"
+  doi: "10.17344/acsi.2024.9099"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2025-lopez-velazquez-endocrine:
+  title: "Endocrine-disrupting compounds in urban rivers of the southern border of Mexico: Occurrence and ecological risk assessment"
+  authors:
+    - "Khirbet López-Velázquez"
+    - "José G. Ronderos-Lara"
+    - "Hugo A. Saldarriaga-Noreña"
+    - "Mario A. Murillo-Tovar"
+    - "Minerva Villanueva-Rodríguez"
+    - "Jorge L. Guzmán-Mar"
+    - "Edwin R. Hoil-Canul"
+    - "José L. Cabellos-Quiroz"
+  journal: "Emerging Contaminants"
+  year: 2025
+  date: "2024-12-03"
+  volume: "11"
+  issue: "1"
+  pages: "100456"
+  doi: "10.1016/j.emcon.2024.100456"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2025-guevara-vela-bncu2:
+  title: "Structure- and Size-Dependent Properties of B_{n}Cu_{2}^{0/–} (n = 2–14) Clusters: DFT Calculations"
+  authors:
+    - "J. M. Guevara-Vela"
+    - "P. L. Rodríguez-Kessler"
+    - "J. L. Cabellos-Quiroz"
+    - "T. Rocha-Rinza"
+    - "A. Vásquez-Espinal"
+    - "A. Muñoz-Castro"
+  journal: "The Journal of Physical Chemistry A"
+  year: 2025
+  date: "2025-05-23"
+  volume: "129"
+  issue: "22"
+  pages: "4855–4860"
+  doi: "10.1021/acs.jpca.4c08443"
+  type: article
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2025-cob-cantu-tio2:
+  title: "TiO_{2} nanoparticles immobilized on mortar spheres as a strategy for efficient photocatalyst reuse: new UV reactor design for dye removal"
+  authors:
+    - "J. R. Cob-Cantú"
+    - "K. López-Velázquez"
+    - "J. G. Ronderos-Lara"
+    - "E. R. Hoil-Canul"
+    - "C. Castillo-Quevedo"
+    - "L. A. Maldonado-López"
+    - "J. L. Cabellos-Quiroz"
+  journal: "Frontiers in Chemistry"
+  year: 2025
+  date: "2025-04-28"
+  volume: "13"
+  pages: "1581274"
+  doi: "10.3389/fchem.2025.1581274"
+  pdf: "https://www.frontiersin.org/journals/chemistry/articles/10.3389/fchem.2025.1581274/pdf"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2025-guevara-vela-b7mn2:
+  title: "Structure search for B_{7}Mn_{2} clusters: Inverse sandwich geometry with a high-spin state"
+  authors:
+    - "Jose Manuel Guevara-Vela"
+    - "J. L. Cabellos-Quiroz"
+    - "Sebastián Salazar-Colores"
+    - "P. L. Rodríguez-Kessler"
+    - "Alvaro Muñoz-Castro"
+  journal: "Computational and Theoretical Chemistry"
+  year: 2025
+  date: "2025-09-17"
+  volume: "1254"
+  pages: "115487"
+  doi: "10.1016/j.comptc.2025.115487"
+  type: article
+  researchAreas: [structure-prediction, chemical-bonding]
+  members: [jose-luis-cabellos]
+
+2024-puri-mose2-shg:
+  title: "Substrate Interference and Strain in the Second-Harmonic Generation from MoSe_{2} Monolayers"
+  authors:
+    - "Sudeep Puri"
+    - "Sneha Patel"
+    - "Jose Luis Cabellos"
+    - "Luis Enrique Rosas-Hernandez"
+    - "Katlin Reynolds"
+    - "Hugh O. H. Churchill"
+    - "Salvador Barraza-Lopez"
+    - "Bernardo S. Mendoza"
+    - "Hiroyuki Nakamura"
+  journal: "Nano Letters"
+  year: 2024
+  date: "2024-10-02"
+  doi: "10.1021/acs.nanolett.4c03880"
+  type: article
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2024-hoil-canul-recycled-glass:
+  title: "Recycled glass used in mortars and reinforced concrete for tropical marine environments"
+  authors:
+    - "Edwin Hoil-Canul"
+    - "Khirbet López-Velázquez"
+    - "José Luis Cabellos"
+    - "Juan A. Ríos-González"
+    - "L. Maldonado-López"
+    - "L. Díaz-Ballote"
+  journal: "Glass-based Materials"
+  year: 2024
+  date: "2024-10-01"
+  pages: "10-1–10-17"
+  doi: "10.1088/978-0-7503-5904-7ch10"
+  type: chapter
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2024-rodriguez-kessler-ni-bn:
+  title: "Structures of Ni-doped B_{n} (n = 1–13) clusters: A computational study"
+  authors:
+    - "P. L. Rodríguez-Kessler"
+    - "Alejandro Vásquez-Espinal"
+    - "A. R. Rodríguez-Domínguez"
+    - "J. L. Cabellos-Quiroz"
+    - "A. Muñoz-Castro"
+  journal: "Inorganica Chimica Acta"
+  year: 2024
+  date: "2024-04-24"
+  volume: "568"
+  pages: "122062"
+  doi: "10.1016/j.ica.2024.122062"
+  type: article
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2024-lopez-velazquez-microplastics-beaches:
+  title: "Microplastics on sandy beaches of Chiapas, Mexico"
+  authors:
+    - "Khirbet López-Velázquez"
+    - "Kevin G. Duque-Olivera"
+    - "David A. Santiago-Gordillo"
+    - "Edwin R. Hoil-Canul"
+    - "Jorge L. Guzmán-Mar"
+    - "Minerva Villanueva-Rodríguez"
+    - "José G. Ronderos-Lara"
+    - "Cesar Castillo-Quevedo"
+    - "José L. Cabellos-Quiroz"
+  journal: "Regional Studies in Marine Science"
+  year: 2024
+  date: "2024-01-21"
+  volume: "70"
+  pages: "103381"
+  doi: "10.1016/j.rsma.2024.103381"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2023-pino-perovskite:
+  title: "Experimental Parameters Effect on the ITO/PEDOT:PSS/MAPbI_{3}/PCBM/Ag Inverted Organic Perovskite Photovoltaic Solar Cell Efficiency"
+  authors:
+    - "Fabián Pino"
+    - "Isaac Zarazúa"
+    - "Alejandro Alatorre-Ordaz"
+    - "Guillermo Martínez-Rodríguez"
+    - "José Luis Cabellos"
+    - "Tzarara López-Luke"
+  journal: "Journal of Electronic Materials"
+  year: 2023
+  date: "2023-06-10"
+  volume: "52"
+  issue: "9"
+  pages: "5834–5842"
+  doi: "10.1007/s11664-023-10515-6"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2023-rodriguez-kessler-pt15:
+  title: "Structure effects of Pt_{15} clusters for the oxygen reduction reaction: first-principles calculations"
+  authors:
+    - "Peter L. Rodríguez-Kessler"
+    - "Alvaro Muñoz-Castro"
+    - "Adán R. Rodríguez-Domínguez"
+    - "José Luis Cabellos"
+  journal: "Physical Chemistry Chemical Physics"
+  year: 2023
+  date: "2023-01-24"
+  volume: "25"
+  issue: "6"
+  pages: "4764–4772"
+  doi: "10.1039/d2cp05188e"
+  type: article
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2023-lopez-vazquez-gold-sers:
+  title: "Ultra-small gold particles via Citrus × sinensis: Theoretical and experimental SERS study"
+  authors:
+    - "L. F. López-Vázquez"
+    - "L. P. Ramírez-Rodríguez"
+    - "A. Pérez-Rodríguez"
+    - "R. Britto Hurtado"
+    - "J. L. Cabellos"
+    - "R. A. Vargas-Ortiz"
+    - "A. Navarro-Badilla"
+    - "Manuel A. Roldan"
+    - "M. Cortez-Valadez"
+  journal: "Materials Science and Engineering: B"
+  year: 2023
+  date: "2023-06-01"
+  volume: "295"
+  pages: "116617"
+  doi: "10.1016/j.mseb.2023.116617"
+  type: article
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2023-de-leon-arginine:
+  title: "The Role of Nitrogen-Rich Moieties in the Selection of Arginine’s Tautomeric Form at Different Temperatures"
+  authors:
+    - "Aned de Leon"
+    - "José Luis Cabellos"
+    - "César Castillo-Quevedo"
+    - "Martha Fabiola Martín-del-Campo-Solís"
+    - "Gerardo Martínez-Guajardo"
+  journal: "Acta Chimica Slovenica"
+  year: 2023
+  date: "2023-12-15"
+  volume: "70"
+  issue: "4"
+  pages: "642–650"
+  doi: "10.17344/acsi.2023.8435"
+  pdf: "https://acsi-journal.eu/index.php/ACSi/article/download/8435/10064"
+  type: article
+  researchAreas: [finite-temperature]
+  members: [jose-luis-cabellos]
+
+2022-mendoza-wilson-quercetin:
+  title: "Potential of quercetin in combination with antioxidants of different polarity incorporated in oil-in-water nanoemulsions to control enzymatic browning of apples"
+  authors:
+    - "Ana María Mendoza-Wilson"
+    - "René Renato Balandrán-Quintana"
+    - "Miguel Ángel Valdés-Covarrubias"
+    - "José Luis Cabellos"
+  journal: "Journal of Molecular Structure"
+  year: 2022
+  date: "2022-01-10"
+  volume: "1254"
+  pages: "132372"
+  doi: "10.1016/j.molstruc.2022.132372"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2022-buelna-garcia-cu38:
+  title: "Relative Populations and IR Spectra of Cu_{38} Cluster at Finite Temperature Based on DFT and Statistical Thermodynamics Calculations"
+  authors:
+    - "Carlos Emiliano Buelna-García"
+    - "Cesar Castillo-Quevedo"
+    - "Jesus Manuel Quiroz-Castillo"
+    - "Edgar Paredes-Sotelo"
+    - "Manuel Cortez-Valadez"
+    - "Martha Fabiola Martin-del-Campo-Solis"
+    - "Tzarara López-Luke"
+    - "Marycarmen Utrilla-Vázquez"
+    - "Ana Maria Mendoza-Wilson"
+    - "Peter L. Rodríguez-Kessler"
+    - "Alejandro Vazquez-Espinal"
+    - "Sudip Pan"
+    - "Aned de Leon-Flores"
+    - "Jhonny Robert Mis-May"
+    - "Adán R. Rodríguez-Domínguez"
+    - "Gerardo Martínez-Guajardo"
+    - "Jose Luis Cabellos"
+  journal: "Frontiers in Chemistry"
+  year: 2022
+  date: "2022-03-01"
+  volume: "10"
+  pages: "841964"
+  doi: "10.3389/fchem.2022.841964"
+  pdf: "https://www.frontiersin.org/articles/10.3389/fchem.2022.841964/pdf"
+  type: article
+  researchAreas: [structure-prediction, finite-temperature]
+  members: [jose-luis-cabellos]
+
+2022-castillo-quevedo-cu13-chapter:
+  title: "Effects of Temperature on Enantiomerization Energy and Distribution of Isomers in the Chiral Cu_{13} Cluster"
+  authors:
+    - "Cesar Castillo-Quevedo"
+    - "Carlos Emiliano Buelna-Garcia"
+    - "Edgar Paredes-Sotelo"
+    - "Eduardo Robles-Chaparro"
+    - "Edgar Zamora-Gonzalez"
+    - "Martha Fabiola Martin-del-Campo-Solis"
+    - "Jesus Manuel Quiroz-Castillo"
+    - "Teresa del-Castillo-Castro"
+    - "Gerardo Martínez-Guajardo"
+    - "Aned de-Leon-Flores"
+    - "Manuel Cortez-Valadez"
+    - "Filiberto Ortiz-Chi"
+    - "Tulio Gaxiola"
+    - "Santos Jesus Castillo"
+    - "Alejandro Vásquez-Espinal"
+    - "Sudip Pan"
+    - "Jose Luis Cabellos"
+  journal: "Prime Archives in Material Science"
+  year: 2022
+  date: "2022-04-07"
+  doi: "10.37247/pams4ed.4.22.16"
+  pdf: "https://videleaf.com/wp-content/uploads/2022/08/Effects-of-Temperature-on-Enantiomerization-Energy-and-Distribution-of-Isomers-in-the-Chiral-Cu13-Cluster.pdf"
+  type: chapter
+  researchAreas: [structure-prediction, finite-temperature]
+  members: [jose-luis-cabellos]
+
+2022-martin-del-campo-solis-cu38:
+  title: "Thermodynamic Properties of Cu_{38} Cluster"
+  authors:
+    - "Martha Fabiola Martin-del-Campo-Solis"
+    - "Edgar O. Zamora Gonzales"
+    - "César Castillo-Quevedo"
+    - "Emiliano Buelna-Garcia"
+    - "Aned de León Flores"
+    - "José Luis Cabellos"
+  journal: "Prime Archives in Chemistry"
+  year: 2022
+  date: "2022-04-07"
+  doi: "10.37247/pachem2ed.2.22.22"
+  pdf: "https://videleaf.com/wp-content/uploads/2022/08/Thermodynamic-Properties-of-Cu38-Cluster.pdf"
+  type: chapter
+  researchAreas: [structure-prediction, finite-temperature]
+  members: [jose-luis-cabellos]
+
+2022-castillo-ortega-membranes:
+  title: "Electrospun Cellulose Acetate Membranes Coated with Polypyrrole and Their Potential Application in the Recovery of Metals"
+  authors:
+    - "María M. Castillo-Ortega"
+    - "Diego Hernández-Martínez"
+    - "Irela Santos-Sauceda"
+    - "Damián F. Plascencia-Martínez"
+    - "Juana Alvarado-Ibarra"
+    - "José L. Cabellos-Quiroz"
+    - "Yaeel I. Cornejo-Ramírez"
+  journal: "ACS Omega"
+  year: 2022
+  date: "2022-08-23"
+  volume: "7"
+  issue: "35"
+  pages: "31059–31068"
+  doi: "10.1021/acsomega.2c03129"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2021-luna-valenzuela-cupd:
+  title: "Effects of van der Waals interactions on the structure and stability of Cu_{8−x}Pd_{x} (x = 0, 4, 8) cluster isomers"
+  authors:
+    - "Analila Luna-Valenzuela"
+    - "José Luis Cabellos"
+    - "Julio A. Alonso"
+    - "Alvaro Posada-Amarillas"
+  journal: "Materials Today Communications"
+  year: 2021
+  date: "2021-01-12"
+  volume: "26"
+  pages: "102024"
+  doi: "10.1016/j.mtcomm.2021.102024"
+  type: article
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2021-buelna-garcia-be6b11-chapter:
+  title: "Effects of Temperature on IR Spectroscopy of the Fluxional Be_{6}B_{11}^{−} Cluster"
+  authors:
+    - "Carlos Emiliano Buelna-Garcia"
+    - "Cesar Castillo-Quevedo"
+    - "Jesus Manuel Quiroz-Castillo"
+    - "Gerardo Martinez-Guajardo"
+    - "Aned de-Leon-Flores"
+    - "Gilberto Anzueto-Sanchez"
+    - "Martha Fabiola Martin-del-Campo-Solis"
+    - "Jose Luis Cabellos"
+  journal: "Prime Archives in Material Science"
+  year: 2021
+  date: "2021-09-14"
+  doi: "10.37247/pams2ed.2.2021.25"
+  pdf: "https://videleaf.com/wp-content/uploads/2021/08/Effects-of-Temperature-on-IR-Spectroscopy-of-the-Fluxional-Be6B11-Cluster.pdf"
+  type: chapter
+  researchAreas: [structure-prediction, finite-temperature]
+  members: [jose-luis-cabellos]
+
+2021-martin-del-campo-solis-be4b8-chapter:
+  title: "Exploration of Free Energy Surface of Chiral Be_{4}B_{8} Cluster at Different Temperatures"
+  authors:
+    - "Martha Fabiola Martin-del-Campo-Solis"
+    - "Cesar Castillo-Quevedo"
+    - "Edgar Zamora-Gonzalez"
+    - "Carlos Emiliano Buelna-García"
+    - "Eduardo Robles-Chaparro"
+    - "Gerardo Martínez-Guajardo"
+    - "Aned de-Leon-Flores"
+    - "Gilberto Anzueto-Sánchez"
+    - "Jose Luis Cabellos"
+  journal: "Prime Archives in Material Science"
+  year: 2021
+  date: "2021-01-01"
+  doi: "10.37247/pams2ed.3.2021.29"
+  type: chapter
+  researchAreas: [structure-prediction, finite-temperature]
+  members: [jose-luis-cabellos]
+
+2021-cabellos-kcl-chapter:
+  title: "Cu-Doped KCl Folded and Unfolded Band Structure and Optical Properties Studied by DFT Calculations"
+  authors:
+    - "Jose Luis Cabellos"
+    - "César Castillo-Quevedo"
+    - "Alvaro Posada-Amarillas"
+  journal: "Prime Archives in Material Science"
+  year: 2021
+  date: "2021-02-15"
+  doi: "10.37247/pams2ed.2.2021.23"
+  pdf: "https://videleaf.com/wp-content/uploads/2021/02/Cu-Doped-KCl-Folded-and-Unfolded-Band-Structure-and-Optical-Properties-Studied-by-DFT-Calculations.pdf"
+  type: chapter
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2021-anzueto-sanchez-fiber-laser:
+  title: "Multiwavelength synchronously Q-switched Erbium-doped fiber laser based on the adjustment of the free spectral range of an intracavity tapered-fiber filter"
+  authors:
+    - "G. Anzueto-Sánchez"
+    - "A. Martínez-Rios"
+    - "I. Torres-Gómez"
+    - "M. Jiménez-Mares"
+    - "R. E. Nuñez-Gomez"
+    - "J. L. Camas-Anzueto"
+    - "J. L. Cabellos-Quiroz"
+  journal: "Optics & Laser Technology"
+  year: 2021
+  date: "2021-05-14"
+  volume: "142"
+  pages: "107197"
+  doi: "10.1016/j.optlastec.2021.107197"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2020-mendoza-wilson-procyanidin:
+  title: "Thermochemical behavior of sorghum procyanidin trimers with C4–C8 and C4–C6 interflavan bonds in the reaction with superoxide anion radical and H_{2}O_{2}-forming NADH-oxidase flavoenzyme"
+  authors:
+    - "Ana María Mendoza-Wilson"
+    - "René Renato Balandrán-Quintana"
+    - "José Luis Cabellos"
+  journal: "Computational and Theoretical Chemistry"
+  year: 2020
+  date: "2020-06-17"
+  volume: "1186"
+  pages: "112912"
+  doi: "10.1016/j.comptc.2020.112912"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2020-nunez-gonzalez-kcl-cu:
+  title: "Effect of substitutional Cu atoms on the electronic and optical properties of KCl: A DFT approach"
+  authors:
+    - "Roberto Núñez-González"
+    - "R. Aceves"
+    - "José Luis Cabellos"
+    - "Alvaro Posada-Amarillas"
+  journal: "Materials Today Communications"
+  year: 2020
+  date: "2019-12-06"
+  volume: "22"
+  pages: "100831"
+  doi: "10.1016/j.mtcomm.2019.100831"
+  type: article
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2020-navarro-dy-nmr:
+  title: "^{1}H NMR of paramagnetic Dy^{3+} complex with DTPA-amide p-xylylene-cyclophane; possible probing action toward d-histidine and histamine"
+  authors:
+    - "Rosa Elena Navarro"
+    - "Octavio Serna-Medina"
+    - "Yedith Soberanes"
+    - "José Luis Cabellos"
+    - "Motomichi Inoue"
+    - "Hisila Santacruz"
+    - "Álvaro Posada-Amarillas"
+  journal: "Polyhedron"
+  year: 2020
+  date: "2020-02-28"
+  volume: "181"
+  pages: "114474"
+  doi: "10.1016/j.poly.2020.114474"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2020-ortiz-chi-glomos:
+  title: "GLOMOS: An efficient global search toolkit for complex molecular systems"
+  authors:
+    - "Filiberto Ortiz-Chi"
+    - "Gabriel Merino"
+    - "Jose Luis Cabellos"
+  journal: "Conference abstract (Morressier)"
+  year: 2020
+  date: "2020-10-12"
+  doi: "10.26226/morressier.5f6c5f439b74b699bf390ae3"
+  type: conference
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2019-dong-li2b24:
+  title: "Li_{2}B_{24}: the simplest combination for a three-ring boron tube"
+  authors:
+    - "Xue Dong"
+    - "Said Jalife"
+    - "Alejandro Vásquez-Espinal"
+    - "Jorge Barroso"
+    - "Mesías Orozco-Ic"
+    - "Estefanía Ravell"
+    - "José Luis Cabellos"
+    - "Wei-yan Liang"
+    - "Zhong-hua Cui"
+    - "Gabriel Merino"
+  journal: "Nanoscale"
+  year: 2019
+  date: "2019-01-17"
+  volume: "11"
+  issue: "5"
+  pages: "2143–2147"
+  doi: "10.1039/c8nr09173k"
+  type: article
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2018-dzib-eyringpy:
+  title: "Eyringpy: A program for computing rate constants in the gas phase and in solution"
+  authors:
+    - "Eugenia Dzib"
+    - "José Luis Cabellos"
+    - "Filiberto Ortíz-Chi"
+    - "Sudip Pan"
+    - "Annia Galano"
+    - "Gabriel Merino"
+  journal: "International Journal of Quantum Chemistry"
+  year: 2018
+  date: "2018-08-30"
+  volume: "119"
+  issue: "2"
+  doi: "10.1002/qua.25686"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2018-dong-li2b12:
+  title: "Li_{2}B_{12} and Li_{3}B_{12}: Prediction of the Smallest Tubular and Cage-like Boron Structures"
+  authors:
+    - "Xue Dong"
+    - "Said Jalife"
+    - "Alejandro Vásquez-Espinal"
+    - "Estefanía Ravell"
+    - "Sudip Pan"
+    - "José Luis Cabellos"
+    - "Wei-yan Liang"
+    - "Zhong-hua Cui"
+    - "Gabriel Merino"
+  journal: "Angewandte Chemie International Edition"
+  year: 2018
+  date: "2018-02-23"
+  volume: "57"
+  issue: "17"
+  pages: "4627–4631"
+  doi: "10.1002/anie.201800976"
+  type: article
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2018-pan-cga5:
+  title: "Planar pentacoordinate carbon in CGa_{5}^{+} derivatives"
+  authors:
+    - "Sudip Pan"
+    - "José Luis Cabellos"
+    - "Mesías Orozco-Ic"
+    - "Pratim K. Chattaraj"
+    - "Lili Zhao"
+    - "Gabriel Merino"
+  journal: "Physical Chemistry Chemical Physics"
+  year: 2018
+  date: "2018-04-09"
+  volume: "20"
+  issue: "18"
+  pages: "12350–12355"
+  doi: "10.1039/c8cp01009a"
+  type: article
+  researchAreas: [chemical-bonding]
+  members: [jose-luis-cabellos]
+
+2018-ravell-ce5:
+  title: "Structure and Bonding in CE_{5}^{−} (E = Al–Tl) Clusters: Planar Tetracoordinate Carbon versus Pentacoordinate Carbon"
+  authors:
+    - "Estefanía Ravell"
+    - "Said Jalife"
+    - "Jorge Barroso"
+    - "Mesías Orozco-Ic"
+    - "Gerardo Hernández-Juárez"
+    - "Filiberto Ortiz-Chi"
+    - "Sudip Pan"
+    - "José Luis Cabellos"
+    - "Gabriel Merino"
+  journal: "Chemistry – An Asian Journal"
+  year: 2018
+  date: "2018-03-24"
+  volume: "13"
+  issue: "11"
+  pages: "1467–1473"
+  doi: "10.1002/asia.201800261"
+  type: article
+  researchAreas: [structure-prediction, chemical-bonding]
+  members: [jose-luis-cabellos]
+
+2018-guerrero-jordan-cupt:
+  title: "Theoretical investigation of the structures of unsupported 38-atom CuPt clusters"
+  authors:
+    - "Josafat Guerrero-Jordan"
+    - "José Luis Cabellos"
+    - "Roy L. Johnston"
+    - "Alvaro Posada-Amarillas"
+  journal: "The European Physical Journal B"
+  year: 2018
+  date: "2018-06-01"
+  volume: "91"
+  issue: "6"
+  doi: "10.1140/epjb/e2018-90020-2"
+  type: article
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2017-rodriguez-kessler-agnrh:
+  title: "Structural Evolution of the Rhodium-Doped Silver Clusters Ag_{n}Rh (n ≤ 15) and Their Reactivity toward NO"
+  authors:
+    - "P. L. Rodríguez-Kessler"
+    - "Sudip Pan"
+    - "Elizabeth Florez"
+    - "José Luis Cabellos"
+    - "Gabriel Merino"
+  journal: "The Journal of Physical Chemistry C"
+  year: 2017
+  date: "2017-08-11"
+  volume: "121"
+  issue: "35"
+  pages: "19420–19427"
+  doi: "10.1021/acs.jpcc.7b05048"
+  type: article
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2017-murillo-h4so5:
+  title: "Does H_{4}SO_{5} exist?"
+  authors:
+    - "Fernando Murillo"
+    - "Alba Vargas-Caamal"
+    - "Sudip Pan"
+    - "José Luis Cabellos"
+    - "Miguel J. Mora-Fonz"
+    - "Alvaro Muñoz-Castro"
+    - "Albeiro Restrepo"
+    - "Gabriel Merino"
+  journal: "Physical Chemistry Chemical Physics"
+  year: 2017
+  date: "2017-06-06"
+  volume: "19"
+  issue: "26"
+  pages: "17088–17093"
+  doi: "10.1039/c7cp01328k"
+  type: article
+  researchAreas: [chemical-bonding]
+  members: [jose-luis-cabellos]
+
+2017-martinez-sumanene:
+  title: "Importance of Dispersion on the Stability of the Concave-Bound CpM (M = Fe, Ru, Os) Complexes of Sumanene"
+  authors:
+    - "Saúl H. Martínez"
+    - "Sudip Pan"
+    - "José Luis Cabellos"
+    - "Eugenia Dzib"
+    - "María A. Fernández-Herrera"
+    - "Gabriel Merino"
+  journal: "Organometallics"
+  year: 2017
+  date: "2017-05-08"
+  volume: "36"
+  issue: "10"
+  pages: "2036–2041"
+  doi: "10.1021/acs.organomet.7b00282"
+  type: article
+  researchAreas: [chemical-bonding]
+  members: [jose-luis-cabellos]
+
+2016-jalife-boron-dynamics:
+  title: "Dynamical behavior of boron clusters"
+  authors:
+    - "Said Jalife"
+    - "Lei Liu"
+    - "Sudip Pan"
+    - "José Luis Cabellos"
+    - "Edison Osorio"
+    - "Cheng Lu"
+    - "Thomas Heine"
+    - "Kelling J. Donald"
+    - "Gabriel Merino"
+  journal: "Nanoscale"
+  year: 2016
+  date: "2016-09-26"
+  volume: "8"
+  issue: "40"
+  pages: "17639–17644"
+  doi: "10.1039/c6nr06383g"
+  type: article
+  researchAreas: [structure-prediction, finite-temperature]
+  members: [jose-luis-cabellos]
+
+2016-vargas-caamal-metallocene:
+  title: "How strong are the metallocene–metallocene interactions? Cases of ferrocene, ruthenocene, and osmocene"
+  authors:
+    - "Alba Vargas-Caamal"
+    - "Sudip Pan"
+    - "Filiberto Ortiz-Chi"
+    - "Jose Luis Cabellos"
+    - "Roberto A. Boto"
+    - "Julia Contreras-Garcia"
+    - "Albeiro Restrepo"
+    - "Pratim K. Chattaraj"
+    - "Gabriel Merino"
+  journal: "Physical Chemistry Chemical Physics"
+  year: 2016
+  date: "2015-11-11"
+  volume: "18"
+  issue: "1"
+  pages: "550–556"
+  doi: "10.1039/c5cp05956a"
+  type: article
+  researchAreas: [chemical-bonding]
+  members: [jose-luis-cabellos]
+
+2016-jin-ruge:
+  title: "Structural and Electronic Properties of Ruthenium-Doped Germanium Clusters"
+  authors:
+    - "Yuanyuan Jin"
+    - "Yonghong Tian"
+    - "Xiaoyu Kuang"
+    - "Cheng Lu"
+    - "José Luis Cabellos"
+    - "Sukanta Mondal"
+    - "Gabriel Merino"
+  journal: "The Journal of Physical Chemistry C"
+  year: 2016
+  date: "2016-04-01"
+  volume: "120"
+  issue: "15"
+  pages: "8399–8404"
+  doi: "10.1021/acs.jpcc.6b02225"
+  type: article
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2016-florez-no3:
+  title: "Microsolvation of NO_{3}^{−}: structural exploration and bonding analysis"
+  authors:
+    - "Elizabeth Flórez"
+    - "Nancy Acelas"
+    - "César Ibargüen"
+    - "Sukanta Mondal"
+    - "José Luis Cabellos"
+    - "Gabriel Merino"
+    - "Albeiro Restrepo"
+  journal: "RSC Advances"
+  year: 2016
+  date: "2016-07-20"
+  volume: "6"
+  issue: "76"
+  pages: "71913–71923"
+  doi: "10.1039/c6ra15059d"
+  type: article
+  researchAreas: [structure-prediction, chemical-bonding]
+  members: [jose-luis-cabellos]
+
+2016-jalife-xe2-c60:
+  title: "Breaking the Isolated Pentagon Rule by Encapsulating Xe_{2} in C_{60}: The Guest Defines the Shape of the Host"
+  authors:
+    - "Said Jalife"
+    - "Sukanta Mondal"
+    - "José Luis Cabellos"
+    - "Sudip Pan"
+    - "Miguel Ángel Méndez-Rojas"
+    - "Israel Fernández"
+    - "Gernot Frenking"
+    - "Gabriel Merino"
+  journal: "ChemistrySelect"
+  year: 2016
+  date: "2016-07-01"
+  volume: "1"
+  issue: "10"
+  pages: "2405–2408"
+  doi: "10.1002/slct.201600525"
+  type: article
+  researchAreas: [chemical-bonding]
+  members: [jose-luis-cabellos]
+
+2016-barroso-pentalenides:
+  title: "Structure and Bonding of Alkali-Metal Pentalenides"
+  authors:
+    - "Jorge Barroso"
+    - "Sukanta Mondal"
+    - "José Luis Cabellos"
+    - "Edison Osorio"
+    - "Sudip Pan"
+    - "Gabriel Merino"
+  journal: "Organometallics"
+  year: 2016
+  date: "2016-12-20"
+  volume: "36"
+  issue: "2"
+  pages: "310–317"
+  doi: "10.1021/acs.organomet.6b00768"
+  type: article
+  researchAreas: [chemical-bonding]
+  members: [jose-luis-cabellos]
+
+2016-hilario-martinez-spirostan:
+  title: "Regioselective Spirostan E-Ring Opening for the Synthesis of Dihydropyran Steroidal Frameworks"
+  authors:
+    - "J. Ciciolil Hilario-Martínez"
+    - "Reyna Zeferino-Díaz"
+    - "Miguel A. Muñoz-Hernández"
+    - "Ma. Guadalupe Hernández-Linares"
+    - "José Luis Cabellos"
+    - "Gabriel Merino"
+    - "Jesús Sandoval-Ramírez"
+    - "Zhendong Jin"
+    - "María A. Fernández-Herrera"
+  journal: "Organic Letters"
+  year: 2016
+  date: "2016-03-24"
+  volume: "18"
+  issue: "8"
+  pages: "1772–1775"
+  doi: "10.1021/acs.orglett.6b00492"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2016-jalife-homododecahedryl:
+  title: "Nonclassical 21-Homododecahedryl Cation Rearrangement Revisited"
+  authors:
+    - "Said Jalife"
+    - "Sukanta Mondal"
+    - "Edison Osorio"
+    - "José Luis Cabellos"
+    - "Gerardo Martínez-Guajardo"
+    - "María A. Fernández-Herrera"
+    - "Gabriel Merino"
+  journal: "Organic Letters"
+  year: 2016
+  date: "2016-02-10"
+  volume: "18"
+  issue: "5"
+  pages: "1140–1142"
+  doi: "10.1021/acs.orglett.5b03558"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2016-mondal-cpe-cr-co5:
+  title: "Why CpAl–Cr(CO)_{5} is linear while CpIn–Cr(CO)_{5} is not? Understanding the structure and bonding of the CpE–Cr(CO)_{5} (E = Group 13 element) complexes"
+  authors:
+    - "Sukanta Mondal"
+    - "Edison Osorio"
+    - "Sudip Pan"
+    - "José Luis Cabellos"
+    - "Saul Martínez"
+    - "Elizabeth Florez"
+    - "Gabriel Merino"
+  journal: "Theoretical Chemistry Accounts"
+  year: 2016
+  date: "2016-09-19"
+  volume: "135"
+  issue: "10"
+  doi: "10.1007/s00214-016-1993-7"
+  type: article
+  researchAreas: [chemical-bonding]
+  members: [jose-luis-cabellos]
+
+2016-durango-garcia-vaska:
+  title: "Back to basics: identification of reaction intermediates in the mechanism of a classic ligand substitution reaction on Vaska's complex"
+  authors:
+    - "Clara J. Durango-García"
+    - "Said Jalife"
+    - "José Luis Cabellos"
+    - "Saul H. Martínez"
+    - "J. Oscar C. Jimenez-Halla"
+    - "Sudip Pan"
+    - "Gabriel Merino"
+    - "Virginia Montiel-Palma"
+  journal: "RSC Advances"
+  year: 2016
+  date: "2015-12-22"
+  volume: "6"
+  issue: "4"
+  pages: "3386–3392"
+  doi: "10.1039/c5ra20969b"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2016-florez-wcn:
+  title: "Structure and bonding in WC_{n} (n = 2–5) clusters"
+  authors:
+    - "Elizabeth Flórez"
+    - "Gabriel Merino"
+    - "José Luis Cabellos"
+    - "Franklin Ferraro"
+    - "Albeiro Restrepo"
+    - "C. Z. Hadad"
+  journal: "Theoretical Chemistry Accounts"
+  year: 2016
+  date: "2016-08-12"
+  volume: "135"
+  issue: "9"
+  doi: "10.1007/s00214-016-1979-5"
+  type: article
+  researchAreas: [structure-prediction, chemical-bonding]
+  members: [jose-luis-cabellos]
+
+2015-martinez-guajardo-borospherene:
+  title: "Dynamical behavior of Borospherene: A Nanobubble"
+  authors:
+    - "Gerardo Martínez-Guajardo"
+    - "José Luis Cabellos"
+    - "Andres Díaz-Celaya"
+    - "Sudip Pan"
+    - "Rafael Islas"
+    - "Pratim K. Chattaraj"
+    - "Thomas Heine"
+    - "Gabriel Merino"
+  journal: "Scientific Reports"
+  year: 2015
+  date: "2015-06-22"
+  volume: "5"
+  pages: "11287"
+  doi: "10.1038/srep11287"
+  pdf: "https://www.nature.com/articles/srep11287.pdf"
+  type: article
+  researchAreas: [structure-prediction, finite-temperature]
+  members: [jose-luis-cabellos]
+
+2015-grande-aztatzi-cbe5:
+  title: "Planar pentacoordinate carbons in CBe_{5}^{4−} derivatives"
+  authors:
+    - "Rafael Grande-Aztatzi"
+    - "José Luis Cabellos"
+    - "Rafael Islas"
+    - "Ivan Infante"
+    - "José M. Mercero"
+    - "Albeiro Restrepo"
+    - "Gabriel Merino"
+  journal: "Physical Chemistry Chemical Physics"
+  year: 2015
+  date: "2015-01-07"
+  volume: "17"
+  issue: "6"
+  pages: "4620–4624"
+  doi: "10.1039/c4cp05659k"
+  type: article
+  researchAreas: [chemical-bonding]
+  members: [jose-luis-cabellos]
+
+2015-vargas-caamal-ethanol-dimer:
+  title: "The rich and complex potential energy surface of the ethanol dimer"
+  authors:
+    - "Alba Vargas-Caamal"
+    - "Filiberto Ortiz-Chi"
+    - "Diego Moreno"
+    - "Albeiro Restrepo"
+    - "Gabriel Merino"
+    - "José Luis Cabellos"
+  journal: "Theoretical Chemistry Accounts"
+  year: 2015
+  date: "2015-01-29"
+  volume: "134"
+  issue: "2"
+  doi: "10.1007/s00214-015-1615-9"
+  type: article
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2015-ruiz-santoyo-mequinol:
+  title: "Intramolecular structure and dynamics of mequinol and guaiacol in the gas phase: Rotationally resolved electronic spectra of their S_{1} states"
+  authors:
+    - "José Arturo Ruiz-Santoyo"
+    - "Marcela Rodríguez-Matus"
+    - "José Luis Cabellos"
+    - "John T. Yi"
+    - "David W. Pratt"
+    - "Michael Schmitt"
+    - "Gabriel Merino"
+    - "Leonardo Álvarez-Valtierra"
+  journal: "The Journal of Chemical Physics"
+  year: 2015
+  date: "2015-09-02"
+  volume: "143"
+  issue: "9"
+  pages: "094301"
+  doi: "10.1063/1.4928696"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2014-grande-aztatzi-gold-boron:
+  title: "Structural evolution of small gold clusters doped by one and two boron atoms"
+  authors:
+    - "Rafael Grande-Aztatzi"
+    - "Paulina R. Martínez-Alanis"
+    - "José Luis Cabellos"
+    - "Edison Osorio"
+    - "Ana Martínez"
+    - "Gabriel Merino"
+  journal: "Journal of Computational Chemistry"
+  year: 2014
+  date: "2014-10-03"
+  volume: "35"
+  issue: "32"
+  pages: "2288–2296"
+  doi: "10.1002/jcc.23748"
+  type: article
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2014-palma-photolithography:
+  title: "Photoinduced C–C Reactions on Insulators toward Photolithography of Graphene Nanoarchitectures"
+  authors:
+    - "Carlos-Andres Palma"
+    - "Katharina Diller"
+    - "Reinhard Berger"
+    - "Alexander Welle"
+    - "Jonas Björk"
+    - "Jose Luis Cabellos"
+    - "Duncan J. Mowbray"
+    - "Anthoula C. Papageorgiou"
+    - "Natalia P. Ivleva"
+    - "Sonja Matich"
+    - "Emanuela Margapoti"
+    - "Reinhard Niessner"
+    - "Bernhard Menges"
+    - "Joachim Reichert"
+    - "Xinliang Feng"
+    - "Hans Joachim Räder"
+    - "Florian Klappenberger"
+    - "Angel Rubio"
+    - "Klaus Müllen"
+    - "Johannes V. Barth"
+  journal: "Journal of the American Chemical Society"
+  year: 2014
+  date: "2014-02-13"
+  volume: "136"
+  issue: "12"
+  pages: "4651–4658"
+  doi: "10.1021/ja412868w"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2014-pan-ngbe:
+  title: "Ab Initio Study on the Stability of Ng_{n}Be_{2}N_{2}, Ng_{n}Be_{3}N_{2} and NgBeSiN_{2} Clusters"
+  authors:
+    - "Sudip Pan"
+    - "Diego Moreno"
+    - "José Luis Cabellos"
+    - "Gabriel Merino"
+    - "Pratim K. Chattaraj"
+  journal: "ChemPhysChem"
+  year: 2014
+  date: "2014-05-30"
+  volume: "15"
+  issue: "12"
+  pages: "2618–2625"
+  doi: "10.1002/cphc.201402101"
+  type: article
+  researchAreas: [structure-prediction, chemical-bonding]
+  members: [jose-luis-cabellos]
+
+2014-castro-e2p4:
+  title: "Exploring the Potential Energy Surface of E_{2}P_{4} Clusters (E = Group 13 Element): The Quest for Inverse Carbon-Free Sandwiches"
+  authors:
+    - "Abril C. Castro"
+    - "Edison Osorio"
+    - "José Luis Cabellos"
+    - "Erick Cerpa"
+    - "Eduard Matito"
+    - "Miquel Solà"
+    - "Marcel Swart"
+    - "Gabriel Merino"
+  journal: "Chemistry – A European Journal"
+  year: 2014
+  date: "2014-04-02"
+  volume: "20"
+  issue: "16"
+  pages: "4583–4590"
+  doi: "10.1002/chem.201304685"
+  type: article
+  researchAreas: [structure-prediction, chemical-bonding]
+  members: [jose-luis-cabellos]
+
+2014-hadad-wc6:
+  title: "Potential Energy Surfaces of WC_{6} Clusters in Different Spin States"
+  authors:
+    - "C. Z. Hadad"
+    - "Elizabeth Florez"
+    - "Gabriel Merino"
+    - "José Luis Cabellos"
+    - "Franklin Ferraro"
+    - "Albeiro Restrepo"
+  journal: "The Journal of Physical Chemistry A"
+  year: 2014
+  date: "2014-02-04"
+  volume: "118"
+  issue: "31"
+  pages: "5762–5768"
+  doi: "10.1021/jp4099045"
+  type: article
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2014-fernandez-herrera-triazolinediones:
+  title: "Understanding the high reactivity of triazolinediones in Diels-Alder reactions. A DFT study"
+  authors:
+    - "María A. Fernández-Herrera"
+    - "Claudia Zavala-Oseguera"
+    - "José Luis Cabellos"
+    - "Jesús Sandoval-Ramírez"
+    - "Luis R. Domingo"
+    - "Gabriel Merino"
+  journal: "Journal of Molecular Modeling"
+  year: 2014
+  date: "2014-04-01"
+  volume: "20"
+  issue: "4"
+  pages: "2207"
+  doi: "10.1007/s00894-014-2207-7"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2013-el-sayed-energy-alignment:
+  title: "Understanding Energy-Level Alignment in Donor–Acceptor/Metal Interfaces from Core-Level Shifts"
+  authors:
+    - "Afaf El-Sayed"
+    - "Patrizia Borghetti"
+    - "Elizabeth Goiri"
+    - "Celia Rogero"
+    - "Luca Floreano"
+    - "Giacomo Lovat"
+    - "Duncan John Mowbray"
+    - "Jose Luis Cabellos"
+    - "Yutaka Wakayama"
+    - "Angel Rubio"
+    - "Jose Enrique Ortega"
+    - "Dimas G. de Oteyza"
+  journal: "ACS Nano"
+  year: 2013
+  date: "2013-07-24"
+  volume: "7"
+  issue: "8"
+  pages: "6914–6920"
+  doi: "10.1021/nn4020888"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2013-pan-be-ng:
+  title: "In Quest of Strong Be–Ng Bonds among the Neutral Ng–Be Complexes"
+  authors:
+    - "Sudip Pan"
+    - "Diego Moreno"
+    - "José Luis Cabellos"
+    - "Jonathan Romero"
+    - "Andres Reyes"
+    - "Gabriel Merino"
+    - "Pratim K. Chattaraj"
+  journal: "The Journal of Physical Chemistry A"
+  year: 2013
+  date: "2013-11-08"
+  volume: "118"
+  issue: "2"
+  pages: "487–494"
+  doi: "10.1021/jp409941v"
+  type: article
+  researchAreas: [chemical-bonding]
+  members: [jose-luis-cabellos]
+
+2012-shkrebtii-graphane:
+  title: "Graphene and graphane functionalization with hydrogen: electronic and optical signatures"
+  authors:
+    - "A. I. Shkrebtii"
+    - "E. Heritage"
+    - "P. McNelles"
+    - "J. L. Cabellos"
+    - "B. S. Mendoza"
+  journal: "physica status solidi (c)"
+  year: 2012
+  date: "2012-03-15"
+  volume: "9"
+  issue: "6"
+  pages: "1378–1383"
+  doi: "10.1002/pssc.201100705"
+  type: article
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2012-mendoza-spin-injection-surfaces:
+  title: "Optical spin injection at semiconductor surfaces"
+  authors:
+    - "Bernardo S. Mendoza"
+    - "J. L. Cabellos"
+  journal: "Physical Review B"
+  year: 2012
+  date: "2012-04-26"
+  volume: "85"
+  issue: "16"
+  pages: "165324"
+  doi: "10.1103/PhysRevB.85.165324"
+  type: article
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2011-cabellos-injection-current:
+  title: "Optical coherent current control at surfaces: Theory of injection current"
+  authors:
+    - "J. L. Cabellos"
+    - "Bernardo S. Mendoza"
+    - "A. I. Shkrebtii"
+  journal: "Physical Review B"
+  year: 2011
+  date: "2011-11-28"
+  volume: "84"
+  issue: "19"
+  pages: "195326"
+  doi: "10.1103/PhysRevB.84.195326"
+  type: article
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2011-arzate-silicon-nanostructures:
+  title: "Optical absorption spectroscopy of one-dimensional silicon nanostructures"
+  authors:
+    - "N. Arzate"
+    - "R. A. Vázquez-Nava"
+    - "J. L. Cabellos"
+    - "R. Carriles"
+    - "E. Castro-Camus"
+    - "M. E. Figueroa-Delgadillo"
+    - "B. S. Mendoza"
+  journal: "Optics and Lasers in Engineering"
+  year: 2011
+  date: "2011-01-10"
+  volume: "49"
+  issue: "6"
+  pages: "668–674"
+  doi: "10.1016/j.optlaseng.2010.12.007"
+  type: article
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2011-gaspari-hydrogenated-graphene:
+  title: "Partially Hydrogenated Graphene: Semiconductor Material with a Tunable Gap and Its Non-Destructive Optical Characterization"
+  authors:
+    - "F. Gaspari"
+    - "A. I. Shkrebtii"
+    - "P. McNelles"
+    - "J. L. Cabellos"
+    - "B. S. Mendoza"
+  journal: "MRS Proceedings"
+  year: 2011
+  date: "2011-07-07"
+  volume: "1362"
+  doi: "10.1557/opl.2011.1035"
+  type: conference
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2011-shkrebtii-si100:
+  title: "Temperature Dependent Optical Response of Si(100): Theory vs. Experiment"
+  authors:
+    - "A. I. Shkrebtii"
+    - "J. Heron"
+    - "J. L. Cabellos"
+    - "N. Witkowski"
+    - "O. Pluchery"
+    - "B. S. Mendoza"
+    - "Y. Borensztein"
+  journal: "MRS Proceedings"
+  year: 2011
+  date: "2011-07-07"
+  volume: "1370"
+  doi: "10.1557/opl.2011.1039"
+  type: conference
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2010-mendoza-spin-injection:
+  title: "Optical Spin Injection in Semiconductors"
+  authors:
+    - "Bernardo S. Mendoza"
+    - "Cuauhtémoc Salazar"
+    - "J. L. Cabellos"
+  journal: "Modern Physics Letters B"
+  year: 2010
+  date: "2010-06-10"
+  volume: "24"
+  issue: "14"
+  pages: "1507–1522"
+  doi: "10.1142/S0217984910023980"
+  type: article
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2009-cabellos-stress-spin:
+  title: "Stress-modulated optical spin injection in bulk Si and GaAs semiconductors"
+  authors:
+    - "José Luis Cabellos"
+    - "C. Salazar"
+    - "Bernardo S. Mendoza"
+  journal: "Physical Review B"
+  year: 2009
+  date: "2009-12-07"
+  volume: "80"
+  issue: "24"
+  pages: "245204"
+  doi: "10.1103/PhysRevB.80.245204"
+  pdf: "https://arxiv.org/pdf/1804.01219"
+  type: article
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2008-cabellos-leos-spin:
+  title: "One-photon spin injection in semiconductor surfaces"
+  authors:
+    - "J. L. Cabellos"
+    - "Bernardo S. Mendoza"
+    - "F. Nastos"
+    - "T. Rangel"
+    - "N. Arzate"
+    - "J. E. Sipe"
+  journal: "2008 Digest of the IEEE/LEOS Summer Topical Meetings"
+  year: 2008
+  date: "2008-08-14"
+  pages: "3–4"
+  doi: "10.1109/LEOSST.2008.4590460"
+  type: conference
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+# Agregada a mano (2026-09-28): aparece en Google Scholar; Crossref solo registra el libro editado.
+2026-lopez-velazquez-sistemas-alimentarios:
+  title: "Sistemas alimentarios en regiones tropicales latinoamericanas"
+  authors:
+    - "Khirbet López-Velázquez"
+    - "Minerva Villanueva-Rodríguez"
+    - "Analila Luna-Valenzuela"
+    - "José Luis Cabellos-Quiroz"
+  journal: "Sistemas alimentarios en regiones tropicales latinoamericanas (Benemérita Universidad Autónoma de Chiapas)"
+  year: 2026
+  date: "2026-02-26"
+  doi: "10.31644/de.2026.lb01"
+  type: chapter
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+# --- Agregadas a mano (2026-09-28) tras comparar con Google Scholar: no están en OpenAlex con su perfil ---
+
+2025-lopez-sanchez-rambutan:
+  title: "Valorization of rambutan (Nephelium lappaceum L.) peel extract for the green synthesis of silver nanoparticles"
+  authors:
+    - "Adolfo López-Sánchez"
+    - "David Andrés Santiago Gordillo"
+    - "Khirbet López Velázquez"
+    - "Edwin René Hoil Canul"
+    - "Luis Alfonso Maldonado López"
+    - "José Luis Cabellos Quiroz"
+  journal: "Agro Productividad"
+  year: 2025
+  date: "2025-09-17"
+  doi: "10.32854/j0ym5240"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2024-lopez-velazquez-humedales:
+  title: "Descontaminación del agua residual de un centro universitario utilizando humedales artificiales: estudio a escala piloto"
+  authors:
+    - "Khirbet López Velázquez"
+    - "Yahir Murakawa Guzmán"
+    - "Carlos Gómez de León"
+    - "Andrés G. Suárez Santizo"
+    - "Linnet Roque-Romero"
+    - "César Castillo Quevedo"
+    - "Edwin R. Hoil Canul"
+    - "José Luis Cabellos Quiroz"
+  journal: "Estudios de la Ciénega"
+  year: 2024
+  date: "2024-01-01"
+  issue: "7"
+  pages: "43–52"
+  url: "https://revistaestudiosdelacienega.com/ojs/index.php/rec/article/view/93"
+  pdf: "https://revistaestudiosdelacienega.com/ojs/index.php/rec/article/download/93/82"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2024-lopez-sanchez-chclf2-cdte:
+  title: "Influencia del CHClF_{2} durante el proceso de activación de celdas solares de películas delgadas basadas en CdTe"
+  authors:
+    - "Adolfo López Sánchez"
+    - "Ricardo Mis Fernández"
+    - "José Luis Cabellos Quiroz"
+  journal: "Estudios de la Ciénega"
+  year: 2024
+  date: "2024-01-01"
+  issue: "7"
+  pages: "153–164"
+  url: "https://revistaestudiosdelacienega.com/ojs/index.php/rec/article/view/102"
+  pdf: "https://revistaestudiosdelacienega.com/ojs/index.php/rec/article/download/102/91"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2024-rojas-gonzalez-citosina:
+  title: "Estudio de la influencia del agua en la citosina mediante métodos DFT"
+  authors:
+    - "Francisco E. Rojas González"
+    - "César Castillo Quevedo"
+    - "Edgar Paredes Sotelo"
+    - "Eduardo Robles Chaparro"
+    - "Ana María Mendoza Wilson"
+    - "Aned de León Flores"
+    - "Khirbet López Velázquez"
+    - "Edwin Hoil Canul"
+    - "Adolfo López Sánchez"
+    - "Jesús Cob Cantú"
+    - "Luis Maldonado López"
+    - "Gerardo Martínez Guajardo"
+    - "José Luis Cabellos Quiroz"
+  journal: "Estudios de la Ciénega"
+  year: 2024
+  date: "2024-01-01"
+  issue: "7"
+  pages: "129–152"
+  url: "https://revistaestudiosdelacienega.com/ojs/index.php/rec/article/view/101"
+  pdf: "https://revistaestudiosdelacienega.com/ojs/index.php/rec/article/download/101/90"
+  type: article
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2023-lopez-velazquez-biobr:
+  title: "Degradación fotocatalítica de una mezcla de estrógenos en agua utilizando microesferas de BiOBr"
+  authors:
+    - "Khirbet López-Velázquez"
+    - "José L. Cabellos-Quiroz"
+    - "Edwin R. Hoil-Canul"
+    - "Adolfo López-Sánchez"
+    - "Jorge L. Guzmán-Mar"
+    - "Minerva Villanueva-Rodríguez"
+  journal: "Journal of Basic Sciences"
+  year: 2023
+  date: "2023-01-01"
+  volume: "9"
+  issue: "25"
+  pages: "86–95"
+  url: "https://revistajobs.ujat.mx/jobs/article/view/6296"
+  pdf: "https://revistajobs.ujat.mx/jobs/article/download/6296/4577"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2016-ravell-cisplatino:
+  title: "Estudio teórico de la microsolvatación del cis-diaminodicloroplatino(II)"
+  authors:
+    - "Estefanía Ravell"
+    - "Alba Vargas-Caamal"
+    - "José Luis Cabellos"
+    - "Gabriel Merino"
+  journal: "Revista del Centro de Graduados e Investigación"
+  year: 2016
+  pages: "163"
+  type: conference
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2012-cabellos-charge-transfer:
+  title: "Understanding Charge Transfer in Donor–Acceptor/Metal Systems: A Combined Theoretical and Experimental Study"
+  authors:
+    - "José Luis Cabellos"
+    - "Duncan J. Mowbray"
+    - "Elizabeth Goiri"
+    - "A. El-Sayed"
+    - "Luca Floreano"
+    - "Dimas G. de Oteyza"
+    - "Celia Rogero"
+    - "J. Enrique Ortega"
+    - "Ángel Rubio"
+  journal: "The Journal of Physical Chemistry C"
+  year: 2012
+  date: "2012-08-21"
+  volume: "116"
+  issue: "34"
+  pages: "17991–18001"
+  doi: "10.1021/jp3004213"
+  pdf: "https://arxiv.org/pdf/1308.5277"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2009-cabellos-tesis-doctoral:
+  title: "Optical response in semiconductors"
+  authors:
+    - "José Luis Cabellos"
+  journal: "Centro de Investigaciones en Óptica (CIO)"
+  year: 2009
+  date: "2009-12-15"
+  type: thesis
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2018-cabellos-glomos:
+  title: "GLOMOS 1.0"
+  authors:
+    - "José Luis Cabellos"
+    - "Filiberto Ortiz-Chi"
+    - "A. Ramírez"
+    - "Gabriel Merino"
+  journal: "Cinvestav Mérida"
+  year: 2018
+  type: software
+  researchAreas: [structure-prediction]
+  members: [jose-luis-cabellos]
+
+2018-dzib-eyringpy-software:
+  title: "Eyringpy 1.0.2"
+  authors:
+    - "Eugenia Dzib"
+    - "José Luis Cabellos"
+    - "Filiberto Ortiz-Chi"
+    - "Sudip Pan"
+    - "Annia Galano"
+    - "Gabriel Merino"
+  journal: "Cinvestav Mérida"
+  year: 2018
+  type: software
+  researchAreas: []
+  members: [jose-luis-cabellos]
+
+2009-mendoza-tiniba:
+  title: "Tiniba: Programas para el cálculo en paralelo de respuestas ópticas en semiconductores usando un clúster de cómputo"
+  authors:
+    - "Bernardo Mendoza Santoyo"
+    - "José Luis Cabellos Quiroz"
+    - "Tonatiuh Rangel Gordillo"
+  journal: "Registro INDAUTOR (México)"
+  year: 2009
+  type: software
   researchAreas: [optical-properties]
   members: [jose-luis-cabellos]
