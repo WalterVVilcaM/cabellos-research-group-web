@@ -12,5 +12,20 @@ declare module 'cloudflare:workers' {
     ASSETS: import('@cloudflare/workers-types/index.ts').Fetcher;
     /** "true" en la vista previa: muestra las notas de prueba. */
     SHOW_TEST_NOTES?: string;
+    /** Cloudflare Access (ADR-013): dominio del equipo (https://<equipo>.cloudflareaccess.com). */
+    ACCESS_TEAM_DOMAIN?: string;
+    /** Cloudflare Access: etiqueta AUD de la aplicación del panel. */
+    ACCESS_AUD?: string;
+    /** Correos con permiso para el panel, separados por comas. */
+    ADMIN_EMAILS?: string;
+    /** Solo desarrollo local (.dev.vars): omite Access en localhost. */
+    ADMIN_DEV_EMAIL?: string;
   };
+}
+
+declare namespace App {
+  interface Locals {
+    /** Correo del editor autenticado en /admin (lo fija src/middleware.ts). */
+    adminEmail?: string;
+  }
 }

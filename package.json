@@ -27,6 +27,7 @@
     "@astrojs/cloudflare": "^14.3.3",
     "@astrojs/sitemap": "^3.7.4",
     "astro": "^7.3.4",
+    "jose": "^6.2.12",
     "micromark": "^4.0.3",
     "micromark-extension-gfm": "^3.0.0"
   },

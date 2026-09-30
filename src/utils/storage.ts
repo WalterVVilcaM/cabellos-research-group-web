@@ -57,11 +57,8 @@ async function looksLikePdf(file: Blob): Promise<boolean> {
   return String.fromCharCode(...head) === '%PDF-';
 }
 
-/**
- * Valida y guarda un PDF en R2. Devuelve los datos para la fila de `attachments`.
- * No escribe en D1: el llamador (panel, NOTES-F5) guarda la fila y, si falla, borra el objeto.
- */
-export async function putNoteFile(file: File, noteId: number, rights: string) {
+/** Valida un PDF antes de subirlo (tipo real, tamaño, derechos y espacio disponible). Lanza UploadError. */
+export async function validateNoteFile(file: File, rights: string): Promise<void> {
   if (!(RIGHTS as readonly string[]).includes(rights)) {
     throw new UploadError('rights', 'Indica si tienes derecho a distribuir este archivo.');
   }
@@ -76,6 +73,14 @@ export async function putNoteFile(file: File, noteId: number, rights: string) {
   if ((await storageUsage()) + file.size > STORAGE_LIMIT_BYTES) {
     throw new UploadError('quota', 'Se alcanzó el espacio máximo para archivos (9.5 GB).');
   }
+}
+
+/**
+ * Valida y guarda un PDF en R2. Devuelve los datos para la fila de `attachments`.
+ * No escribe en D1: el llamador (panel, NOTES-F5) guarda la fila y, si falla, borra el objeto.
+ */
+export async function putNoteFile(file: File, noteId: number, rights: string) {
+  await validateNoteFile(file, rights);
   const key = makeKey(noteId, file.name);
   // ≤ 20 MB: cabe en memoria del Worker (128 MB); ArrayBuffer evita mezclar tipos de streams.
   await env.NOTES_FILES.put(key, await file.arrayBuffer(), {

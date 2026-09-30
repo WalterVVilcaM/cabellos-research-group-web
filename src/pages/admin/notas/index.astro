@@ -1,0 +1,164 @@
+---
+/** Panel: listado de notas con filtro por estado (VIEW-ADMIN-002). */
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { listAdminNotes, STATUSES, type NoteStatus } from '../../../utils/admin-notes';
+import { noteCategories } from '../../../config/notes';
+import { withBase, notePath } from '../../../i18n/utils';
+
+const estado = Astro.url.searchParams.get('estado');
+const status = STATUSES.includes(estado as NoteStatus) ? (estado as NoteStatus) : undefined;
+const notes = await listAdminNotes(status);
+const statusLabel = { draft: 'Borrador', published: 'Publicada', archived: 'Archivada' } as const;
+const filters = [
+  { label: 'Todas', value: undefined },
+  { label: 'Publicadas', value: 'published' },
+  { label: 'Borradores', value: 'draft' },
+  { label: 'Archivadas', value: 'archived' },
+] as const;
+const fmt = (iso: string) =>
+  new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium', timeZone: 'America/Mexico_City' }).format(new Date(iso));
+---
+
+<AdminLayout title="Notas" current="notes">
+  <div class="head">
+    <h1>Notas</h1>
+    <a href={withBase('/admin/notas/nueva/')} class="admin-btn admin-btn--primary">+ Nueva nota</a>
+  </div>
+
+  <nav aria-label="Filtrar por estado">
+    <ul role="list" class="filters">
+      {
+        filters.map((f) => (
+          <li>
+            <a
+              href={withBase(`/admin/notas/${f.value ? `?estado=${f.value}` : ''}`)}
+              aria-current={status === f.value ? 'page' : undefined}
+            >
+              {f.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <div class="admin-card table-wrap">
+    {
+      notes.length === 0 ? (
+        <p>No hay notas en este estado.</p>
+      ) : (
+        <table>
+          <caption class="visually-hidden">Notas{status ? ` (${statusLabel[status]})` : ''}</caption>
+          <thead>
+            <tr>
+              <th scope="col">Título</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Categoría</th>
+              <th scope="col">Idioma</th>
+              <th scope="col">Publicación</th>
+              <th scope="col">Actualizada</th>
+              <th scope="col"><span class="visually-hidden">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {notes.map((n) => (
+              <tr>
+                <th scope="row">
+                  <a href={withBase(`/admin/notas/${n.id}/`)}>{n.title}</a>
+                  {n.files > 0 && <span class="muted"> · {n.files} PDF</span>}
+                </th>
+                <td>
+                  <span class={`status status--${n.status}`}>{statusLabel[n.status]}</span>
+                  {n.isTest && <span class="status status--test">Prueba</span>}
+                  {n.featured && <span class="status status--test">Destacada</span>}
+                </td>
+                <td>{noteCategories[n.category].name.es}</td>
+                <td>{n.lang.toUpperCase()}</td>
+                <td>{n.publishedAt}</td>
+                <td>{fmt(n.updatedAt)}</td>
+                <td class="actions">
+                  <a href={withBase(`/admin/notas/${n.id}/`)}>Editar</a>
+                  {n.status === 'published' ? (
+                    <a href={notePath(n.slug, n.lang)} target="_blank" rel="noopener">Ver</a>
+                  ) : (
+                    <a href={withBase(`/admin/notas/${n.id}/vista-previa/`)} target="_blank" rel="noopener">Vista previa</a>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )
+    }
+  </div>
+</AdminLayout>
+
+<style>
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .filters a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 var(--space-4);
+    border: var(--border);
+    border-radius: var(--radius-pill);
+    background: #fff;
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    text-decoration: none;
+  }
+  .filters a[aria-current='page'] {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+  }
+  .table-wrap {
+    overflow-x: auto;
+    padding: 0;
+  }
+  .table-wrap > p {
+    padding: var(--space-6);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+  th,
+  td {
+    padding: var(--space-3) var(--space-4);
+    border-bottom: var(--border);
+    text-align: left;
+    vertical-align: top;
+  }
+  thead th {
+    background: var(--color-surface-alt);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  tbody th {
+    font-weight: 500;
+    min-width: 16rem;
+  }
+  td .status + .status {
+    margin-left: var(--space-1);
+  }
+  .actions {
+    white-space: nowrap;
+  }
+  .actions a + a {
+    margin-left: var(--space-3);
+  }
+</style>

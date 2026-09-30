@@ -1,0 +1,3 @@
+# Copia este archivo como .dev.vars (no se sube a GitHub) para usar el panel en tu equipo.
+# Solo funciona en localhost / 127.0.0.1: omite Cloudflare Access con este correo.
+ADMIN_DEV_EMAIL=waltervvilcam@gmail.com

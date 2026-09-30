@@ -1,0 +1,15 @@
+---
+/** Panel: vista previa de una nota (también borradores), con el mismo diseño que la pública (§68). */
+export const prerender = false;
+import View from '../../../../views/NoteDetailView.astro';
+import { loadNoteDetail } from '../../../../utils/notes';
+import { getAdminNote } from '../../../../utils/admin-notes';
+
+const id = Number(Astro.params.id);
+const note = Number.isInteger(id) ? await getAdminNote(id) : undefined;
+const data = note ? await loadNoteDetail(note.slug, { anyStatus: true }) : null;
+if (!data) return new Response('Nota no encontrada', { status: 404 });
+const lang = Astro.url.searchParams.get('lang') === 'en' ? 'en' : 'es';
+---
+
+<View lang={lang} data={data} />

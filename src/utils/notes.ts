@@ -225,9 +225,13 @@ export function renderMarkdown(md: string): string {
 }
 
 /** Detalle de una nota por slug, con cuerpo, enlaces, archivos y etiquetas. */
-export async function getNoteBySlug(slug: string): Promise<NoteWithBody | undefined> {
+export async function getNoteBySlug(
+  slug: string,
+  opts: { anyStatus?: boolean } = {},
+): Promise<NoteWithBody | undefined> {
+  // anyStatus: vista previa del panel (borradores y archivadas); nunca en rutas públicas.
   const row = await env.DB.prepare(
-    `SELECT ${LIST_COLUMNS}, n.content FROM notes n WHERE ${visible()} AND n.slug = ?`,
+    `SELECT ${LIST_COLUMNS}, n.content FROM notes n WHERE ${opts.anyStatus ? '1 = 1' : visible()} AND n.slug = ?`,
   )
     .bind(slug)
     .first<NoteRow>();
@@ -372,8 +376,8 @@ export async function loadNotesListing(page: number, category?: NoteCategoryId) 
 export type NotesListing = NonNullable<Awaited<ReturnType<typeof loadNotesListing>>>;
 
 /** Datos del detalle de una nota, o `null` si no existe o no es visible (→ 404). */
-export async function loadNoteDetail(slug: string) {
-  const note = await getNoteBySlug(slug);
+export async function loadNoteDetail(slug: string, opts: { anyStatus?: boolean } = {}) {
+  const note = await getNoteBySlug(slug, opts);
   if (!note) return null;
   const [translation, adjacent] = await Promise.all([translationFor(note), adjacentNotes(note)]);
   return { note, translation, ...adjacent };

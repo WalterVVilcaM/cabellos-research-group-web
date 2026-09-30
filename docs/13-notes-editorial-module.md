@@ -2549,7 +2549,9 @@ Gate:
 - [x] derecho de distribución obligatorio;
 - [x] seguridad (bucket privado, firma `%PDF-`, PDF de borradores inaccesibles, sin endpoint público de escritura).
 
-## NOTES-F5 — ADMIN (CRUD)
+## NOTES-F5 — ADMIN (CRUD) (implementado 2026-09-30, ADR-014)
+
+Rutas: `/admin/` (inicio), `/admin/notas/` (listado con filtro por estado), `/admin/notas/nueva/`, `/admin/notas/<id>/` (editor y estado), `/admin/notas/<id>/vista-previa/` y `/admin/api/markdown/`. La API vive bajo `/admin` para que una sola aplicación de Access proteja todo (ADR-013).
 
 Objetivo: editor utilizable por el Dr. Cabellos.
 
@@ -2563,14 +2565,15 @@ Implementar:
 
 Gate:
 
-- [ ] crear;
-- [ ] editar;
-- [ ] borrador;
-- [ ] publicar;
-- [ ] despublicar;
-- [ ] adjuntar.
+- [x] crear;
+- [x] editar;
+- [x] borrador;
+- [x] publicar;
+- [x] despublicar;
+- [x] adjuntar (PDF a R2 con derechos, quitar con limpieza en R2);
+- [x] archivar, restaurar y eliminar con confirmación.
 
-## NOTES-F6 — ACCESS
+## NOTES-F6 — ACCESS (código listo 2026-09-30, ADR-013; falta crear la aplicación de Access)
 
 Objetivo: proteger panel.
 
@@ -2583,9 +2586,9 @@ Implementar:
 
 Gate:
 
-- [ ] usuario autorizado entra;
-- [ ] no autorizado no entra;
-- [ ] rutas públicas siguen públicas.
+- [ ] usuario autorizado entra (probado en local con JWT; falta en Cloudflare);
+- [x] no autorizado no entra (401/403/503, probado en local);
+- [x] rutas públicas siguen públicas.
 
 ## NOTES-F7 — MIGRACIÓN
 
@@ -3280,8 +3283,8 @@ Dominio final            PENDIENTE
 Cloudflare               ACTIVO — https://cabellos-research-group.cabellos.workers.dev/ (NOTES-F2)
 D1                       IMPLEMENTADA (NOTES-F3)
 R2                       IMPLEMENTADA (NOTES-F4) — bucket privado servido por el Worker
-Admin / CRUD             FUTURO
-Access                   FUTURO
+Admin / CRUD             IMPLEMENTADO (NOTES-F5) — cerrado hasta configurar Access
+Access                   CÓDIGO LISTO (NOTES-F6) — falta la aplicación de Access
 ```
 
 ---

@@ -8,7 +8,14 @@
   "observability": { "enabled": true },
   "vars": {
     // "true" = vista previa: se muestran las notas de prueba. Se quita antes del lanzamiento (Gate 8).
-    "SHOW_TEST_NOTES": "true"
+    "SHOW_TEST_NOTES": "true",
+    // Panel /admin (ADR-013). Sin ACCESS_TEAM_DOMAIN y ACCESS_AUD el panel responde 503 (cerrado).
+    // Dominio del equipo de Zero Trust, p. ej. "https://<equipo>.cloudflareaccess.com".
+    "ACCESS_TEAM_DOMAIN": "",
+    // Etiqueta "Application Audience (AUD)" de la aplicación de Access del panel.
+    "ACCESS_AUD": "",
+    // Correos con permiso (también deben estar en la política de Access), separados por comas.
+    "ADMIN_EMAILS": "waltervvilcam@gmail.com"
   },
   "d1_databases": [
     {

@@ -26,8 +26,9 @@ pnpm-debug.log*
 # Archivos locales de herramientas de desarrollo: se excluyen en .git/info/exclude (no se versionan).
 
 
-# Estado local de Wrangler (Cloudflare)
+# Estado local de Wrangler (Cloudflare) y variables locales (no se suben)
 .wrangler/
+.dev.vars
 
 # scripts locales de publicación (.cmd) y sus registros
 publicar-*.cmd

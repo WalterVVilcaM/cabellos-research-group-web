@@ -1,0 +1,103 @@
+---
+/** Panel de Notes: inicio (NOTES-F5). Protegido por src/middleware.ts + Cloudflare Access. */
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { listAdminNotes, statusCounts } from '../../utils/admin-notes';
+import { STORAGE_LIMIT_BYTES, storageUsage } from '../../utils/storage';
+import { formatBytes } from '../../utils/notes';
+import { withBase } from '../../i18n/utils';
+
+const [counts, recent, used] = await Promise.all([statusCounts(), listAdminNotes(undefined, 5), storageUsage()]);
+const pct = Math.min(100, (used / STORAGE_LIMIT_BYTES) * 100);
+const statusLabel = { draft: 'Borrador', published: 'Publicada', archived: 'Archivada' } as const;
+---
+
+<AdminLayout title="Inicio" current="home">
+  <div class="dash-head">
+    <h1>Notas</h1>
+    <a href={withBase('/admin/notas/nueva/')} class="admin-btn admin-btn--primary">+ Nueva nota</a>
+  </div>
+
+  <ul role="list" class="stats">
+    <li class="admin-card"><a href={withBase('/admin/notas/?estado=published')}><strong>{counts.published}</strong> publicadas</a></li>
+    <li class="admin-card"><a href={withBase('/admin/notas/?estado=draft')}><strong>{counts.draft}</strong> borradores</a></li>
+    <li class="admin-card"><a href={withBase('/admin/notas/?estado=archived')}><strong>{counts.archived}</strong> archivadas</a></li>
+    <li class="admin-card">
+      <span><strong>{formatBytes(used, 'es')}</strong> de 9.5 GB en archivos</span>
+      <span class="meter" role="img" aria-label={`${pct.toFixed(1)} % del espacio usado`}><span style={`width:${Math.max(pct, used > 0 ? 1 : 0)}%`}></span></span>
+    </li>
+  </ul>
+
+  <section class="admin-card" aria-labelledby="recent-title">
+    <h2 id="recent-title" class="section-title">Actualizadas recientemente</h2>
+    {
+      recent.length === 0 ? (
+        <p>Todavía no hay notas. <a href={withBase('/admin/notas/nueva/')}>Escribe la primera</a>.</p>
+      ) : (
+        <ul role="list" class="recent">
+          {recent.map((n) => (
+            <li>
+              <a href={withBase(`/admin/notas/${n.id}/`)}>{n.title}</a>
+              <span class={`status status--${n.status}`}>{statusLabel[n.status]}</span>
+              {n.isTest && <span class="status status--test">Prueba</span>}
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+</AdminLayout>
+
+<style>
+  .dash-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+  }
+  .stats {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  .stats li {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .stats a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .stats strong {
+    display: block;
+    font-size: var(--text-2xl);
+    color: var(--color-primary);
+  }
+  .meter {
+    display: block;
+    height: 8px;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-alt);
+    overflow: hidden;
+  }
+  .meter span {
+    display: block;
+    height: 100%;
+    background: var(--color-primary);
+  }
+  .section-title {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-4);
+  }
+  .recent {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .recent li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+  }
+</style>

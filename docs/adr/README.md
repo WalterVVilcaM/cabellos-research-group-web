@@ -22,8 +22,8 @@ Cuando una decisión afecta arquitectura, sería costosa de revertir, modifica r
 | [ADR-010](./ADR-010-cloudflare-workers-hosting.md) | Hosting en Cloudflare Workers con Static Assets | NOTES-F2 | Aprobado |
 | [ADR-011](./ADR-011-d1-editorial-persistence.md) | Notes en Cloudflare D1 y renderizado bajo demanda | NOTES-F3 | Aprobado |
 | [ADR-012](./ADR-012-r2-file-storage.md) | Archivos de Notes en R2, servidos por el Worker | NOTES-F4 | Aprobado |
-
-Reservados para la Etapa B del módulo Notes (`docs/13-notes-editorial-module.md` §157): ADR-013 Cloudflare Access, ADR-014 editor.
+| [ADR-013](./ADR-013-cloudflare-access-admin.md) | Panel /admin con Cloudflare Access y verificación del JWT | NOTES-F6 | Aprobado |
+| [ADR-014](./ADR-014-notes-editor.md) | Editor Markdown con barra de formato y vista previa | NOTES-F5 | Aprobado |
 
 ## Plantilla
 

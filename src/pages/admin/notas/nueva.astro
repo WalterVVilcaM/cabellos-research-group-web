@@ -1,0 +1,29 @@
+---
+/** Panel: nueva nota (VIEW-ADMIN-003). */
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import NoteForm from '../../../components/admin/NoteForm.astro';
+import { emptyDraft, type FieldErrors, type NoteDraft } from '../../../utils/admin-notes';
+import { formOptions, handleSave } from '../../../utils/admin-form';
+import { withBase } from '../../../i18n/utils';
+
+let draft: NoteDraft = emptyDraft('jose-luis-cabellos');
+let errors: FieldErrors = {};
+let opts = await formOptions(draft);
+if (opts.authorIds[0]) draft.authorId = opts.authorIds[0];
+
+if (Astro.request.method === 'POST') {
+  const result = await handleSave(await Astro.request.formData(), draft, Astro.locals.adminEmail ?? '');
+  if (result.ok) {
+    const flag = result.uploadError ? 'archivo' : result.published ? 'publicada' : 'creada';
+    return Astro.redirect(withBase(`/admin/notas/${result.id}/?ok=${flag}`), 303);
+  }
+  ({ draft, errors, opts } = result);
+  Astro.response.status = 422;
+}
+---
+
+<AdminLayout title="Nueva nota" current="new">
+  <h1>Nueva nota</h1>
+  <NoteForm draft={draft} errors={errors} research={opts.research} authors={opts.authors} translations={opts.translations} />
+</AdminLayout>

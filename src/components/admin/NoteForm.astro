@@ -1,0 +1,601 @@
+---
+/**
+ * Editor de notas del panel (NOTES-F5, ADR-014): formulario de servidor con mejora progresiva
+ * (barra de formato Markdown, vista previa, URL automática, contador y filas de enlaces).
+ * Sin JavaScript todo funciona: se escribe Markdown y se guarda.
+ */
+import { noteCategories, noteCategoryIds } from '../../config/notes';
+import { useTranslations, withBase } from '../../i18n/utils';
+import { formatBytes } from '../../utils/notes';
+import { LINK_KINDS, type FieldErrors, type NoteDraft } from '../../utils/admin-notes';
+import { RIGHTS } from '../../utils/storage';
+
+interface Props {
+  draft: NoteDraft;
+  errors: FieldErrors;
+  research: { id: string; label: string }[];
+  authors: { id: string; label: string }[];
+  translations: { id: number; title: string }[];
+}
+const { draft: d, errors, research, authors, translations } = Astro.props;
+const t = useTranslations('es');
+const isPublished = d.status === 'published';
+const rightsLabels: Record<(typeof RIGHTS)[number], string> = {
+  'open-access': 'Acceso abierto (licencia que permite redistribuir)',
+  'public-domain': 'Dominio público',
+  author: 'Material propio del Dr. / del grupo',
+  permission: 'Permiso explícito del titular',
+};
+const links = d.links.length > 0 ? d.links : [{ title: '', url: '', kind: 'other' as const, description: '' }];
+const err = (k: string) => errors[k];
+const hasErrors = Object.keys(errors).length > 0;
+---
+
+<form method="post" enctype="multipart/form-data" class="note-form" novalidate data-note-form>
+  {
+    hasErrors && (
+      <div class="admin-flash admin-flash--error" role="alert" tabindex="-1" data-error-summary>
+        <strong>Revisa los campos marcados:</strong>
+        <ul>
+          {Object.entries(errors).map(([, m]) => (
+            <li>{m}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  <div class="note-form__grid">
+    <div class="note-form__main">
+      <section class="admin-card fields">
+        <div class="field">
+          <label for="title">Título</label>
+          <input id="title" name="title" value={d.title} required maxlength="200" aria-invalid={err('title') ? 'true' : undefined} data-title />
+          {err('title') && <p class="field__error">{err('title')}</p>}
+        </div>
+
+        <div class="field">
+          <label for="slug">Dirección (URL)</label>
+          <div class="slug">
+            <span class="slug__prefix" aria-hidden="true">{d.lang === 'es' ? '/es/notas/' : '/notes/'}</span>
+            <input
+              id="slug"
+              name="slug"
+              value={d.slug}
+              maxlength="80"
+              readonly={isPublished}
+              aria-describedby="slug-help"
+              aria-invalid={err('slug') ? 'true' : undefined}
+              data-slug
+              data-auto={d.slug ? undefined : 'true'}
+            />
+          </div>
+          <p id="slug-help" class="field__help">
+            {isPublished
+              ? 'La dirección de una nota publicada no cambia (protege los enlaces). Despublícala para editarla.'
+              : 'Se genera sola a partir del título. Minúsculas, números y guiones.'}
+          </p>
+          {err('slug') && <p class="field__error">{err('slug')}</p>}
+        </div>
+
+        <div class="field">
+          <label for="summary">Resumen</label>
+          <textarea id="summary" name="summary" rows="3" maxlength="320" required aria-describedby="summary-count" aria-invalid={err('summary') ? 'true' : undefined} data-summary>{d.summary}</textarea>
+          <p id="summary-count" class="field__help"><span data-count>{d.summary.length}</span>/320 · Aparece en el listado y en buscadores.</p>
+          {err('summary') && <p class="field__error">{err('summary')}</p>}
+        </div>
+
+        <div class="field">
+          <span class="field__label" id="content-label">Texto de la nota</span>
+          <div class="editor" data-editor>
+            <div class="editor__bar" role="toolbar" aria-label="Formato" data-toolbar hidden>
+              <button type="button" data-md="bold" title="Negrita"><strong>B</strong></button>
+              <button type="button" data-md="italic" title="Cursiva"><em>I</em></button>
+              <button type="button" data-md="h2" title="Subtítulo">T2</button>
+              <button type="button" data-md="h3" title="Subtítulo menor">T3</button>
+              <button type="button" data-md="ul" title="Lista">• Lista</button>
+              <button type="button" data-md="ol" title="Lista numerada">1. Lista</button>
+              <button type="button" data-md="quote" title="Cita">“Cita”</button>
+              <button type="button" data-md="link" title="Enlace">Enlace</button>
+              <span class="editor__sep" aria-hidden="true"></span>
+              <button type="button" data-tab="write" aria-pressed="true">Escribir</button>
+              <button type="button" data-tab="preview" aria-pressed="false">Vista previa</button>
+            </div>
+            <textarea id="content" name="content" rows="18" aria-labelledby="content-label" aria-describedby="content-help" data-content>{d.content}</textarea>
+            <div class="editor__preview prose" data-preview hidden aria-live="polite"></div>
+          </div>
+          <p id="content-help" class="field__help">
+            Formato Markdown: <code>**negrita**</code>, <code>*cursiva*</code>, <code>## Subtítulo</code>, <code>- lista</code>, <code>[texto](https://…)</code>.
+          </p>
+          {err('content') && <p class="field__error">{err('content')}</p>}
+        </div>
+      </section>
+
+      <section class="admin-card fields" aria-labelledby="links-title">
+        <h2 id="links-title" class="fields__title">Enlaces</h2>
+        <p class="field__help">Artículos, DOI, editoriales o libros recomendados. Deja vacía una fila para no usarla.</p>
+        {err('links') && <p class="field__error">{err('links')}</p>}
+        <div class="links" data-links>
+          {
+            links.map((l) => (
+              <fieldset class="link-row" data-link-row>
+                <legend class="visually-hidden">Enlace</legend>
+                <label>
+                  Título
+                  <input name="link_title" value={l.title} maxlength="200" />
+                </label>
+                <label>
+                  Dirección
+                  <input name="link_url" type="url" value={l.url} placeholder="https://" />
+                </label>
+                <label>
+                  Tipo
+                  <select name="link_kind">
+                    {LINK_KINDS.map((k) => (
+                      <option value={k} selected={l.kind === k}>
+                        {t(`notes.kind.${k}`)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label class="link-row__desc">
+                  Descripción (opcional)
+                  <input name="link_description" value={l.description} maxlength="300" />
+                </label>
+                <button type="button" class="admin-btn link-row__remove" data-remove-link hidden>
+                  Quitar
+                </button>
+              </fieldset>
+            ))
+          }
+        </div>
+        <button type="button" class="admin-btn" data-add-link hidden>+ Agregar enlace</button>
+      </section>
+
+      <section class="admin-card fields" aria-labelledby="files-title">
+        <h2 id="files-title" class="fields__title">Archivos PDF</h2>
+        {
+          d.attachments.length > 0 && (
+            <ul role="list" class="files">
+              {d.attachments.map((a) => (
+                <li>
+                  <span>
+                    <strong>{a.title}</strong> · {a.originalFilename} · {formatBytes(a.sizeBytes, 'es')}
+                  </span>
+                  <label class="check">
+                    <input type="checkbox" name="remove_attachment" value={a.id} /> Quitar al guardar
+                  </label>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+        <div class="field">
+          <label for="new_file">Agregar un PDF (máx. 20 MB)</label>
+          <input id="new_file" name="new_file" type="file" accept="application/pdf,.pdf" aria-invalid={err('new_file') ? 'true' : undefined} />
+        </div>
+        <div class="field">
+          <label for="new_file_title">Nombre visible del archivo</label>
+          <input id="new_file_title" name="new_file_title" maxlength="200" placeholder="Si lo dejas vacío, se usa el nombre del archivo" />
+        </div>
+        <fieldset class="field">
+          <legend>Derecho de distribución (obligatorio para subir)</legend>
+          {
+            RIGHTS.map((r) => (
+              <label class="check">
+                <input type="radio" name="new_file_rights" value={r} /> {rightsLabels[r]}
+              </label>
+            ))
+          }
+          <p class="field__help">Si el PDF tiene derechos de autor y no hay permiso, no lo subas: agrega un enlace a la editorial o al DOI.</p>
+        </fieldset>
+        {err('new_file') && <p class="field__error">{err('new_file')}</p>}
+      </section>
+    </div>
+
+    <aside class="note-form__side">
+      <section class="admin-card fields">
+        <div class="field">
+          <label for="lang">Idioma de la nota</label>
+          <select id="lang" name="lang">
+            <option value="es" selected={d.lang === 'es'}>Español</option>
+            <option value="en" selected={d.lang === 'en'}>Inglés</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="category">Categoría</label>
+          <select id="category" name="category" aria-invalid={err('category') ? 'true' : undefined}>
+            {noteCategoryIds.map((c) => (
+              <option value={c} selected={d.category === c}>{noteCategories[c].name.es}</option>
+            ))}
+          </select>
+        </div>
+        <div class="field">
+          <label for="authorId">Autor</label>
+          <select id="authorId" name="authorId">
+            {authors.map((a) => (
+              <option value={a.id} selected={d.authorId === a.id}>{a.label}</option>
+            ))}
+          </select>
+        </div>
+        <div class="field">
+          <label for="publishedAt">Fecha de publicación</label>
+          <input id="publishedAt" name="publishedAt" type="date" value={d.publishedAt} aria-invalid={err('publishedAt') ? 'true' : undefined} />
+          {err('publishedAt') && <p class="field__error">{err('publishedAt')}</p>}
+        </div>
+        <div class="field">
+          <label for="revisedAt">Fecha de actualización visible (opcional)</label>
+          <input id="revisedAt" name="revisedAt" type="date" value={d.revisedAt} aria-invalid={err('revisedAt') ? 'true' : undefined} />
+          {err('revisedAt') && <p class="field__error">{err('revisedAt')}</p>}
+        </div>
+        <div class="field">
+          <label for="tags">Etiquetas</label>
+          <input id="tags" name="tags" value={d.tags.join(', ')} placeholder="DFT, Clústeres" aria-describedby="tags-help" />
+          <p id="tags-help" class="field__help">Separadas por comas (máx. 10).</p>
+          {err('tags') && <p class="field__error">{err('tags')}</p>}
+        </div>
+        <label class="check">
+          <input type="checkbox" name="featured" checked={d.featured} /> Destacada (arriba del listado; quita la marca a las demás)
+        </label>
+      </section>
+
+      <section class="admin-card fields">
+        <fieldset class="field">
+          <legend>Líneas de investigación relacionadas</legend>
+          {research.map((r) => (
+            <label class="check">
+              <input type="checkbox" name="researchAreas" value={r.id} checked={d.researchAreas.includes(r.id)} /> {r.label}
+            </label>
+          ))}
+        </fieldset>
+        <div class="field">
+          <label for="translationOf">Es traducción de (opcional)</label>
+          <select id="translationOf" name="translationOf" aria-invalid={err('translationOf') ? 'true' : undefined}>
+            <option value="">— No es traducción —</option>
+            {translations.map((n) => (
+              <option value={n.id} selected={d.translationOf === n.id}>{n.title}</option>
+            ))}
+          </select>
+          {err('translationOf') && <p class="field__error">{err('translationOf')}</p>}
+        </div>
+      </section>
+
+      <section class="admin-card actions">
+        <button type="submit" name="action" value="save" class="admin-btn">
+          {isPublished ? 'Guardar cambios' : 'Guardar borrador'}
+        </button>
+        {!isPublished && (
+          <button type="submit" name="action" value="publish" class="admin-btn admin-btn--primary">
+            Guardar y publicar
+          </button>
+        )}
+        {isPublished && <p class="field__help">Los cambios se ven en el sitio al guardar.</p>}
+      </section>
+    </aside>
+  </div>
+</form>
+
+<template data-link-template>
+  <fieldset class="link-row" data-link-row>
+    <legend class="visually-hidden">Enlace</legend>
+    <label>Título <input name="link_title" maxlength="200" /></label>
+    <label>Dirección <input name="link_url" type="url" placeholder="https://" /></label>
+    <label>
+      Tipo
+      <select name="link_kind">
+        {LINK_KINDS.map((k) => <option value={k}>{t(`notes.kind.${k}`)}</option>)}
+      </select>
+    </label>
+    <label class="link-row__desc">Descripción (opcional) <input name="link_description" maxlength="300" /></label>
+    <button type="button" class="admin-btn link-row__remove" data-remove-link>Quitar</button>
+  </fieldset>
+</template>
+
+<script define:vars={{ markdownEndpoint: withBase('/admin/api/markdown/') }}>
+  // Mejora progresiva del editor (sin dependencias).
+  const form = document.querySelector('[data-note-form]');
+  if (form) {
+    document.querySelector('[data-error-summary]')?.focus();
+
+    // URL automática mientras no se haya tocado a mano.
+    const title = form.querySelector('[data-title]');
+    const slug = form.querySelector('[data-slug]');
+    const slugify = (s) =>
+      s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+    if (title && slug && !slug.readOnly) {
+      title.addEventListener('input', () => {
+        if (slug.dataset.auto === 'true') slug.value = slugify(title.value);
+      });
+      slug.addEventListener('input', () => (slug.dataset.auto = slug.value ? 'false' : 'true'));
+    }
+
+    // Contador del resumen.
+    const summary = form.querySelector('[data-summary]');
+    const count = form.querySelector('[data-count]');
+    summary?.addEventListener('input', () => (count.textContent = String(summary.value.length)));
+
+    // Barra de formato.
+    const bar = form.querySelector('[data-toolbar]');
+    const area = form.querySelector('[data-content]');
+    const preview = form.querySelector('[data-preview]');
+    bar.hidden = false;
+    const wrap = (before, after = before, placeholder = 'texto') => {
+      const { selectionStart: a, selectionEnd: b, value } = area;
+      const sel = value.slice(a, b) || placeholder;
+      area.setRangeText(before + sel + after, a, b, 'end');
+      area.focus();
+      area.setSelectionRange(a + before.length, a + before.length + sel.length);
+    };
+    const prefixLines = (fn) => {
+      const { selectionStart: a, selectionEnd: b, value } = area;
+      const start = value.lastIndexOf('\n', a - 1) + 1;
+      const end = value.indexOf('\n', b) === -1 ? value.length : value.indexOf('\n', b);
+      const lines = value.slice(start, end).split('\n').map((l, i) => fn(l, i));
+      area.setRangeText(lines.join('\n'), start, end, 'select');
+      area.focus();
+    };
+    const actions = {
+      bold: () => wrap('**'),
+      italic: () => wrap('*'),
+      h2: () => prefixLines((l) => '## ' + l.replace(/^#+\s*/, '')),
+      h3: () => prefixLines((l) => '### ' + l.replace(/^#+\s*/, '')),
+      ul: () => prefixLines((l) => '- ' + l),
+      ol: () => prefixLines((l, i) => `${i + 1}. ` + l),
+      quote: () => prefixLines((l) => '> ' + l),
+      link: () => {
+        const url = prompt('Dirección del enlace (https://…)', 'https://');
+        if (url) wrap('[', `](${url})`, 'texto del enlace');
+      },
+    };
+    const setTab = async (tab) => {
+      bar.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tab === tab)));
+      bar.querySelectorAll('[data-md]').forEach((b) => (b.disabled = tab === 'preview'));
+      if (tab === 'preview') {
+        preview.innerHTML = '<p>Cargando vista previa…</p>';
+        area.hidden = true;
+        preview.hidden = false;
+        try {
+          const res = await fetch(markdownEndpoint, { method: 'POST', body: area.value, headers: { 'Content-Type': 'text/plain' } });
+          preview.innerHTML = res.ok ? await res.text() : '<p>No se pudo generar la vista previa.</p>';
+        } catch {
+          preview.innerHTML = '<p>No se pudo generar la vista previa.</p>';
+        }
+      } else {
+        preview.hidden = true;
+        area.hidden = false;
+        area.focus();
+      }
+    };
+    bar.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      if (btn.dataset.md) actions[btn.dataset.md]?.();
+      if (btn.dataset.tab) setTab(btn.dataset.tab);
+    });
+
+    // Filas de enlaces.
+    const list = form.querySelector('[data-links]');
+    const tpl = document.querySelector('[data-link-template]');
+    const add = form.querySelector('[data-add-link]');
+    add.hidden = false;
+    list.querySelectorAll('[data-remove-link]').forEach((b) => (b.hidden = false));
+    add.addEventListener('click', () => {
+      list.append(tpl.content.cloneNode(true));
+      list.lastElementChild.querySelector('input')?.focus();
+    });
+    list.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-remove-link]');
+      if (!btn) return;
+      const row = btn.closest('[data-link-row]');
+      if (list.querySelectorAll('[data-link-row]').length > 1) row.remove();
+      else row.querySelectorAll('input').forEach((i) => (i.value = ''));
+      add.focus();
+    });
+  }
+</script>
+
+<style>
+  .note-form__grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (min-width: 1000px) {
+    .note-form__grid {
+      grid-template-columns: minmax(0, 1fr) 320px;
+      align-items: start;
+    }
+  }
+  .note-form__main,
+  .note-form__side {
+    display: grid;
+    gap: var(--space-6);
+    min-width: 0;
+  }
+  .fields {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .fields__title {
+    font-size: var(--text-lg);
+  }
+  .field {
+    display: grid;
+    gap: var(--space-1);
+    min-width: 0;
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+  .field label,
+  .field__label,
+  .field legend {
+    font-weight: 500;
+    font-size: var(--text-sm);
+  }
+  .note-form input:not([type='checkbox'], [type='radio']),
+  .note-form select,
+  .note-form textarea {
+    width: 100%;
+    min-height: 42px;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid #c6d1cb;
+    border-radius: var(--radius-sm);
+    background: #fff;
+    font: inherit;
+    color: var(--color-text);
+  }
+  .note-form textarea {
+    line-height: 1.55;
+    resize: vertical;
+  }
+  .note-form [data-content] {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  .note-form input[readonly] {
+    background: var(--color-surface-alt);
+    color: var(--color-text-muted);
+  }
+  .note-form [aria-invalid='true'] {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 1px var(--color-error);
+  }
+  .field__help {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  .field__error {
+    font-size: var(--text-sm);
+    color: var(--color-error);
+    font-weight: 500;
+  }
+  .slug {
+    display: flex;
+    align-items: stretch;
+  }
+  .slug__prefix {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 var(--space-3);
+    border: 1px solid #c6d1cb;
+    border-right: 0;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+    background: var(--color-surface-alt);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+  .slug input {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+  }
+  .editor__bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    padding: var(--space-2);
+    border: 1px solid #c6d1cb;
+    border-bottom: 0;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    background: var(--color-surface-alt);
+  }
+  .editor__bar button {
+    min-height: 34px;
+    padding: 0 var(--space-3);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    font: inherit;
+    font-size: var(--text-sm);
+    cursor: pointer;
+  }
+  .editor__bar button:hover:not(:disabled) {
+    background: #fff;
+    border-color: var(--color-border);
+  }
+  .editor__bar button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .editor__bar button[aria-pressed='true'] {
+    background: #fff;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+  .editor__sep {
+    flex: 1;
+  }
+  .editor__preview {
+    min-height: 300px;
+    max-width: none;
+    padding: var(--space-4);
+    border: 1px solid #c6d1cb;
+    background: #fff;
+    overflow-wrap: anywhere;
+  }
+  .links {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .link-row {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border: var(--border);
+    border-radius: var(--radius-sm);
+    margin: 0;
+  }
+  @media (min-width: 700px) {
+    .link-row {
+      grid-template-columns: 1fr 1fr 160px;
+    }
+    .link-row__desc {
+      grid-column: 1 / 3;
+    }
+  }
+  .link-row label {
+    display: grid;
+    gap: var(--space-1);
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+  .link-row__remove {
+    align-self: end;
+  }
+  .files {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .files li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border: var(--border);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+  }
+  .check {
+    display: flex;
+    gap: var(--space-2);
+    align-items: flex-start;
+    font-size: var(--text-sm);
+    font-weight: 400 !important;
+  }
+  .check input {
+    margin-top: 0.2em;
+    accent-color: var(--color-primary);
+  }
+  .actions {
+    display: grid;
+    gap: var(--space-3);
+  }
+  @media (min-width: 1000px) {
+    .actions {
+      position: sticky;
+      top: var(--space-4);
+    }
+  }
+</style>
