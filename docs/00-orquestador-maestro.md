@@ -454,6 +454,8 @@ El sitio debe ser:
 
 # 11. FUERA DE ALCANCE DE LA PRIMERA VERSIÓN
 
+> **Cambio Tipo C aprobado (2026-09-29):** la sección pública **Notes / Notas** entra en la V1 como sitio estático (contenido en Markdown en el repositorio). Panel, base de datos, autenticación y almacenamiento externo siguen fuera de la V1; se activarán en la Etapa B del módulo. Detalle: `docs/13-notes-editorial-module.md` §0.
+
 Salvo aprobación formal de cambio:
 
 - login;
@@ -514,6 +516,8 @@ Propuesta inicial:
 
 Se recomienda español como idioma sin prefijo y `/en/` para inglés, siempre que esta decisión sea aprobada antes de implementación.
 
+> Rutas vigentes: `docs/04-information-architecture.md` (v1.2). Desde ADR-007 el inglés va sin prefijo y el español bajo `/es/`; desde 2026-09-29 se añaden `/notes/` · `/es/notas/` (Notes) y `/gallery/` · `/es/galeria/`.
+
 ---
 
 # 13. INVENTARIO PRELIMINAR DE VISTAS
@@ -530,6 +534,9 @@ IDs estables para documentación:
 | VIEW-004-D | Perfil de integrante | dinámica |
 | VIEW-005 | Publicaciones | principal |
 | VIEW-006 | Contacto | principal |
+| VIEW-007 | Notes / Notas (listado y categoría VIEW-007-C) | principal |
+| VIEW-007-D | Detalle de nota | dinámica |
+| VIEW-008 | Galería / Gallery | principal |
 | VIEW-404 | No encontrado | sistema |
 
 Si durante arquitectura aparecen nuevas vistas justificadas, se agregan con ID y ADR o registro de cambio cuando modifiquen alcance.
@@ -1606,7 +1613,7 @@ Requiere:
 - registrar fuera de alcance;
 - verificar build base;
 - verificar `.gitignore`;
-- verificar exclusión local de archivos de agentes;
+- verificar exclusión local de archivos locales de herramientas;
 - registrar herramientas de desarrollo;
 - establecer convenciones de nombres.
 

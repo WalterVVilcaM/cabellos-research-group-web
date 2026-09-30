@@ -1,0 +1,23 @@
+---
+import type { GetStaticPaths } from 'astro';
+import View from '../../../../../../views/NotesView.astro';
+import { noteCategories } from '../../../../../../config/notes';
+import { getNotes, listedNotes, paginate, usedCategories } from '../../../../../../utils/notes';
+
+/** Páginas 2…n de cada categoría. */
+export const getStaticPaths = (async () => {
+  const all = await getNotes();
+  return usedCategories(all).flatMap((category) =>
+    paginate(listedNotes(all, category))
+      .slice(1)
+      .map(({ page }) => ({
+        params: { category: noteCategories[category].slug.es, page: String(page) },
+        props: { category, page },
+      })),
+  );
+}) satisfies GetStaticPaths;
+
+const { category, page } = Astro.props;
+---
+
+<View lang="es" category={category} page={page} />

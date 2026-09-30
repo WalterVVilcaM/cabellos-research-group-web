@@ -23,16 +23,18 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# local AI agent files (orquestador §32, Fase 0: no deben versionarse)
-AGENTS.md
-CLAUDE.md
-.claude/
-
-# capturas y paletas de revisión (no se publican)
-Claude outputs/
+# Archivos locales de herramientas de desarrollo: se excluyen en .git/info/exclude (no se versionan).
 
 # script de publicación de un solo uso
 publicar-github-pages.cmd
 publicar-github-pages.log
 publicar-cambios.cmd
 publicar-cambios.log
+
+publicar-notes.cmd
+publicar-notes.log
+
+# Estado local de Wrangler (Cloudflare)
+.wrangler/
+publicar-cloudflare.cmd
+publicar-cloudflare.log

@@ -33,6 +33,16 @@ El dominio y la subruta salen de las variables `SITE` y `BASE_PATH` (por defecto
 | Líneas de investigación | `src/content/data/research.yaml` + `src/content/texts/{es,en}/research/*.md` |
 | Integrantes | `src/content/data/members.yaml` + `src/content/texts/{es,en}/members/*.md` |
 | Publicaciones | `src/content/data/publications.yaml` |
+| Notas (Notes / Notas) | `src/content/notes/<slug>.md` + PDF en `public/files/notes/<año>/` |
+
+## Notas (Notes / Notas)
+
+1. Copia `src/content/notes/_PLANTILLA.md` como `src/content/notes/<slug>.md` (el slug es la URL: `/notes/<slug>/` y `/es/notas/<slug>/`).
+2. Llena el frontmatter: `lang` es el idioma en que está escrita la nota; `category` es `opinion`, `readings` o `books`.
+3. Si lleva PDF, cópialo a `public/files/notes/<año>/` y declara `rights` (solo con derecho de distribución; si no, usa un enlace).
+4. Cambia `status: draft` a `status: published` y publica.
+
+Las notas con `isTest: true` solo aparecen en `npm run dev` y en la vista previa de GitHub Pages (`SHOW_TEST_NOTES=true`). El build del dominio final las omite. Detalle: `docs/13-notes-editorial-module.md`, ADR-008 y ADR-009.
 
 ## Publicaciones automáticas
 

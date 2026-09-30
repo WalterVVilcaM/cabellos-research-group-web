@@ -14,8 +14,13 @@ interface Props {
   current?: SectionKey;
   noindex?: boolean;
   ogType?: 'website' | 'profile' | 'article';
+  canonicalPath?: string;
+  hreflang?: Alternates | null;
+  ogLocale?: string;
+  jsonLd?: Record<string, unknown>;
 }
-const { lang, title, description, alternates, current, noindex, ogType } = Astro.props;
+const { lang, title, description, alternates, current, noindex, ogType, canonicalPath, hreflang, ogLocale, jsonLd } =
+  Astro.props;
 const t = useTranslations(lang);
 ---
 
@@ -38,6 +43,10 @@ const t = useTranslations(lang);
       alternates={alternates}
       noindex={noindex}
       ogType={ogType}
+      canonicalPath={canonicalPath}
+      hreflang={hreflang}
+      ogLocale={ogLocale}
+      jsonLd={jsonLd}
     />
   </head>
   <body>

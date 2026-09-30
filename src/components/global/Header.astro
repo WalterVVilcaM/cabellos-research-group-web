@@ -200,6 +200,24 @@ const t = useTranslations(lang);
     color: var(--color-primary);
   }
 
+  /* Escritorio estrecho: con 7 apartados (Notes) se compacta el espaciado para que el menú
+     quepa en una fila junto a la marca. */
+  @media (min-width: 900px) and (max-width: 1139.98px) {
+    .nav-panel {
+      gap: var(--space-3);
+    }
+    .nav-list {
+      gap: 0;
+    }
+    .nav-list a {
+      padding-inline: var(--space-2);
+    }
+    .nav-list a::after {
+      left: var(--space-2);
+      right: var(--space-2);
+    }
+  }
+
   /* Móvil */
   @media (max-width: 899.98px) {
     .nav-panel {

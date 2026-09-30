@@ -1,0 +1,67 @@
+---
+/** Paginación anterior / "Página n de N" / siguiente. No se muestra con una sola página. */
+import Icon from './Icon.astro';
+
+interface Props {
+  label: string;
+  status: string;
+  prev?: { href: string; label: string };
+  next?: { href: string; label: string };
+}
+const { label, status, prev, next } = Astro.props;
+---
+
+{
+  (prev || next) && (
+    <nav aria-label={label} class="pager">
+      {prev ? (
+        <a href={prev.href} rel="prev" class="pager__link">
+          <Icon name="arrow-left" size={18} />
+          {prev.label}
+        </a>
+      ) : (
+        <span />
+      )}
+      <span class="pager__status">{status}</span>
+      {next ? (
+        <a href={next.href} rel="next" class="pager__link pager__link--next">
+          {next.label}
+          <Icon name="arrow-right" size={18} />
+        </a>
+      ) : (
+        <span />
+      )}
+    </nav>
+  )
+}
+
+<style>
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--space-4);
+    margin-top: var(--space-12);
+    padding-top: var(--space-6);
+    border-top: var(--border);
+  }
+  .pager__status {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .pager__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    justify-self: start;
+    min-height: 44px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .pager__link--next {
+    justify-self: end;
+  }
+  .pager__link:hover {
+    text-decoration: underline;
+  }
+</style>

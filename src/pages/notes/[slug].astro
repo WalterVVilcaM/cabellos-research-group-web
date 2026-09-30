@@ -1,0 +1,15 @@
+---
+import type { GetStaticPaths } from 'astro';
+import View from '../../views/NoteDetailView.astro';
+import { getNotes } from '../../utils/notes';
+
+/** Todas las notas, en cualquier idioma, con la interfaz en inglés (ADR-009). */
+export const getStaticPaths = (async () => {
+  const notes = await getNotes();
+  return notes.map((note) => ({ params: { slug: note.slug }, props: { note } }));
+}) satisfies GetStaticPaths;
+
+const { note } = Astro.props;
+---
+
+<View lang="en" note={note} />

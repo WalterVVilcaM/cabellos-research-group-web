@@ -1,0 +1,135 @@
+---
+/**
+ * Notes / Notas (VIEW-007) y Notas por categoría (VIEW-007-C).
+ * Ficha: docs/views/VIEW-007-notes.md. Lista todas las notas, en cualquier idioma (ADR-009).
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import Breadcrumb from '../components/ui/Breadcrumb.astro';
+import CategoryFilter from '../components/ui/CategoryFilter.astro';
+import Pagination from '../components/ui/Pagination.astro';
+import NoteCard from '../components/content/NoteCard.astro';
+import { noteCategories, type NoteCategoryId } from '../config/notes';
+import { useTranslations, sectionPath, notesListPath, type Lang } from '../i18n/utils';
+import { getNotes, featuredNote, listedNotes, usedCategories, categoryPath, paginate } from '../utils/notes';
+
+interface Props {
+  lang: Lang;
+  page?: number;
+  category?: NoteCategoryId;
+}
+const { lang, page = 1, category } = Astro.props;
+const t = useTranslations(lang);
+
+const all = await getNotes();
+// La destacada solo va arriba en la página 1 del listado general.
+const featured = !category && page === 1 ? featuredNote(all) : undefined;
+const pages = paginate(listedNotes(all, category));
+const current = pages[page - 1] ?? pages[0]!;
+
+const pathFor = (l: Lang, p: number) => (category ? categoryPath(category, l, p) : notesListPath(l, p));
+const alternates = { en: pathFor('en', page), es: pathFor('es', page) };
+
+const baseTitle = category ? noteCategories[category].name[lang] : t('notes.title');
+const title = page > 1 ? t('notes.pageTitle', { title: baseTitle, n: page }) : baseTitle;
+const description = category ? noteCategories[category].description[lang] : t('notes.description');
+
+const filterItems = [
+  { label: t('notes.all'), href: notesListPath(lang), current: !category },
+  ...usedCategories(all).map((c) => ({
+    label: noteCategories[c].name[lang],
+    href: categoryPath(c, lang),
+    current: c === category,
+  })),
+];
+const isEmpty = all.length === 0;
+---
+
+<BaseLayout
+  lang={lang}
+  title={title}
+  description={description}
+  alternates={alternates}
+  current="notes"
+>
+  {
+    category ? (
+      <PageHeader title={baseTitle} lead={noteCategories[category].description[lang]}>
+        <Breadcrumb
+          slot="before"
+          lang={lang}
+          items={[
+            { label: t('nav.home'), href: sectionPath('home', lang) },
+            { label: t('notes.title'), href: notesListPath(lang) },
+            { label: baseTitle },
+          ]}
+        />
+      </PageHeader>
+    ) : (
+      <PageHeader lang={lang} title={t('notes.title')} lead={t('notes.lead')} />
+    )
+  }
+
+  <div class="section notes">
+    <div class="container">
+      {
+        isEmpty ? (
+          <p class="empty muted">{t('notes.empty')}</p>
+        ) : (
+          <>
+            {filterItems.length > 2 && <CategoryFilter label={t('notes.filterLabel')} items={filterItems} />}
+            {featured && (
+              <div class="notes__featured">
+                <NoteCard note={featured} lang={lang} featured />
+              </div>
+            )}
+            {current.items.length > 0 && (
+              <ul role="list" class="notes__grid">
+                {current.items.map((note) => (
+                  <li>
+                    <NoteCard note={note} lang={lang} />
+                  </li>
+                ))}
+              </ul>
+            )}
+            <Pagination
+              label={t('notes.pagination')}
+              status={t('notes.pageOf', { n: current.page, total: current.total })}
+              prev={current.page > 1 ? { href: pathFor(lang, current.page - 1), label: t('notes.prevPage') } : undefined}
+              next={
+                current.page < current.total
+                  ? { href: pathFor(lang, current.page + 1), label: t('notes.nextPage') }
+                  : undefined
+              }
+            />
+          </>
+        )
+      }
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .notes {
+    padding-top: var(--space-8);
+  }
+  .notes .container > :global(* + *) {
+    margin-top: var(--space-8);
+  }
+  .notes__grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (min-width: 900px) {
+    .notes__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .empty {
+    max-width: 60ch;
+    padding: var(--space-8);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-sm);
+    text-align: center;
+  }
+</style>

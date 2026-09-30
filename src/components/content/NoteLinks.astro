@@ -1,0 +1,62 @@
+---
+/** Enlaces externos de una nota, con su tipo (DOI, editorial, acceso abierto, libro). */
+import ExternalLink from '../ui/ExternalLink.astro';
+import { useTranslations, type Lang } from '../../i18n/utils';
+import type { Note } from '../../utils/notes';
+
+interface Props {
+  items: Note['links'];
+  lang: Lang;
+  /** Idioma de la nota, para títulos y descripciones. */
+  contentLang: Lang;
+}
+const { items, lang, contentLang } = Astro.props;
+const t = useTranslations(lang);
+const textLang = contentLang !== lang ? contentLang : undefined;
+---
+
+<ul role="list" class="nlinks">
+  {
+    items.map((l) => (
+      <li class="nlink">
+        <span class="nlink__kind">{t(`notes.kind.${l.kind}`)}</span>
+        <ExternalLink href={l.url} lang={lang} class="nlink__title">
+          <span lang={textLang}>{l.title}</span>
+        </ExternalLink>
+        {l.description && (
+          <p class="nlink__desc" lang={textLang}>
+            {l.description}
+          </p>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .nlinks {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .nlink {
+    display: grid;
+    gap: var(--space-1);
+    padding-left: var(--space-4);
+    border-left: 3px solid var(--color-accent-deco);
+  }
+  .nlink__kind {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+  .nlink :global(.nlink__title) {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+  .nlink__desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+</style>

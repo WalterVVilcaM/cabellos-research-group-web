@@ -3,7 +3,7 @@
 | Campo | Valor |
 |---|---|
 | Fase | 2 — Arquitectura de información |
-| Versión | 1.1 (ADR-007: EN por defecto) |
+| Versión | 1.2 (Notes / Notas, ADR-008/009) |
 | Fecha | 2026-09-23 |
 | Estado | `APPROVED` |
 
@@ -11,6 +11,8 @@
 
 ## 1. Sitemap
 
+> v1.2 (2026-09-29): se añaden Notes / Notas (VIEW-007, cambio Tipo C) y Galería (VIEW-008).
+>
 > v1.1 (2026-09-24, ADR-007): el inglés es el idioma por defecto y va sin prefijo; el español va bajo `/es/`. "Nosotros" se integró en Inicio en v1.5.
 
 ```text
@@ -21,6 +23,11 @@ EN (idioma por defecto, sin prefijo)   ES (/es/)
 /team/                   VIEW-004       /es/integrantes/
 /team/<slug>/            VIEW-004-D     /es/integrantes/<slug>/
 /publications/           VIEW-005       /es/publicaciones/
+/notes/                  VIEW-007       /es/notas/
+/notes/page/<n>/         VIEW-007       /es/notas/pagina/<n>/
+/notes/category/<cat>/   VIEW-007-C     /es/notas/categoria/<cat>/
+/notes/<slug>/           VIEW-007-D     /es/notas/<slug>/
+/gallery/                VIEW-008       /es/galeria/
 /contact/                VIEW-006       /es/contacto/
 /404                     VIEW-404 (bilingüe, única; primero EN)
 ```
@@ -37,6 +44,10 @@ Profundidad máxima: 2 niveles (sección → detalle).
 | VIEW-004 | `/team/` | `/es/integrantes/` | estática | members |
 | VIEW-004-D | `/team/[slug]/` | `/es/integrantes/[slug]/` | dinámica | members + texts + research + publications |
 | VIEW-005 | `/publications/` | `/es/publicaciones/` | estática | publications + research |
+| VIEW-007 | `/notes/` (+ `/notes/page/[n]/`) | `/es/notas/` (+ `/es/notas/pagina/[n]/`) | estática (paginada) | notes + config/notes |
+| VIEW-007-C | `/notes/category/[cat]/` | `/es/notas/categoria/[cat]/` | dinámica (`getStaticPaths`) | notes + config/notes |
+| VIEW-007-D | `/notes/[slug]/` | `/es/notas/[slug]/` | dinámica | notes + members + research |
+| VIEW-008 | `/gallery/` | `/es/galeria/` | estática | config/gallery |
 | VIEW-006 | `/contact/` | `/es/contacto/` | estática | site config |
 | VIEW-404 | `/404` | — | sistema | i18n (EN + ES en la misma página) |
 
@@ -53,6 +64,8 @@ Rutas anteriores a v1.1:
 | Líneas de investigación | Slug traducido por idioma, definido en datos | `/research/cluster-structure-prediction/` | `/es/investigacion/prediccion-estructural-de-clusteres/` |
 | Integrantes | Slug único derivado del nombre, igual en ambos idiomas | `/team/jose-luis-cabellos/` | `/es/integrantes/jose-luis-cabellos/` |
 | Publicaciones | Sin página propia en v1 (se enlaza al DOI) | — | — |
+| Notas | Slug único en el idioma de la nota, igual en ambas interfaces (ADR-009) | `/notes/comments-on-orca-6/` | `/es/notas/comments-on-orca-6/` |
+| Categorías de notas | Traducidas, definidas en `src/config/notes.ts` | `/notes/category/readings/` | `/es/notas/categoria/lecturas/` |
 
 Reglas: minúsculas, ASCII, guiones, sin acentos y sin fechas. Las URLs no cambian después del release (si cambian, redirección 301 en `public/_redirects`).
 
@@ -72,6 +85,8 @@ Reglas: minúsculas, ASCII, guiones, sin acentos y sin fechas. Las URLs no cambi
 
 "Inicio" no aparece como ítem de menú: lo cubre la marca. Se mantienen los 6 apartados del alcance.
 
+> Menú vigente (v1.2, `navOrder` en `src/i18n/utils.ts`): Home · Research · People · Publications · **Notes** · Gallery · Contact us / Inicio · Investigación · Integrantes · Publicaciones · **Notas** · Galería · Contáctanos. "Nosotros" se integró en Inicio (v1.5).
+
 - **≥ 900 px:** navegación horizontal visible.
 - **< 900 px:** botón "Menú" con `aria-expanded` que despliega un panel. Sin JS, el panel queda visible debajo del header (mejora progresiva).
 - El ítem activo lleva `aria-current="page"` (también en las vistas de detalle de su sección).
@@ -82,7 +97,7 @@ Marca + nombre descriptivo · institución · enlaces de navegación · perfiles
 
 ### 4.3 Breadcrumbs
 
-Solo en detalle: `Inicio › Investigación › <Línea>` y `Inicio › Integrantes › <Nombre>`.
+Solo en detalle: `Inicio › Investigación › <Línea>`, `Inicio › Integrantes › <Nombre>` y `Inicio › Notas › <Título>`.
 
 ### 4.4 Selector de idioma
 
@@ -113,6 +128,8 @@ erDiagram
 | Integrantes | Cada perfil |
 | Perfil | Sus líneas, Publicaciones (lista completa) |
 | Publicaciones | Líneas (filtro), DOI externo |
+| Notas | Cada nota, cada categoría |
+| Detalle de nota | Perfil del autor, categoría, líneas relacionadas, nota anterior/siguiente, enlaces y PDF |
 | 404 | Home EN, Home ES |
 
 Todas las vistas son alcanzables desde el header en ≤ 2 clics.

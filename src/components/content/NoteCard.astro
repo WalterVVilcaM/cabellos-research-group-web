@@ -1,0 +1,198 @@
+---
+/** Tarjeta de nota (VIEW-007). Toda la tarjeta es clicable mediante el enlace del título. */
+import Icon from '../ui/Icon.astro';
+import { noteCategories } from '../../config/notes';
+import { useTranslations, notePath, type Lang } from '../../i18n/utils';
+import { formatNoteDate, isoDate, type Note } from '../../utils/notes';
+
+interface Props {
+  note: Note;
+  lang: Lang;
+  featured?: boolean;
+  headingLevel?: 2 | 3;
+}
+const { note, lang, featured = false, headingLevel = 2 } = Astro.props;
+const t = useTranslations(lang);
+const H = `h${headingLevel}` as 'h2' | 'h3';
+const otherLang = note.lang !== lang;
+const nLinks = note.links.length;
+---
+
+<article class:list={['ncard', { 'ncard--featured': featured, 'ncard--test': note.isTest }]}>
+  <div class="ncard__labels">
+    <span class="ncard__cat">{noteCategories[note.category].name[lang]}</span>
+    {
+      otherLang && (
+        <span class="ncard__lang" lang={note.lang}>
+          <span aria-hidden="true">{note.lang.toUpperCase()}</span>
+          <span class="visually-hidden">{t(`notes.langLabel.${note.lang}`)}</span>
+        </span>
+      )
+    }
+    {note.isTest && <span class="ncard__test">{t('notes.test')}</span>}
+    {featured && <span class="ncard__featured">{t('notes.featured')}</span>}
+  </div>
+  <H class="ncard__title" lang={otherLang ? note.lang : undefined}>
+    <a href={notePath(note.slug, lang)} class="ncard__link">{note.title}</a>
+  </H>
+  <p class="ncard__summary" lang={otherLang ? note.lang : undefined}>{note.summary}</p>
+  <p class="ncard__meta">
+    <time datetime={isoDate(note.publishedAt)}>{formatNoteDate(note.publishedAt, lang)}</time>
+    <span aria-hidden="true">·</span>
+    <span>{note.author.fullName}</span>
+    {
+      note.attachments.length > 0 && (
+        <>
+          <span aria-hidden="true">·</span>
+          <span class="ncard__flag">
+            <Icon name="file" size={16} />
+            PDF
+          </span>
+        </>
+      )
+    }
+    {
+      nLinks > 0 && (
+        <>
+          <span aria-hidden="true">·</span>
+          <span>{nLinks === 1 ? t('notes.linksCountOne') : t('notes.linksCount', { n: nLinks })}</span>
+        </>
+      )
+    }
+  </p>
+</article>
+
+<style>
+  .ncard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    height: 100%;
+    padding: var(--space-6);
+    background: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition:
+      border-color var(--duration) var(--ease),
+      box-shadow var(--duration) var(--ease),
+      transform var(--duration) var(--ease);
+  }
+  .ncard:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .ncard:focus-within {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ncard:hover {
+      transform: none;
+    }
+  }
+  .ncard--featured {
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border-top: 4px solid var(--color-primary);
+  }
+  .ncard--test {
+    border-style: dashed;
+  }
+  .ncard--featured.ncard--test {
+    border-top-style: solid;
+  }
+  .ncard__labels {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .ncard__cat,
+  .ncard__featured {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .ncard__featured {
+    margin-left: auto;
+    color: var(--color-text-muted);
+  }
+  .ncard__lang,
+  .ncard__test {
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+  }
+  .ncard__lang {
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+  }
+  .ncard__test {
+    background: #fff4e0;
+    color: var(--color-warning);
+    text-transform: uppercase;
+  }
+  .ncard__title {
+    font-size: var(--text-lg);
+    line-height: var(--leading-tight);
+    overflow-wrap: anywhere;
+  }
+  .ncard--featured .ncard__title {
+    font-size: var(--text-2xl);
+    max-width: 30ch;
+  }
+  .ncard__link {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .ncard__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .ncard__link:hover {
+    color: var(--color-primary);
+  }
+  .ncard__link:focus-visible {
+    outline: none;
+  }
+  .ncard__summary {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+    color: var(--color-text-muted);
+  }
+  .ncard--featured .ncard__summary {
+    max-width: 65ch;
+    font-size: var(--text-lg);
+  }
+  .ncard__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-2);
+    margin-top: auto;
+    padding-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .ncard__flag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--color-primary);
+    font-weight: 500;
+  }
+</style>

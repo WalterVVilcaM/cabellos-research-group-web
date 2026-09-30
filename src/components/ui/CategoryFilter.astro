@@ -1,0 +1,56 @@
+---
+/** Filtro por categoría como enlaces (sin JavaScript). El activo lleva aria-current. */
+interface Props {
+  label: string;
+  items: { label: string; href: string; current: boolean }[];
+}
+const { label, items } = Astro.props;
+---
+
+<nav aria-label={label} class="cfilter">
+  <ul role="list">
+    {
+      items.map((item) => (
+        <li>
+          <a href={item.href} aria-current={item.current ? 'page' : undefined}>
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .cfilter ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .cfilter a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 var(--space-4);
+    border: var(--border);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+      border-color var(--duration-fast) var(--ease),
+      background-color var(--duration-fast) var(--ease),
+      color var(--duration-fast) var(--ease);
+  }
+  .cfilter a:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+  .cfilter a[aria-current='page'] {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: #fff;
+  }
+</style>

@@ -26,7 +26,7 @@
 | 6 | Build base funciona | ☑ Cumplido en el entorno de desarrollo | `npm run build` (23 páginas) y `npm run check` (0 errores) el 2026-09-23; repetir en local tras `npm install` |
 | 7 | Repositorio limpio | ☐ Pendiente de verificar | Resultado de `git status` tras el commit (ver §3) |
 | 8 | No hay secretos versionados | ☐ Pendiente de verificar | `.gitignore` excluye `.env` y `.env.production`; falta revisar `git ls-files` (ver §3) |
-| 9 | Archivos locales de agentes no trackeados | ◐ Parcial | `.gitignore` ahora excluye `AGENTS.md`, `CLAUDE.md` y `.claude/`; falta confirmar que no estén ya en el índice (ver §3) |
+| 9 | Archivos locales de herramientas no trackeados | ✅ | Se excluyen en `.git/info/exclude` (local, fuera del repositorio) |
 
 ---
 
@@ -42,7 +42,7 @@
 | Registrar alcance inicial y lo que queda fuera | ☑ | Charter §3 |
 | Verificar build base | ☐ | Ver §3 |
 | Verificar `.gitignore` | ☑ | Revisado y ampliado (ver §4) |
-| Verificar exclusión local de archivos de agentes | ◐ | Ver §3 |
+| Verificar exclusión local de archivos de herramientas | ✅ | `.git/info/exclude` |
 | Registrar herramientas de desarrollo | ☑ | Ver §5 |
 | Establecer convenciones de nombres | ☑ | `docs/README.md` (sección Convenciones) |
 
@@ -65,9 +65,8 @@ Ejecutar en la raíz del repositorio y registrar el resultado en la tabla.
 # 1. Build base
 npm run build
 
-# 2. Si los archivos de agentes ya estaban trackeados, sacarlos del índice (no los borra del disco)
-git ls-files AGENTS.md CLAUDE.md .claude
-git rm --cached AGENTS.md CLAUDE.md          # solo si el comando anterior los listó
+# 2. Archivos locales de herramientas: deben estar en .git/info/exclude y fuera del índice
+git status --short --ignored
 
 # 3. Secretos: no debe aparecer ningún .env ni archivo con credenciales
 git ls-files | grep -iE '\.env|secret|token|credential|\.pem|\.key'
@@ -88,7 +87,7 @@ git tag phase-0-baseline
 | Verificación | Resultado esperado | Resultado obtenido | OK |
 |---|---|---|---|
 | `npm run build` | Termina sin errores y genera `dist/` | | ☐ |
-| `git ls-files AGENTS.md CLAUDE.md .claude` | Sin salida | | ☐ |
+| `git status --short --ignored` | Ningún archivo local de herramientas en el índice | | ☐ |
 | Búsqueda de secretos en `git ls-files` | Sin salida | | ☐ |
 | `git status` | working tree clean | | ☐ |
 | Tag `phase-0-baseline` | Creado | | ☐ |
@@ -106,7 +105,7 @@ git tag phase-0-baseline
 | `docs/00-orquestador-maestro.md` | Movido desde la raíz; tablero §35 actualizado |
 | `docs/01-project-charter.md` | Nuevo: charter v0.1 |
 | `docs/gate-0-acta-cierre.md` | Nuevo: esta acta |
-| `.gitignore` | Añadidos `AGENTS.md`, `CLAUDE.md` y `.claude/` |
+| `.git/info/exclude` | Exclusión local de archivos de herramientas |
 
 ---
 
@@ -130,7 +129,6 @@ Sin dependencias adicionales. Cualquier dependencia importante nueva requiere un
 
 1. **Charter en borrador.** El charter tiene datos **POR CONFIRMAR** (nombre oficial, institución, responsable académico, validador de inglés). No bloquean el Gate 0 porque su resolución es parte del alcance de la Fase 1. La aprobación académica del charter pasa a ser la primera actividad de la Fase 1.
 2. **README raíz.** Sigue siendo el de la plantilla de Astro. Se reemplaza en la Fase 12 (o antes, si se decide hacerlo como tarea menor).
-3. **`CLAUDE.md` es un symlink.** En Windows, Git puede tratarlo como archivo de texto. Con la regla de `.gitignore` y `git rm --cached` queda excluido en ambos casos.
 
 ---
 
@@ -140,7 +138,7 @@ Sin dependencias adicionales. Cualquier dependencia importante nueva requiere un
 |---|---|
 | ☐ `APROBADO` | Las 5 verificaciones de §3 en OK |
 | ☐ `APROBADO CON OBSERVACIONES NO BLOQUEANTES` | Las 5 verificaciones de §3 en OK, con las observaciones de §6 registradas |
-| ☐ `NO APROBADO` | Falla el build o hay secretos/archivos de agentes versionados |
+| ☐ `NO APROBADO` | Falla el build o hay secretos o archivos locales de herramientas versionados |
 
 **Decisión recomendada:** `APROBADO CON OBSERVACIONES NO BLOQUEANTES`, una vez completada la §3.
 

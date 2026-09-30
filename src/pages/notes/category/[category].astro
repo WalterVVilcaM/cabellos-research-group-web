@@ -1,0 +1,16 @@
+---
+import type { GetStaticPaths } from 'astro';
+import View from '../../../views/NotesView.astro';
+import { noteCategories } from '../../../config/notes';
+import { getNotes, usedCategories } from '../../../utils/notes';
+
+/** Una página por categoría con notas (las vacías no se generan). */
+export const getStaticPaths = (async () => {
+  const cats = usedCategories(await getNotes());
+  return cats.map((category) => ({ params: { category: noteCategories[category].slug.en }, props: { category } }));
+}) satisfies GetStaticPaths;
+
+const { category } = Astro.props;
+---
+
+<View lang="en" category={category} />

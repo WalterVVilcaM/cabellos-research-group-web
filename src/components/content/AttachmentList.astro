@@ -1,0 +1,129 @@
+---
+/**
+ * Archivos de una nota: título, "PDF · 2.3 MB", Abrir (otra pestaña) y Descargar.
+ * No sabe dónde vive el archivo: recibe `url` ya resuelta (ADR-008).
+ */
+import Icon from '../ui/Icon.astro';
+import { useTranslations, type Lang } from '../../i18n/utils';
+import { formatBytes, type NoteAttachment } from '../../utils/notes';
+
+interface Props {
+  items: NoteAttachment[];
+  lang: Lang;
+}
+const { items, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<ul role="list" class="files">
+  {
+    items.map((f) => (
+      <li class="file">
+        <span class="file__icon" aria-hidden="true">
+          <Icon name="file" size={24} />
+        </span>
+        <div class="file__body">
+          <p class="file__title">{f.title}</p>
+          <p class="file__meta">
+            {f.type.toUpperCase()} · {formatBytes(f.sizeBytes, lang)}
+          </p>
+          {f.description && <p class="file__desc">{f.description}</p>}
+        </div>
+        <div class="file__actions">
+          <a href={f.url} target="_blank" rel="noopener" class="file__btn file__btn--primary">
+            {t('notes.open')}
+            <Icon name="external" size={16} />
+            <span class="visually-hidden">
+              {f.title} {t('notes.newTab')}
+            </span>
+          </a>
+          <a href={f.url} download={f.filename} class="file__btn">
+            <Icon name="download" size={16} />
+            {t('notes.download')}
+            <span class="visually-hidden">{f.title}</span>
+          </a>
+        </div>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .files {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .file {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-3) var(--space-4);
+    align-items: start;
+    padding: var(--space-4) var(--space-6);
+    border: var(--border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+  }
+  @media (min-width: 640px) {
+    .file {
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+    }
+  }
+  .file__icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-alt);
+    color: var(--color-primary);
+  }
+  .file__title {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+  .file__meta,
+  .file__desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .file__actions {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  @media (min-width: 640px) {
+    .file__actions {
+      grid-column: auto;
+    }
+  }
+  .file__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 40px;
+    padding: 0 var(--space-4);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    color: var(--color-primary);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease),
+      color var(--duration-fast) var(--ease);
+  }
+  .file__btn:hover {
+    background: var(--color-primary);
+    color: #fff;
+  }
+  .file__btn--primary {
+    background: var(--color-primary);
+    color: #fff;
+  }
+  .file__btn--primary:hover {
+    background: var(--color-primary-hover);
+  }
+</style>

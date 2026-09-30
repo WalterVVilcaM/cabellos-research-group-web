@@ -13,7 +13,7 @@ export function useTranslations(lang: Lang) {
   };
 }
 
-export type SectionKey = 'home' | 'about' | 'research' | 'team' | 'publications' | 'gallery' | 'contact';
+export type SectionKey = 'home' | 'about' | 'research' | 'team' | 'publications' | 'notes' | 'gallery' | 'contact';
 
 /** Subruta de despliegue (`base` en astro.config), sin barra final: '' en la raíz, '/repo' en GitHub Pages. */
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -30,6 +30,7 @@ const rawSectionPaths: Record<SectionKey, Record<Lang, string>> = {
   research: { en: '/research/', es: '/es/investigacion/' },
   team: { en: '/team/', es: '/es/integrantes/' },
   publications: { en: '/publications/', es: '/es/publicaciones/' },
+  notes: { en: '/notes/', es: '/es/notas/' },
   gallery: { en: '/gallery/', es: '/es/galeria/' },
   contact: { en: '/contact/', es: '/es/contacto/' },
 };
@@ -39,7 +40,7 @@ export const sectionPaths = Object.fromEntries(
   Object.entries(rawSectionPaths).map(([key, paths]) => [key, { en: withBase(paths.en), es: withBase(paths.es) }]),
 ) as Record<SectionKey, Record<Lang, string>>;
 
-export const navOrder: SectionKey[] = ['home', 'research', 'team', 'publications', 'gallery', 'contact'];
+export const navOrder: SectionKey[] = ['home', 'research', 'team', 'publications', 'notes', 'gallery', 'contact'];
 
 export function sectionPath(section: SectionKey, lang: Lang): string {
   return sectionPaths[section][lang];
@@ -53,6 +54,27 @@ export function researchPath(slugs: Record<Lang, string>, lang: Lang): string {
 /** Ruta del perfil de un integrante (slug compartido entre idiomas). */
 export function memberPath(id: string, lang: Lang): string {
   return `${sectionPaths.team[lang]}${id}/`;
+}
+
+/** Segmentos traducidos de las rutas de Notes (docs/04-information-architecture.md §2). */
+const notesSegments: Record<Lang, { page: string; category: string }> = {
+  en: { page: 'page', category: 'category' },
+  es: { page: 'pagina', category: 'categoria' },
+};
+
+/** Ruta del detalle de una nota (mismo slug en ambas interfaces; ADR-009). */
+export function notePath(slug: string, lang: Lang): string {
+  return `${sectionPaths.notes[lang]}${slug}/`;
+}
+
+/**
+ * Ruta de un listado de notas: general o de una categoría (`categorySlug` ya traducido), página `page`.
+ * La página 1 no lleva segmento de página.
+ */
+export function notesListPath(lang: Lang, page = 1, categorySlug?: string): string {
+  const seg = notesSegments[lang];
+  const base = categorySlug ? `${sectionPaths.notes[lang]}${seg.category}/${categorySlug}/` : sectionPaths.notes[lang];
+  return page > 1 ? `${base}${seg.page}/${page}/` : base;
 }
 
 /** Rutas equivalentes de una página en ambos idiomas (para hreflang y selector). */

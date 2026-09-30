@@ -4,9 +4,9 @@
 **Proyecto:** `cabellos-research-group-web`  
 **Documento complementario a:** `docs/00-orquestador-maestro.md`  
 **Tipo de documento:** especificación funcional, técnica y operativa del módulo editorial  
-**Versión:** 1.1  
+**Versión:** 1.2  
 **Fecha:** 2026-09-29  
-**Estado:** `ALCANCE APROBADO` — NOTES-F0 en cierre (faltan ADR, fichas de vista y wireframes; ver §110)  
+**Estado:** `ALCANCE APROBADO` — NOTES-F0 cerrada; NOTES-F1 implementada, en revisión (ver §110)  
 **Nombre público:** Notes (EN) / Notas (ES)  
 **Repositorio actual:** GitHub  
 **Hosting actual:** GitHub Pages (vista previa en subruta `/cabellos-research-group-web/`)  
@@ -18,7 +18,7 @@
 **Protección del panel administrativo:** Cloudflare Access  
 **Responsable técnico:** Walter Vilca  
 **Editor principal futuro:** Dr. José Luis Cabellos Quiroz  
-**Ubicación prevista del documento:** `docs/13-notes-editorial-module.md` (hoy está en la raíz del repositorio)
+**Ubicación:** `docs/13-notes-editorial-module.md` (antes `13_ESPECIFICACION_MODULO_BLOG_RECURSOS.md` en la raíz)
 
 ---
 
@@ -28,6 +28,7 @@
 |---|---|---|
 | 1.0 | 2026-09-29 | Propuesta inicial ("Blog / Recursos"). |
 | 1.1 | 2026-09-29 | Decisiones del responsable técnico (§0). Nombre **Notes / Notas**; rutas alineadas con ADR-007 (EN en la raíz, ES bajo `/es/`); enlaces a archivos vía `withBase()`; tres categorías; política de idioma del contenido; notas de prueba; modelo provisional igual al modelo futuro (`status`, `lang`, referencias a integrante, tamaño y derechos del adjunto); estructura de código según las convenciones del repositorio; ADR con numeración del proyecto (ADR-008…014); registro del cambio Tipo C. |
+| 1.2 | 2026-09-29 | Documento movido a `docs/`. NOTES-F0 cerrada: ADR-008, ADR-009, fichas VIEW-007 y VIEW-007-D con wireframes, orquestador y doc 04 actualizados. La Galería pasa a VIEW-008. NOTES-F1 implementada. |
 
 ---
 
@@ -43,7 +44,9 @@
 | D-N4 | La **interfaz** de la sección es bilingüe con el inglés como idioma principal y el español como secundario (igual que el resto del sitio). El **idioma de cada nota** lo decide el Dr. Cabellos; una nota se escribe una sola vez (§102). |
 | D-N5 | Mientras no haya notas reales se trabaja con **notas de prueba** claramente marcadas, que nunca se publican en producción (§67). |
 | D-N6 | Se prefiere la solución **sencilla**: tres categorías, sin páginas de etiquetas, sin buscador, sin traducción obligatoria. |
-| D-N7 | La administración por CRUD (panel `/admin`) queda como **arquitectura objetivo** (Etapa B). Se activa según §149; no bloquea la V1. |
+| D-N7 | ~~La administración por CRUD queda para después de la V1.~~ **Reemplazada por D-N8.** |
+| D-N8 | (2026-09-29) La **Etapa B se adelanta a la V1**: el Dr. Cabellos publicará desde un panel propio. Proveedor: **Cloudflare** (Workers + D1 + R2 + Access), comparado con Supabase (1 GB de archivos y pausa tras una semana sin actividad), Firebase (Storage exige plan Blaze) y paneles sobre GitHub (PDF y borradores en el repo público). Las pruebas se hacen en la **cuenta de Cloudflare del responsable técnico**; el Dr. no necesita cuenta de Cloudflare: entra al panel con su correo vía Access. **La cuenta de Walter queda como definitiva** (decisión del 2026-09-29); el Dr. Cabellos puede agregarse como miembro de la cuenta si se requiere, y se guardan los códigos de recuperación de la verificación en dos pasos. |
+| D-N9 | El panel **rechaza subidas cuando el total de archivos llega a 9.5 GB** (cuota gratuita de R2: 10 GB-mes) para garantizar costo $0. |
 
 ## 0.2 Registro de cambio (orquestador §30, Tipo C)
 
@@ -52,8 +55,8 @@
 | Solicitud | Añadir una sección editorial pública ("Notes / Notas") al sitio. |
 | Justificación | El Dr. Cabellos necesita un espacio para opiniones y recomendaciones de lectura sin modificar las páginas estructurales. |
 | Alcance V1 | Solo la sección pública estática (NOTES-F1): listado, categoría, detalle, adjuntos PDF, enlaces, SEO, responsive, accesibilidad. Contenido en archivos Markdown dentro del repositorio. |
-| Fuera de la V1 | Panel, base de datos, autenticación y almacenamiento externo (NOTES-F2…F8). Siguen fuera de alcance según orquestador §11 hasta que se active la Etapa B (§149). |
-| Impacto en fases | Reabre **solo para las vistas nuevas** los Gates 2 (IA), 3 (UX) y 4 (UI). El resto de vistas no se toca. Gate 7 sigue pendiente de la revisión visual. Gate 8 añade el criterio "sin notas de prueba publicadas". |
+| Fuera de la V1 | ~~Panel, base de datos, autenticación y almacenamiento externo.~~ Desde D-N8 (2026-09-29) entran en la V1 (NOTES-F2…F6). Se registra como ampliación del mismo cambio Tipo C. |
+| Impacto en fases | Reabre **solo para las vistas nuevas** los Gates 2 (arquitectura de información), 3 (UX) y 4 (UI). El resto de vistas no se toca. Gate 7 sigue pendiente de la revisión visual. Gate 8 añade el criterio "sin notas de prueba publicadas". |
 | Impacto en navegación | El menú pasa de 6 a 7 entradas (§6.2). |
 | Impacto técnico | Nueva colección de contenido `notes`, clave de sección `notes` en `src/i18n/utils.ts`, textos de interfaz en `src/i18n/ui.ts`, carpeta `public/files/notes/`. Sin dependencias nuevas en la V1. |
 | Esfuerzo estimado | NOTES-F1: una sesión de trabajo tras cerrar NOTES-F0. |
@@ -2425,7 +2428,7 @@ No hay beneficio proporcional para el alcance.
 
 El módulo tiene sus propias subfases. NOTES-F0 y NOTES-F1 forman parte de la V1; NOTES-F2 en adelante son la Etapa B.
 
-## NOTES-F0 — ESPECIFICACIÓN (activa)
+## NOTES-F0 — ESPECIFICACIÓN (cerrada 2026-09-29)
 
 Objetivo: cerrar este documento y dejar lista la implementación pública.
 
@@ -2444,11 +2447,11 @@ Gate:
 - [x] arquitectura provisional definida (Etapa A);
 - [x] arquitectura objetivo definida (Etapa B);
 - [x] herramientas de la Etapa A definidas (Astro Content Collections, sin dependencias nuevas);
-- [ ] ADR-008 y ADR-009 aprobados;
-- [ ] fichas de vista y wireframes aprobados;
-- [ ] orquestador e IA actualizados.
+- [x] ADR-008 y ADR-009 aprobados;
+- [x] fichas de vista y wireframes aprobados (`docs/views/VIEW-007-notes.md`, `docs/views/VIEW-007-D-note.md`);
+- [x] orquestador y arquitectura de información actualizados.
 
-## NOTES-F1 — SECCIÓN PÚBLICA ESTÁTICA (V1)
+## NOTES-F1 — SECCIÓN PÚBLICA ESTÁTICA (V1) — implementada, en revisión
 
 Objetivo: crear la sección pública compatible con el modelo futuro.
 
@@ -2480,7 +2483,7 @@ Gate:
 - [ ] `astro check` sin errores y build correcto en GitHub Pages (con subruta);
 - [ ] sin regresiones en el resto del sitio (§148).
 
-## NOTES-F2 — PREPARACIÓN CLOUDFLARE
+## NOTES-F2 — PREPARACIÓN CLOUDFLARE (en curso, ADR-010)
 
 Objetivo: desplegar réplica del proyecto en Cloudflare.
 
@@ -3247,6 +3250,8 @@ La implementación no debe romper:
 
 # 149. DECISIÓN SOBRE CUÁNDO ACTIVAR BACKEND (ETAPA B)
 
+> **Activada el 2026-09-29 (D-N8).** Se trabaja primero en la cuenta de Cloudflare del responsable técnico y en la dirección gratuita `*.workers.dev`; GitHub Pages sigue como respaldo hasta NOTES-F8.
+
 No se activa solo porque exista la sección.
 
 Se activa cuando:
@@ -3266,13 +3271,13 @@ La activación se registra como decisión y actualiza el orquestador §11.
 A 2026-09-29:
 
 ```text
-Repositorio              LISTO (cambios de la sesión 4 pendientes de commit)
+Repositorio              LISTO
 GitHub Pages             ACTIVO (vista previa)
-Especificación Notes     ALCANCE APROBADO — NOTES-F0 en cierre
-Sección pública Notes    POR IMPLEMENTAR (V1, NOTES-F1)
+Especificación Notes     ALCANCE APROBADO — NOTES-F0 cerrada
+Sección pública Notes    IMPLEMENTADA (V1, NOTES-F1) — en revisión visual
 Notas reales             NINGUNA — se usan notas de prueba
 Dominio final            PENDIENTE
-Cloudflare               POR CONFIGURAR (Etapa B)
+Cloudflare               CUENTA CREADA (responsable técnico, 2FA) — réplica en *.workers.dev en curso (NOTES-F2)
 D1                       FUTURO
 R2                       FUTURO
 Admin / CRUD             FUTURO
@@ -3289,11 +3294,11 @@ Orden:
 
 ```text
 1.  Aprobar alcance ................................ HECHO (2026-09-29)
-2.  Integrar Notes a la IA (orquestador + doc 04)
-3.  ADR-008 y ADR-009
-4.  Fichas de vista y wireframes
-5.  UI con el sistema de diseño existente
-6.  Implementar la sección pública estática (NOTES-F1)
+2.  Integrar Notes a la arquitectura de información (orquestador + doc 04) ... HECHO
+3.  ADR-008 y ADR-009 ..................................... HECHO
+4.  Fichas de vista y wireframes .......................... HECHO
+5.  UI con el sistema de diseño existente ................. HECHO
+6.  Implementar la sección pública estática (NOTES-F1) .... HECHO (en revisión)
 7.  Validar experiencia con notas de prueba
 8.  QA y UAT junto con el resto del sitio (Fases 9–10)
 --- fin de la V1 ---
@@ -3476,14 +3481,14 @@ ADR-014 — Editor technology
 
 # 158. PRÓXIMA ACCIÓN OFICIAL
 
-1. publicar los cambios pendientes de la sesión 4 (`publicar-cambios.cmd`) antes de tocar código del módulo;
-2. mover este documento a `docs/13-notes-editorial-module.md`;
-3. actualizar `docs/00-orquestador-maestro.md` (§11 alcance, §12 rutas, §13 inventario de vistas, menú) y `docs/04-information-architecture.md`;
-4. redactar ADR-008 y ADR-009;
-5. crear `docs/views/VIEW-007-notes.md` y `docs/views/VIEW-007-D-note.md` con wireframes;
-6. definir las notas de prueba (§67);
-7. implementar NOTES-F1;
-8. no comenzar D1/R2/Admin todavía.
+Hecho el 2026-09-29: documento movido a `docs/`, orquestador y doc 04 actualizados, ADR-008 y ADR-009, fichas VIEW-007 y VIEW-007-D, notas de prueba e implementación de NOTES-F1.
+
+Pendiente:
+
+1. revisión visual de la sección en la vista previa (junto con el Gate 7);
+2. notas reales del Dr. Cabellos (usar `src/content/notes/_PLANTILLA.md`);
+3. antes del release: comprobar que el build de producción no incluye notas de prueba (Gate 8);
+4. no comenzar D1/R2/Admin hasta que se active la Etapa B (§149).
 
 ---
 

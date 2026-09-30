@@ -1,0 +1,15 @@
+---
+import type { GetStaticPaths } from 'astro';
+import View from '../../../../views/NotesView.astro';
+import { getNotes, listedNotes, paginate } from '../../../../utils/notes';
+
+/** Páginas 2…n del listado general (la 1 es /es/notas/). */
+export const getStaticPaths = (async () => {
+  const pages = paginate(listedNotes(await getNotes()));
+  return pages.slice(1).map(({ page }) => ({ params: { page: String(page) }, props: { page } }));
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+---
+
+<View lang="es" page={page} />

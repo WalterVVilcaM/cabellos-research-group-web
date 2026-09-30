@@ -1,13 +1,16 @@
 ---
 /** Iconos SVG en línea (trazo 1.5, currentColor). Decorativos por defecto. */
 interface Props {
-  name: 'arrow-right' | 'external' | 'mail' | 'pin' | 'menu' | 'close' | 'building' | 'phone' | 'cpu';
+  name: 'arrow-right' | 'external' | 'mail' | 'pin' | 'menu' | 'close' | 'building' | 'phone' | 'cpu' | 'file' | 'download' | 'arrow-left';
   size?: number;
   label?: string;
 }
 const { name, size = 20, label } = Astro.props;
 const paths: Record<Props['name'], string> = {
   'arrow-right': 'M4 10h11M11 5.5 15.5 10 11 14.5',
+  'arrow-left': 'M16 10H5M9 5.5 4.5 10 9 14.5',
+  file: 'M11.5 2.5H5.75a.75.75 0 0 0-.75.75v13.5c0 .41.34.75.75.75h8.5c.41 0 .75-.34.75-.75V6ZM11.5 2.5V6H15M7.5 10.5h5M7.5 13.5h5',
+  download: 'M10 3v9.5M6 9l4 4 4-4M4 16.5h12',
   external: 'M8 4H4.75A.75.75 0 0 0 4 4.75v10.5c0 .41.34.75.75.75h10.5c.41 0 .75-.34.75-.75V12M11 4h5v5M16 4 9 11',
   mail: 'M3 5.5h14v9H3zM3.5 6l6.5 5 6.5-5',
   pin: 'M10 17s5.5-4.9 5.5-9A5.5 5.5 0 0 0 4.5 8c0 4.1 5.5 9 5.5 9ZM10 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z',

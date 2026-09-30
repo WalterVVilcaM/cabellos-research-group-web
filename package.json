@@ -11,7 +11,9 @@
     "preview": "astro preview",
     "check": "astro check",
     "astro": "astro",
-    "sync:pubs": "node scripts/sync-publications.mjs"
+    "sync:pubs": "node scripts/sync-publications.mjs",
+    "cf:deploy": "wrangler deploy",
+    "cf:dev": "wrangler dev"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
@@ -22,6 +24,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "wrangler": "^4.144.0"
   }
 }

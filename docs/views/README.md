@@ -14,6 +14,11 @@ Una especificación por vista, usando los IDs estables del orquestador (§13) y 
 | VIEW-004-D | Perfil de integrante | dinámica | `VIEW-004-D-member-detail.md` | APPROVED |
 | VIEW-005 | Publicaciones | principal | `VIEW-005-publications.md` | APPROVED |
 | VIEW-006 | Contacto | principal | `VIEW-006-contact.md` | APPROVED |
+| VIEW-007 / VIEW-007-C | Notes / Notas (listado y categoría) | principal | `VIEW-007-notes.md` | APPROVED (NOTES-F0) |
+| VIEW-007-D | Detalle de nota | dinámica | `VIEW-007-D-note.md` | APPROVED (NOTES-F0) |
+| VIEW-008 | Galería / Gallery | principal | — (aviso de "próximamente"; ficha pendiente) | EN CONSTRUCCIÓN |
 | VIEW-404 | No encontrado | sistema | `VIEW-404.md` | APPROVED |
 
 Nuevas vistas solo se agregan con ID y ADR o registro de cambio cuando modifiquen alcance.
+
+> 2026-09-29: VIEW-007 se asigna a Notes (cambio Tipo C, `docs/13-notes-editorial-module.md` §0.2). La Galería, que usaba informalmente ese número en el código, pasa a VIEW-008.
