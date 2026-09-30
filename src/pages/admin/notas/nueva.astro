@@ -9,7 +9,7 @@ import { withBase } from '../../../i18n/utils';
 
 let draft: NoteDraft = emptyDraft('jose-luis-cabellos');
 let errors: FieldErrors = {};
-let opts = await formOptions(draft);
+let opts = await formOptions();
 if (opts.authorIds[0]) draft.authorId = opts.authorIds[0];
 
 if (Astro.request.method === 'POST') {
@@ -23,7 +23,7 @@ if (Astro.request.method === 'POST') {
 }
 ---
 
-<AdminLayout title="Nueva nota" current="new">
+<AdminLayout title="Nueva nota" current="new" wide>
   <h1>Nueva nota</h1>
-  <NoteForm draft={draft} errors={errors} research={opts.research} authors={opts.authors} translations={opts.translations} />
+  <NoteForm draft={draft} errors={errors} research={opts.research} authors={opts.authors} />
 </AdminLayout>

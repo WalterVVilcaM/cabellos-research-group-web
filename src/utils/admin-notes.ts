@@ -169,17 +169,6 @@ export async function listAdminNotes(status?: NoteStatus, limit = 200): Promise<
   }));
 }
 
-/** Notas que pueden ser "original" de una traducción (del otro idioma). */
-export async function translationCandidates(lang: Lang, excludeId?: number) {
-  const other = lang === 'es' ? 'en' : 'es';
-  const { results } = await env.DB.prepare(
-    `SELECT id, title FROM notes WHERE lang = ? AND id <> ? AND status <> 'archived' ORDER BY published_at DESC LIMIT 200`,
-  )
-    .bind(other, excludeId ?? 0)
-    .all<{ id: number; title: string }>();
-  return results;
-}
-
 export async function getAdminNote(id: number): Promise<NoteDraft | undefined> {
   const row = await env.DB.prepare('SELECT * FROM notes WHERE id = ?').bind(id).first<Record<string, unknown>>();
   if (!row) return undefined;
@@ -267,10 +256,11 @@ export function parseForm(form: FormData, base: NoteDraft): ParsedForm {
     const kind = (LINK_KINDS as readonly string[]).includes(kinds[i] ?? '') ? (kinds[i] as AdminLink['kind']) : 'other';
     links.push({ title, url, kind, description: (descs[i] ?? '').trim() });
   }
-  const translation = str(form, 'translationOf');
   const file = form.get('new_file');
   const hasFile = file instanceof File && file.size > 0;
-  const slugInput = str(form, 'slug');
+  // Tolerante: si pegan la dirección completa se usa la última parte, y se normaliza
+  // ("Mi Nota Nueva" → "mi-nota-nueva"), así nadie tiene que saber las reglas.
+  const slugInput = slugify(str(form, 'slug').replace(/\/+$/, '').split('/').pop() ?? '');
   return {
     draft: {
       ...base,
@@ -285,7 +275,8 @@ export function parseForm(form: FormData, base: NoteDraft): ParsedForm {
       publishedAt: str(form, 'publishedAt') || today(),
       revisedAt: str(form, 'revisedAt'),
       researchAreas: form.getAll('researchAreas').map(String),
-      translationOf: translation ? Number(translation) : null,
+      // El panel ya no edita traducciones (decisión 2026-09-30): se conserva la que tenga la nota.
+      translationOf: base.translationOf,
       tags: [
         ...new Map(
           str(form, 'tags')
@@ -309,7 +300,8 @@ export function parseForm(form: FormData, base: NoteDraft): ParsedForm {
       .getAll('remove_attachment')
       .map(Number)
       .filter((n) => Number.isInteger(n)),
-    slugTouched: slugInput !== '',
+    // slug_auto = "true": el navegador la generó del título (no la escribió la persona).
+    slugTouched: slugInput !== '' && str(form, 'slug_auto') !== 'true',
   };
 }
 
@@ -323,14 +315,23 @@ export async function validate(parsed: ParsedForm, validResearch: string[], auth
   if (!d.slug && d.status !== 'published') d.slug = slugify(d.title);
   if (!d.slug && !d.title) {
     // Sin título ni URL: basta con el error del título.
-  } else if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(d.slug)) e.slug = 'La URL solo admite minúsculas, números y guiones.';
-  else if (d.slug.length > 80) e.slug = 'La URL es demasiado larga (máx. 80 caracteres).';
-  else if ((notesConfig.reservedSlugs as readonly string[]).includes(d.slug)) e.slug = 'Esa URL está reservada.';
+  } else if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(d.slug)) e.slug = 'La dirección solo admite letras sin acentos, números y guiones.';
+  else if (d.slug.length > 80) e.slug = 'La dirección es demasiado larga (máx. 80 caracteres).';
+  else if ((notesConfig.reservedSlugs as readonly string[]).includes(d.slug)) e.slug = 'Esa dirección está reservada por el sitio; elige otra.';
   else {
-    const clash = await env.DB.prepare('SELECT id FROM notes WHERE slug = ? AND id <> ?')
-      .bind(d.slug, d.id ?? 0)
-      .first();
-    if (clash) e.slug = 'Ya existe una nota con esta URL.';
+    const taken = async (slug: string) =>
+      !!(await env.DB.prepare('SELECT id FROM notes WHERE slug = ? AND id <> ?').bind(slug, d.id ?? 0).first());
+    if (await taken(d.slug)) {
+      if (parsed.slugTouched || d.status === 'published') {
+        e.slug = 'Ya existe otra nota con esta dirección. Cambia la última parte (por ejemplo, agrega el año).';
+      } else {
+        // Dirección automática repetida: se le agrega un número (titulo-2, titulo-3…).
+        const root = d.slug.slice(0, 76);
+        let n = 2;
+        while (n < 50 && (await taken(`${root}-${n}`))) n++;
+        d.slug = `${root}-${n}`;
+      }
+    }
   }
 
   if (!d.summary) e.summary = 'El resumen es obligatorio.';
@@ -355,14 +356,15 @@ export async function validate(parsed: ParsedForm, validResearch: string[], auth
       const u = new URL(l.url);
       if (u.protocol !== 'https:' && u.protocol !== 'http:') throw new Error();
     } catch {
-      e.links = `La dirección "${l.url}" no es válida (debe empezar con https://).`;
+      e.links = `El enlace "${l.url}" no es válido: copia la dirección completa desde el navegador (empieza con https://).`;
       break;
     }
   }
 
   if (d.translationOf) {
     const t = await env.DB.prepare('SELECT lang FROM notes WHERE id = ?').bind(d.translationOf).first<{ lang: Lang }>();
-    if (!t || t.lang === d.lang || d.translationOf === d.id) e.translationOf = 'La nota original debe estar en el otro idioma.';
+    // Si ya no es válida (p. ej. se cambió el idioma), se quita el vínculo en silencio: el panel no lo muestra.
+    if (!t || t.lang === d.lang || d.translationOf === d.id) d.translationOf = null;
   }
 
   if (parsed.newFile) {

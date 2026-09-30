@@ -7,8 +7,10 @@ import { withBase } from '../i18n/utils';
 interface Props {
   title: string;
   current?: 'home' | 'notes' | 'new';
+  /** Más ancho para el editor con vista previa en vivo. */
+  wide?: boolean;
 }
-const { title, current } = Astro.props;
+const { title, current, wide = false } = Astro.props;
 const email = Astro.locals.adminEmail ?? '';
 const nav = [
   { key: 'home', label: 'Inicio', href: withBase('/admin/') },
@@ -29,32 +31,59 @@ const nav = [
   </head>
   <body class="admin">
     <a class="skip-link" href="#main">Saltar al contenido</a>
-    <header class="admin-header">
-      <div class="container admin-header__inner">
+    <header class="admin-header" data-admin-header>
+      <div class:list={['container admin-header__inner', { 'admin-main--wide': wide }]}>
         <a href={withBase('/admin/')} class="admin-brand">Panel <span>· Notas</span></a>
-        <nav aria-label="Panel">
-          <ul role="list" class="admin-nav">
-            {
-              nav.map((n) => (
-                <li>
-                  <a href={n.href} aria-current={current === n.key ? 'page' : undefined}>
-                    {n.label}
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-        </nav>
-        <div class="admin-user">
-          <a href={withBase('/notes/')} target="_blank" rel="noopener">Ver sitio</a>
-          {email && <span class="admin-user__email">{email}</span>}
-          <a href="/cdn-cgi/access/logout">Salir</a>
+        <button type="button" class="admin-menu-btn" aria-expanded="false" aria-controls="admin-menu" data-menu-btn hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+          Menú
+        </button>
+        <div class="admin-menu" id="admin-menu" data-menu>
+          <nav aria-label="Panel">
+            <ul role="list" class="admin-nav">
+              {
+                nav.map((n) => (
+                  <li>
+                    <a href={n.href} aria-current={current === n.key ? 'page' : undefined}>
+                      {n.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </nav>
+          <div class="admin-user">
+            <a href={withBase('/notes/')} target="_blank" rel="noopener">Ver sitio</a>
+            {email && <span class="admin-user__email" title={email}>{email}</span>}
+            <a href="/cdn-cgi/access/logout">Salir</a>
+          </div>
         </div>
       </div>
     </header>
-    <main id="main" tabindex="-1" class="container admin-main">
+    <main id="main" tabindex="-1" class:list={['container admin-main', { 'admin-main--wide': wide }]}>
       <slot />
     </main>
+    <script>
+      // Menú plegable en celular (sin JavaScript el menú queda siempre visible).
+      const header = document.querySelector<HTMLElement>('[data-admin-header]');
+      const btn = header?.querySelector<HTMLButtonElement>('[data-menu-btn]');
+      if (header && btn) {
+        header.classList.add('has-menu');
+        btn.hidden = false;
+        btn.addEventListener('click', () => {
+          const open = btn.getAttribute('aria-expanded') !== 'true';
+          btn.setAttribute('aria-expanded', String(open));
+          header.classList.toggle('is-open', open);
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && header.classList.contains('is-open')) {
+            header.classList.remove('is-open');
+            btn.setAttribute('aria-expanded', 'false');
+            btn.focus();
+          }
+        });
+      }
+    </script>
   </body>
 </html>
 
@@ -96,6 +125,45 @@ const nav = [
     color: var(--color-text-muted);
     font-weight: 400;
   }
+  .admin-menu {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-8);
+    flex: 1;
+  }
+  .admin-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    margin-left: auto;
+    padding: 0 var(--space-4);
+    border: var(--border);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text);
+    cursor: pointer;
+  }
+  .admin-menu-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+  .admin-menu-btn[hidden] {
+    display: none;
+  }
+  @media (min-width: 760px) {
+    .admin-menu-btn {
+      display: none !important;
+    }
+  }
   .admin-nav {
     display: flex;
     gap: var(--space-1);
@@ -128,12 +196,55 @@ const nav = [
   }
   .admin-user__email {
     color: var(--color-text-muted);
+    max-width: 16rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .admin-main {
     padding-block: var(--space-8) var(--space-16);
   }
   .admin-main > * + * {
     margin-top: var(--space-6);
+  }
+  .admin-main--wide {
+    max-width: calc(1480px + 2 * var(--gutter));
+  }
+  /* Controles de formulario comunes (el select nativo se ve distinto en cada navegador). */
+  .admin :is(input:not([type='checkbox'], [type='radio'], [type='file']), select, textarea) {
+    width: 100%;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid #c3cdc8;
+    border-radius: var(--radius-sm);
+    background-color: #fff;
+    font: inherit;
+    font-weight: 400;
+    color: var(--color-text);
+    transition: border-color var(--duration-fast) var(--ease), box-shadow var(--duration-fast) var(--ease);
+  }
+  .admin :is(input, select, textarea):hover {
+    border-color: #9fb0a8;
+  }
+  .admin :is(input, select, textarea):focus-visible {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 22%, transparent);
+  }
+  .admin select {
+    appearance: none;
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234b5a54' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    cursor: pointer;
+  }
+  .admin textarea {
+    line-height: 1.6;
+    resize: vertical;
+  }
+  .admin ::placeholder {
+    color: #8a9791;
   }
   .admin h1 {
     font-size: var(--text-2xl);
@@ -210,5 +321,56 @@ const nav = [
   .status--test {
     background: #eef0f7;
     color: #454b73;
+  }
+  @media (max-width: 759px) {
+    .admin-main {
+      padding-block: var(--space-6) var(--space-12);
+    }
+    .admin-header__inner {
+      flex-wrap: wrap;
+      gap: 0;
+      padding-block: var(--space-2);
+    }
+    .has-menu .admin-menu {
+      display: none;
+    }
+    .admin-menu {
+      flex-basis: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-2);
+      padding-block: var(--space-3) var(--space-2);
+    }
+    .has-menu.is-open .admin-menu {
+      display: flex;
+    }
+    .admin-nav {
+      flex-direction: column;
+    }
+    .admin-nav a {
+      display: flex;
+      min-height: 48px;
+      font-size: var(--text-base);
+    }
+    .admin-user {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      margin-left: 0;
+      padding-top: var(--space-2);
+      border-top: var(--border);
+    }
+    .admin-user a {
+      display: flex;
+      align-items: center;
+      min-height: 48px;
+      padding: 0 var(--space-3);
+      font-size: var(--text-base);
+    }
+    .admin-user__email {
+      order: -1;
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--text-sm);
+    }
   }
 </style>

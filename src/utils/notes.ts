@@ -4,8 +4,7 @@
  * Solo se usa en rutas renderizadas bajo demanda (`prerender = false`).
  */
 import { env } from 'cloudflare:workers';
-import { micromark } from 'micromark';
-import { gfm, gfmHtml } from 'micromark-extension-gfm';
+import { renderMarkdown } from './markdown';
 import { noteCategories, notesConfig, type NoteCategoryId } from '../config/notes';
 import { memberPath, notePath, notesListPath, withBase, type Lang } from '../i18n/utils';
 import { getMembers } from './content';
@@ -217,12 +216,7 @@ export async function hasNotes(): Promise<boolean> {
 }
 
 /** Markdown → HTML seguro: micromark no deja pasar HTML crudo ni protocolos peligrosos. */
-export function renderMarkdown(md: string): string {
-  return micromark(md, { extensions: [gfm()], htmlExtensions: [gfmHtml()] })
-    .replace(/<(\/?)h1>/g, '<$1h2>')
-    .replace(/<table>/g, '<div class="table-wrap"><table>')
-    .replace(/<\/table>/g, '</table></div>');
-}
+export { renderMarkdown };
 
 /** Detalle de una nota por slug, con cuerpo, enlaces, archivos y etiquetas. */
 export async function getNoteBySlug(

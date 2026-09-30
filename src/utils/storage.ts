@@ -60,7 +60,7 @@ async function looksLikePdf(file: Blob): Promise<boolean> {
 /** Valida un PDF antes de subirlo (tipo real, tamaño, derechos y espacio disponible). Lanza UploadError. */
 export async function validateNoteFile(file: File, rights: string): Promise<void> {
   if (!(RIGHTS as readonly string[]).includes(rights)) {
-    throw new UploadError('rights', 'Indica si tienes derecho a distribuir este archivo.');
+    throw new UploadError('rights', 'Elige si se puede compartir este PDF.');
   }
   if (file.size === 0) throw new UploadError('empty', 'El archivo está vacío.');
   if (file.size > notesConfig.maxAttachmentBytes) {

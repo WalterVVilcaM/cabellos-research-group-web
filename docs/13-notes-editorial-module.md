@@ -2551,7 +2551,7 @@ Gate:
 
 ## NOTES-F5 — ADMIN (CRUD) (implementado 2026-09-30, ADR-014)
 
-Rutas: `/admin/` (inicio), `/admin/notas/` (listado con filtro por estado), `/admin/notas/nueva/`, `/admin/notas/<id>/` (editor y estado), `/admin/notas/<id>/vista-previa/` y `/admin/api/markdown/`. La API vive bajo `/admin` para que una sola aplicación de Access proteja todo (ADR-013).
+Rutas: `/admin/` (inicio), `/admin/notas/` (listado con filtro por estado), `/admin/notas/nueva/`, `/admin/notas/<id>/` (editor y estado), y `/admin/notas/<id>/vista-previa/`. Todo vive bajo `/admin` para que una sola aplicación de Access lo proteja (ADR-013). Revisión 1 del editor (2026-09-30): pasos con indicaciones, vista previa en vivo de la nota completa (Markdown convertido en el navegador con el mismo módulo del sitio), dirección automática con botón *Cambiar* y sin campo de traducción (ADR-014).
 
 Objetivo: editor utilizable por el Dr. Cabellos.
 
@@ -2573,20 +2573,20 @@ Gate:
 - [x] adjuntar (PDF a R2 con derechos, quitar con limpieza en R2);
 - [x] archivar, restaurar y eliminar con confirmación.
 
-## NOTES-F6 — ACCESS (código listo 2026-09-30, ADR-013; falta crear la aplicación de Access)
+## NOTES-F6 — ACCESS (hecho 2026-09-30, ADR-013)
 
 Objetivo: proteger panel.
 
 Implementar:
 
-- aplicación Access;
-- políticas;
+- aplicación Access (equipo `cabellos`; destino: hostname público `cabellos-research-group.cabellos.workers.dev` con ruta `admin`);
+- políticas (por ahora «Cloudflare account»: solo miembros de la cuenta; al agregar al Dr., política por correos con código de un solo uso);
 - correos autorizados;
 - protección admin/API.
 
 Gate:
 
-- [ ] usuario autorizado entra (probado en local con JWT; falta en Cloudflare);
+- [x] usuario autorizado entra (probado en local con JWT y en producción por el responsable técnico);
 - [x] no autorizado no entra (401/403/503, probado en local);
 - [x] rutas públicas siguen públicas.
 
@@ -3283,8 +3283,8 @@ Dominio final            PENDIENTE
 Cloudflare               ACTIVO — https://cabellos-research-group.cabellos.workers.dev/ (NOTES-F2)
 D1                       IMPLEMENTADA (NOTES-F3)
 R2                       IMPLEMENTADA (NOTES-F4) — bucket privado servido por el Worker
-Admin / CRUD             IMPLEMENTADO (NOTES-F5) — cerrado hasta configurar Access
-Access                   CÓDIGO LISTO (NOTES-F6) — falta la aplicación de Access
+Admin / CRUD             EN PRODUCCIÓN (NOTES-F5) — editor revisado con vista previa en vivo
+Access                   HECHO (NOTES-F6) — solo /admin pide inicio de sesión
 ```
 
 ---

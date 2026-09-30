@@ -19,7 +19,7 @@ if (!base) return new Response('Nota no encontrada', { status: 404 });
 
 let draft = base;
 let errors: FieldErrors = {};
-let opts = await formOptions(draft);
+let opts = await formOptions();
 let flash: string | null = null;
 const here = withBase(`/admin/notas/${id}/`);
 
@@ -67,7 +67,7 @@ const ok = Astro.url.searchParams.get('ok');
 const statusLabel = { draft: 'Borrador', published: 'Publicada', archived: 'Archivada' } as const;
 ---
 
-<AdminLayout title={base.title} current="notes">
+<AdminLayout title={base.title} current="notes" wide>
   <div class="head">
     <div>
       <p class="crumb"><a href={withBase('/admin/notas/')}>Notas</a> ›</p>
@@ -92,45 +92,57 @@ const statusLabel = { draft: 'Borrador', published: 'Publicada', archived: 'Arch
   {ok && messages[ok] && <p class="admin-flash" role="status">{messages[ok]}</p>}
   {flash && <p class="admin-flash admin-flash--error" role="alert">{flash}</p>}
 
-  <NoteForm draft={draft} errors={errors} research={opts.research} authors={opts.authors} translations={opts.translations} />
+  <NoteForm draft={draft} errors={errors} research={opts.research} authors={opts.authors} />
 
   <section class="admin-card state" aria-labelledby="state-title">
-    <h2 id="state-title">Estado de la nota</h2>
-    <div class="state__actions">
+    <h2 id="state-title">Publicación y archivo</h2>
+    <ul role="list" class="state__list">
       {
         base.status === 'published' && (
-          <form method="post">
-            <button class="admin-btn" name="action" value="unpublish">Despublicar (volver a borrador)</button>
-          </form>
+          <li>
+            <form method="post">
+              <button class="admin-btn" name="action" value="unpublish">Despublicar</button>
+            </form>
+            <p>La nota deja de verse en el sitio y vuelve a borrador. Puedes publicarla otra vez cuando quieras.</p>
+          </li>
         )
       }
       {
         base.status !== 'archived' && (
-          <form method="post">
-            <button class="admin-btn" name="action" value="archive">Archivar</button>
-          </form>
+          <li>
+            <form method="post">
+              <button class="admin-btn" name="action" value="archive">Archivar</button>
+            </form>
+            <p>La guarda aparte: no se ve en el sitio ni estorba en el listado. Se puede restaurar.</p>
+          </li>
         )
       }
       {
         base.status === 'archived' && (
-          <form method="post">
-            <button class="admin-btn" name="action" value="restore">Restaurar como borrador</button>
-          </form>
+          <li>
+            <form method="post">
+              <button class="admin-btn" name="action" value="restore">Restaurar</button>
+            </form>
+            <p>La recupera como borrador para editarla o publicarla de nuevo.</p>
+          </li>
         )
       }
-    </div>
+    </ul>
     {
-      base.status === 'archived' && (
+      base.status === 'archived' ? (
         <form method="post" class="danger">
-          <label for="confirm">Eliminar para siempre (también sus PDF). Escribe <strong>ELIMINAR</strong> para confirmar:</label>
+          <label for="confirm">
+            <strong>Eliminar para siempre.</strong> Se borran la nota y sus PDF; no se puede deshacer. Escribe <strong>ELIMINAR</strong> para confirmar:
+          </label>
           <div class="danger__row">
             <input id="confirm" name="confirm" autocomplete="off" />
             <button class="admin-btn admin-btn--danger" name="action" value="delete">Eliminar definitivamente</button>
           </div>
         </form>
+      ) : (
+        <p class="muted small">Para eliminar una nota para siempre, primero archívala.</p>
       )
     }
-    {base.status !== 'archived' && <p class="muted small">Para eliminar una nota, primero archívala.</p>}
   </section>
 </AdminLayout>
 
@@ -163,10 +175,29 @@ const statusLabel = { draft: 'Borrador', published: 'Publicada', archived: 'Arch
   .state h2 {
     font-size: var(--text-lg);
   }
-  .state__actions {
-    display: flex;
-    flex-wrap: wrap;
+  .state {
+    max-width: 50rem;
+  }
+  .state__list {
+    display: grid;
     gap: var(--space-3);
+  }
+  .state__list li {
+    display: grid;
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: center;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .state__list .admin-btn {
+    width: 100%;
+  }
+  @media (max-width: 559px) {
+    .state__list li {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
   }
   .danger {
     display: grid;
@@ -181,11 +212,9 @@ const statusLabel = { draft: 'Borrador', published: 'Publicada', archived: 'Arch
     gap: var(--space-2);
   }
   .danger input {
-    min-height: 40px;
-    padding: 0 var(--space-3);
-    border: 1px solid #c6d1cb;
-    border-radius: var(--radius-sm);
-    font: inherit;
+    flex: 1 1 10rem;
+    width: auto;
+    max-width: 16rem;
   }
   .small {
     font-size: var(--text-sm);
