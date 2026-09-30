@@ -18,7 +18,10 @@
     "db:migrate:local": "wrangler d1 migrations apply DB --local -c wrangler.jsonc",
     "db:seed:local": "wrangler d1 execute DB --local -c wrangler.jsonc --file seeds/test-notes.sql",
     "db:migrate:remote": "wrangler d1 migrations apply DB --remote -c wrangler.jsonc",
-    "db:seed:remote": "wrangler d1 execute DB --remote -c wrangler.jsonc --file seeds/test-notes.sql"
+    "db:seed:remote": "wrangler d1 execute DB --remote -c wrangler.jsonc --file seeds/test-notes.sql",
+    "files:setup": "node scripts/cf-setup-r2.mjs",
+    "files:seed:local": "wrangler r2 object put cabellos-research-files/notes/test/test-note-sample.pdf --file seeds/files/test-note-sample.pdf --content-type application/pdf --local -c wrangler.jsonc",
+    "files:seed:remote": "wrangler r2 object put cabellos-research-files/notes/test/test-note-sample.pdf --file seeds/files/test-note-sample.pdf --content-type application/pdf --remote -c wrangler.jsonc"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.3.3",

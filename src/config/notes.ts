@@ -42,7 +42,7 @@ export const noteCategories: Record<
 export const notesConfig = {
   /** Notas por página en el listado y en cada categoría. */
   perPage: 10,
-  /** Carpeta pública de los adjuntos estáticos (dentro de public/). En NOTES-F4 los archivos pasan a R2. */
+  /** Carpeta de los adjuntos estáticos anteriores a R2 ("static:"); desde NOTES-F4 los PDF viven en R2 (ADR-012). */
   filesDir: '/files/notes/',
   /** Tamaño máximo de un adjunto. */
   maxAttachmentBytes: 20 * 1024 * 1024,

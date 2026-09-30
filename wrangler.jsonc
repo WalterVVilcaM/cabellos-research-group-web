@@ -1,4 +1,5 @@
-// Cloudflare Workers (ADR-010). Todo el sitio es estático salvo Notes, que se lee de D1 (ADR-011).
+// Cloudflare Workers (ADR-010). Todo el sitio es estático salvo Notes, que se lee de D1 (ADR-011)
+// y sirve sus PDF desde R2 (ADR-012).
 // El adaptador @astrojs/cloudflare añade al build el Worker (main) y los assets estáticos.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
@@ -17,5 +18,9 @@
       "database_id": "4199cb18-8d71-4ba9-b3d5-31503613b8e3",
       "migrations_dir": "migrations"
     }
+  ],
+  // Archivos de Notes (PDF). El bucket no es público: el Worker los sirve en /files/… (ADR-012).
+  "r2_buckets": [
+    { "binding": "NOTES_FILES", "bucket_name": "cabellos-research-files" }
   ]
 }

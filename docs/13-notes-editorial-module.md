@@ -2526,7 +2526,7 @@ Gate:
 - [x] queries paginadas;
 - [ ] backup plan (D1 Time Travel + exportación con `wrangler d1 export` antes de cargar contenido real).
 
-## NOTES-F4 — R2
+## NOTES-F4 — R2 (implementada 2026-09-30, ADR-012)
 
 Objetivo: archivos.
 
@@ -2542,12 +2542,12 @@ Implementar:
 
 Gate:
 
-- [ ] PDF upload;
-- [ ] lectura;
-- [ ] eliminación controlada;
-- [ ] límite tamaño;
-- [ ] derecho de distribución obligatorio;
-- [ ] seguridad.
+- [x] PDF upload (biblioteca `src/utils/storage.ts`; la interfaz llega con el panel, NOTES-F5);
+- [x] lectura (el Worker sirve `/files/…` con rangos, ETag y descarga);
+- [x] eliminación controlada (`deleteNoteFile`; comprobación de uso en el panel);
+- [x] límite tamaño (20 MB por archivo, 9.5 GB en total, D-N9);
+- [x] derecho de distribución obligatorio;
+- [x] seguridad (bucket privado, firma `%PDF-`, PDF de borradores inaccesibles, sin endpoint público de escritura).
 
 ## NOTES-F5 — ADMIN (CRUD)
 
@@ -3279,7 +3279,7 @@ Notas reales             NINGUNA — se usan notas de prueba
 Dominio final            PENDIENTE
 Cloudflare               ACTIVO — https://cabellos-research-group.cabellos.workers.dev/ (NOTES-F2)
 D1                       IMPLEMENTADA (NOTES-F3)
-R2                       FUTURO
+R2                       IMPLEMENTADA (NOTES-F4) — bucket privado servido por el Worker
 Admin / CRUD             FUTURO
 Access                   FUTURO
 ```

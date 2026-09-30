@@ -86,10 +86,27 @@ function visible(alias = 'n') {
   return `${alias}.status = 'published'${showTestNotes() ? '' : ` AND ${alias}.is_test = 0`}`;
 }
 
-/** URL pública de un archivo: "static:<ruta>" → public/files/notes/<ruta>. R2 llega en NOTES-F4. */
-function fileUrl(storageKey: string): string {
+/**
+ * URL pública de un archivo. "r2:<clave>" → /files/<clave> (lo sirve el Worker desde R2, ADR-012).
+ * "static:<ruta>" (anterior a NOTES-F4) → public/files/notes/<ruta>.
+ */
+export function fileUrl(storageKey: string): string {
+  if (storageKey.startsWith('r2:')) return withBase(`/files/${storageKey.slice(3)}`);
   if (storageKey.startsWith('static:')) return withBase(`${notesConfig.filesDir}${storageKey.slice(7)}`);
   throw new Error(`[notes] almacenamiento no soportado: ${storageKey}`);
+}
+
+/**
+ * Adjunto público por clave de R2: solo si pertenece a una nota visible (así los PDF de
+ * borradores o notas archivadas no se pueden descargar aunque alguien conozca la URL).
+ */
+export async function visibleAttachment(key: string) {
+  return env.DB.prepare(
+    `SELECT a.original_filename, a.size_bytes FROM attachments a JOIN notes n ON n.id = a.note_id
+     WHERE a.storage_key = ? AND ${visible()} LIMIT 1`,
+  )
+    .bind(`r2:${key}`)
+    .first<{ original_filename: string; size_bytes: number }>();
 }
 
 const asDate = (d: string) => new Date(`${d.slice(0, 10)}T00:00:00Z`);

@@ -37,7 +37,7 @@ const t = useTranslations(lang);
               {f.title} {t('notes.newTab')}
             </span>
           </a>
-          <a href={f.url} download={f.filename} class="file__btn">
+          <a href={`${f.url}?download=1`} download={f.filename} class="file__btn">
             <Icon name="download" size={16} />
             {t('notes.download')}
             <span class="visually-hidden">{f.title}</span>

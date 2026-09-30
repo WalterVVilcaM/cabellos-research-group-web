@@ -37,7 +37,7 @@ El dominio y la subruta salen de las variables `SITE` y `BASE_PATH` (por defecto
 
 ## Notas (Notes / Notas)
 
-Las notas viven en **Cloudflare D1** (base `cabellos-notes`, ADR-011) y las páginas de Notes se generan en cada visita; el resto del sitio es estático. El panel para que el Dr. Cabellos publique llega en NOTES-F5.
+Las notas viven en **Cloudflare D1** (base `cabellos-notes`, ADR-011), sus PDF en **R2** (bucket privado `cabellos-research-files`, servido por el Worker en `/files/…`, ADR-012) y las páginas de Notes se generan en cada visita; el resto del sitio es estático. El panel para que el Dr. Cabellos publique llega en NOTES-F5.
 
 | Comando | Qué hace |
 |---|---|
@@ -46,6 +46,7 @@ Las notas viven en **Cloudflare D1** (base `cabellos-notes`, ADR-011) y las pág
 | `npm run dev` | Sitio en `localhost:4321` con la base local |
 | `git push` a `main` | Publica en Cloudflare (Workers Builds). A mano: `npm run build` + `npm run cf:deploy` |
 | `npm run db:migrate:remote` / `npm run db:seed:remote` | Lo mismo en la base de Cloudflare |
+| `npm run files:seed:local` / `npm run files:seed:remote` | Sube el PDF de prueba a R2 (local o Cloudflare) |
 
 Las notas de prueba (`is_test = 1`, `seeds/test-notes.sql`) solo se ven si la variable `SHOW_TEST_NOTES` de `wrangler.jsonc` es `"true"`. Antes del lanzamiento se quita esa variable y se borran (Gate 8). Detalle: `docs/13-notes-editorial-module.md`, ADR-008, ADR-009 y ADR-011.
 
