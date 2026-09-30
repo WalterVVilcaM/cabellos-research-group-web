@@ -26,8 +26,8 @@ export const site = {
     country: { es: 'México', en: 'Mexico' },
   },
   contact: {
-    /** Correo del Dr. Cabellos (confirmado por el responsable técnico, 2026-09-23). */
-    email: 'jose.luis@uptapachula.edu.mx' as string | null,
+    /** Correo del Dr. Cabellos (actualizado por el responsable técnico, 2026-09-30). */
+    email: 'jose.cabellos@uptapachula.edu.mx' as string | null,
     /** Teléfono visible y en formato internacional para enlaces tel:. */
     phone: '962 465 9908' as string | null,
     phoneIntl: '+529624659908' as string | null,

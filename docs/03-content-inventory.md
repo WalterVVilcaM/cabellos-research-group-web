@@ -19,7 +19,7 @@ Leyenda de estado: **OK** disponible y verificado · **BORRADOR** redactado por 
 | Nombre descriptivo ES/EN | BORRADOR | `src/config/site.ts` | Provisional (charter D-01) |
 | Institución y adscripción | OK | `src/config/site.ts` | Fuente: afiliación publicada |
 | Dirección postal | OK (campus) / FALTA edificio | `src/config/site.ts` | Carretera Tapachula–Puerto Madero km 24 + 300 |
-| Correo público | OK | `src/config/site.ts` | jose.luis@uptapachula.edu.mx (confirmado) |
+| Correo público | OK | `src/config/site.ts` | jose.cabellos@uptapachula.edu.mx (actualizado 2026-09-30) |
 | Teléfono público | OK | `src/config/site.ts` | 962 465 9908 (confirmado) |
 | Logotipo | OK (propio) | `public/favicon.svg`, componente `Brand` | Monograma "CRG" |
 | Descripción del grupo (About) | BORRADOR | `src/i18n/es.ts`, `src/i18n/en.ts` | Redactada a partir de la producción publicada |

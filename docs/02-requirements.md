@@ -109,7 +109,7 @@ Mejoras propias frente al benchmark: DOI enlazado en cada publicación, relació
 | ID | Decisión | Bloquea |
 |---|---|---|
 | D-10 | Integrantes adicionales (estudiantes, colaboradores, egresados) | Contenido de VIEW-004 (no la estructura) |
-| D-11 | ~~Correo público~~ → jose.luis@uptapachula.edu.mx · tel. 962 465 9908 (cerrada) | — |
+| D-11 | ~~Correo público~~ → jose.cabellos@uptapachula.edu.mx (actualizado 2026-09-30; antes jose.luis@…) · tel. 962 465 9908 (cerrada) | — |
 | D-12 | Fotografía del PI y fotografías del grupo | Imágenes (hay fallback) |
 | D-13 | Biografía y trayectoria validadas del PI | Contenido de VIEW-004-D |
 | D-14 | Lista completa de publicaciones validada | Contenido de VIEW-005 |
