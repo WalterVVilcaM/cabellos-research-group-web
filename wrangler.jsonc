@@ -11,9 +11,9 @@
     "SHOW_TEST_NOTES": "true",
     // Panel /admin (ADR-013). Sin ACCESS_TEAM_DOMAIN y ACCESS_AUD el panel responde 503 (cerrado).
     // Dominio del equipo de Zero Trust, p. ej. "https://<equipo>.cloudflareaccess.com".
-    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_TEAM_DOMAIN": "https://cabellos.cloudflareaccess.com",
     // Etiqueta "Application Audience (AUD)" de la aplicación de Access del panel.
-    "ACCESS_AUD": "",
+    "ACCESS_AUD": "f3297e8de08da91d3d32c889da81d04e63b64e2b5db508827963cec010a80a2f",
     // Correos con permiso (también deben estar en la política de Access), separados por comas.
     "ADMIN_EMAILS": "waltervvilcam@gmail.com"
   },
