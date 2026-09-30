@@ -44,14 +44,14 @@ Las notas viven en **Cloudflare D1** (base `cabellos-notes`, ADR-011) y las pág
 | `npm run db:migrate:local` | Crea las tablas en la base local (`.wrangler/state`) |
 | `npm run db:seed:local` | Carga las notas de prueba en la base local |
 | `npm run dev` | Sitio en `localhost:4321` con la base local |
-| `npm run build` + `npm run cf:deploy` | Publica en Cloudflare |
+| `git push` a `main` | Publica en Cloudflare (Workers Builds). A mano: `npm run build` + `npm run cf:deploy` |
 | `npm run db:migrate:remote` / `npm run db:seed:remote` | Lo mismo en la base de Cloudflare |
 
 Las notas de prueba (`is_test = 1`, `seeds/test-notes.sql`) solo se ven si la variable `SHOW_TEST_NOTES` de `wrangler.jsonc` es `"true"`. Antes del lanzamiento se quita esa variable y se borran (Gate 8). Detalle: `docs/13-notes-editorial-module.md`, ADR-008, ADR-009 y ADR-011.
 
 ## Publicaciones automáticas
 
-Cada lunes, `.github/workflows/publications.yml` ejecuta `scripts/sync-publications.mjs`, que busca en OpenAlex (por el ORCID del Dr. Cabellos) y completa los datos con Crossref. Solo **agrega** entradas nuevas al final de `publications.yaml` (nunca modifica ni borra las existentes) y solo guarda el cambio si pasan `astro check` y `astro build`.
+Cada lunes, `.github/workflows/publications.yml` ejecuta `scripts/sync-publications.mjs`, que busca en OpenAlex (por el ORCID del Dr. Cabellos) y completa los datos con Crossref. Solo **agrega** entradas nuevas al final de `publications.yaml` (nunca modifica ni borra las existentes) y solo guarda el cambio si pasan `astro check` y `astro build`; Cloudflare lo publica automáticamente.
 
 - Se ignoran preprints, erratas, portadas, material suplementario, repositorios (Zenodo/Figshare) y duplicados por DOI o por título.
 - Si aparecen más de 12 de golpe o las APIs no responden, no se cambia nada.

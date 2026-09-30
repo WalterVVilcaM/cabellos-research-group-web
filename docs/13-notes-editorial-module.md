@@ -2504,7 +2504,7 @@ Gate:
 - [x] misma web funciona (`https://cabellos-research-group.cabellos.workers.dev/`);
 - [x] URLs verificadas;
 - [x] no regresiones;
-- [ ] la sincronización semanal de publicaciones sigue funcionando (`publications.yml`; publicación automática con Workers Builds).
+- [x] la sincronización semanal de publicaciones sigue funcionando (`publications.yml` guarda en `main`; Workers Builds publica cada push, conectado 2026-09-29).
 
 ## NOTES-F3 — D1 (implementada 2026-09-29, ADR-011)
 

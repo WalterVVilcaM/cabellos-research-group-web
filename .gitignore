@@ -25,18 +25,10 @@ pnpm-debug.log*
 
 # Archivos locales de herramientas de desarrollo: se excluyen en .git/info/exclude (no se versionan).
 
-# script de publicación de un solo uso
-publicar-github-pages.cmd
-publicar-github-pages.log
-publicar-cambios.cmd
-publicar-cambios.log
-
-publicar-notes.cmd
-publicar-notes.log
 
 # Estado local de Wrangler (Cloudflare)
 .wrangler/
-publicar-cloudflare.cmd
-publicar-cloudflare.log
-publicar-d1.cmd
-publicar-d1.log
+
+# scripts locales de publicación (.cmd) y sus registros
+publicar-*.cmd
+publicar-*.log

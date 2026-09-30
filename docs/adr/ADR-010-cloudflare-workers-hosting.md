@@ -11,7 +11,7 @@ El Dr. Cabellos publicará notas desde un panel propio (`docs/13-notes-editorial
 2. Cuenta de Cloudflare: la del responsable técnico (definitiva). El Dr. no necesita cuenta.
 3. **NOTES-F2 (hecho):** réplica en `https://cabellos-research-group.cabellos.workers.dev/`. Desde NOTES-F3 (ADR-011) el Worker ejecuta las rutas de Notes y **GitHub Pages deja de actualizarse** (queda congelado con la última versión estática); la vista previa oficial es la de `workers.dev`.
 4. En NOTES-F3 en adelante se añade el adaptador `@astrojs/cloudflare` solo para las rutas dinámicas (Notes, `/admin`, `/api`); el resto sigue estático.
-5. Despliegue: por ahora manual con un `.cmd` (`wrangler login` en el equipo del responsable técnico; ningún token pasa por el chat ni por el repositorio). Después, **Workers Builds** (el repositorio conectado desde el panel de Cloudflare publica en cada push a `main`, sin tokens en GitHub).
+5. Despliegue: **Workers Builds** conectado el 2026-09-29 (repositorio `WalterVVilcaM/cabellos-research-group-web`, rama `main`, build `npm run build`, deploy `npx wrangler deploy`). Cada push a `main` publica solo, incluidas las publicaciones que guarda `publications.yml`. La app de Cloudflare en GitHub solo tiene acceso a este repositorio; no hay tokens en GitHub ni en el chat. Las migraciones de D1 siguen siendo manuales (`npm run db:migrate:remote`).
 6. `SITE` sigue apuntando al dominio final, así que las canónicas de la réplica apuntan a `cabellosresearchgroup.org` y la réplica no compite en buscadores.
 
 ## Alternativas consideradas
