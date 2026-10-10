@@ -1,4 +1,8 @@
 /**
+ * Fotografías del sitio.
+ * `heroGallery`: carrusel de la página de inicio.
+ * `galleryPhotos`: página Galería (las más recientes primero).
+ *
  * Fotografías del hero de la página de inicio.
  * PROVISIONALES: tomadas de las notas públicas de uptapachula.edu.mx (crédito UPTap).
  * Sustituir por fotografías propias del grupo cuando existan: basta con cambiar
@@ -11,6 +15,11 @@ import tallerMicroscopia1 from '../assets/gallery/taller-microscopia-1.webp';
 import campusExplanada from '../assets/gallery/campus-explanada.webp';
 import examenMaestria from '../assets/gallery/examen-maestria.webp';
 import tallerMicroscopia3 from '../assets/gallery/taller-microscopia-3.webp';
+// Archivo personal del Dr. Cabellos publicado en Figshare (CC BY 4.0).
+import cabellosStallman2008 from '../assets/gallery/cabellos-stallman-2008.webp';
+import cabellosLeon2008 from '../assets/gallery/cabellos-leon-2008.webp';
+import osi7A from '../assets/gallery/osi7-jackson-hole-2007-a.webp';
+import osi7B from '../assets/gallery/osi7-jackson-hole-2007-b.webp';
 
 type L = { es: string; en: string };
 export interface GalleryPhoto {
@@ -20,8 +29,14 @@ export interface GalleryPhoto {
   year: number;
   credit: string;
   sourceUrl: string;
+  /** Licencia de la foto, si se publicó con una (p. ej. CC BY 4.0). */
+  license?: { name: string; url: string };
+  /** Lugar donde se tomó (Galería). */
+  place?: L;
   focus?: string;
 }
+
+const CC_BY = { name: 'CC BY 4.0', url: 'https://creativecommons.org/licenses/by/4.0/' };
 
 export const heroGallery: GalleryPhoto[] = [
   {
@@ -83,5 +98,78 @@ export const heroGallery: GalleryPhoto[] = [
     credit: 'UPTap',
     sourceUrl: 'https://www.uptapachula.edu.mx/noticias/uptap-participa-en-la-caravana-planetario-itinerante',
     focus: '60% 50%',
+  },
+];
+
+/**
+ * Página Galería. Fotos del archivo del Dr. Cabellos publicadas por él en Figshare con licencia CC BY 4.0
+ * (perfil https://figshare.com/authors/Jose_Luis_Cabellos/24669280). Orden: las más recientes primero.
+ */
+export const galleryPhotos: GalleryPhoto[] = [
+  {
+    image: cabellosStallman2008,
+    alt: {
+      es: 'Richard Stallman, con camisa roja, de pie junto al Dr. José Luis Cabellos en un salón de la Universidad Iberoamericana León, con banderas al fondo.',
+      en: 'Richard Stallman, in a red shirt, standing next to Dr. José Luis Cabellos in a hall at Universidad Iberoamericana León, with flags in the background.',
+    },
+    caption: {
+      es: 'Con Richard Stallman durante su visita a la Ibero León',
+      en: 'With Richard Stallman during his visit to Ibero León',
+    },
+    place: { es: 'León, Guanajuato', en: 'León, Guanajuato, Mexico' },
+    year: 2008,
+    credit: 'José Luis Cabellos',
+    sourceUrl: 'https://doi.org/10.6084/m9.figshare.33942058',
+    license: CC_BY,
+  },
+  {
+    image: cabellosLeon2008,
+    alt: {
+      es: 'El Dr. Cabellos, durante su doctorado, escribe un análisis estructural a mano junto a un monitor que muestra un modelo molecular.',
+      en: 'Dr. Cabellos, during his PhD, writes a structural analysis by hand next to a monitor showing a molecular model.',
+    },
+    caption: {
+      es: 'Modelado molecular durante el doctorado',
+      en: 'Molecular modeling during the PhD',
+    },
+    place: { es: 'León, Guanajuato', en: 'León, Guanajuato, Mexico' },
+    year: 2008,
+    credit: 'José Luis Cabellos',
+    sourceUrl: 'https://doi.org/10.6084/m9.figshare.33826726',
+    license: CC_BY,
+  },
+  {
+    image: osi7A,
+    alt: {
+      es: 'Foto de grupo de unos sesenta participantes sobre el pasto, con bosque al fondo, en el congreso Optics of Surfaces and Interfaces VII.',
+      en: 'Group photo of about sixty participants on the grass, with a forest behind them, at the Optics of Surfaces and Interfaces VII meeting.',
+    },
+    caption: {
+      es: 'Congreso Optics of Surfaces and Interfaces VII',
+      en: 'Optics of Surfaces and Interfaces VII meeting',
+    },
+    place: { es: 'Jackson Hole, Wyoming, EUA', en: 'Jackson Hole, Wyoming, USA' },
+    year: 2007,
+    credit: 'José Luis Cabellos',
+    sourceUrl: 'https://doi.org/10.6084/m9.figshare.33473407',
+    license: CC_BY,
+    focus: '50% 70%',
+  },
+  {
+    image: osi7B,
+    alt: {
+      es: 'Otra foto de grupo del congreso Optics of Surfaces and Interfaces VII, con montañas y bosque al fondo.',
+      en: 'Another group photo of the Optics of Surfaces and Interfaces VII meeting, with mountains and forest in the background.',
+    },
+    caption: {
+      es: 'Optics of Surfaces and Interfaces VII, segunda toma',
+      en: 'Optics of Surfaces and Interfaces VII, second shot',
+    },
+    place: { es: 'Jackson Hole, Wyoming, EUA', en: 'Jackson Hole, Wyoming, USA' },
+    year: 2007,
+    credit: 'José Luis Cabellos',
+    sourceUrl: 'https://doi.org/10.6084/m9.figshare.33457075',
+    license: CC_BY,
+    focus: '50% 70%',
   },
 ];

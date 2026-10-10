@@ -12,18 +12,26 @@ jose-luis-cabellos:
   affiliation: Universidad Politécnica de Tapachula
   # PROVISIONAL: foto pública de su perfil de Google Scholar (baja resolución). Sustituir por la foto que entregue el grupo.
   photo: ../../assets/members/jose-luis-cabellos.webp
+  # Formación y distinciones según su perfil de Figshare (2026-10) y el reportaje del Diario de Colima (2022).
   education:
-    - es: Doctorado, Centro de Investigaciones en Óptica (CIO), 2009
-      en: PhD, Centro de Investigaciones en Óptica (CIO), 2009
+    - es: Estancia posdoctoral, Donostia International Physics Center (DIPC), España, con el Prof. Ángel Rubio
+      en: Postdoctoral stay, Donostia International Physics Center (DIPC), Spain, with Prof. Ángel Rubio
+    - es: Doctorado en Ciencias, Centro de Investigaciones en Óptica (CIO), 2009
+      en: PhD in Science, Centro de Investigaciones en Óptica (CIO), 2009
+    - es: Ingeniería en Comunicaciones y Electrónica, Universidad de Colima
+      en: BEng in Communications and Electronics, Universidad de Colima
   distinctions:
     - es: Sistema Nacional de Investigadoras e Investigadores (SNII), Nivel II
       en: National System of Researchers (SNII), Level II
+    - es: Sistema Estatal de Investigadores de Chiapas, Categoría VI (Investigador Científico Honorario)
+      en: Chiapas State System of Researchers, Category VI (Honorary Scientific Researcher)
   researchAreas: [structure-prediction, finite-temperature, chemical-bonding, optical-properties]
   links:
     email: jose.cabellos@uptapachula.edu.mx
     orcid: 0000-0002-9438-8725
     googleScholar: EwYPXrAAAAAJ
     frontiersLoop: https://loop.frontiersin.org/people/1208393/overview
+    figshare: https://figshare.com/authors/Jose_Luis_Cabellos/24669280
   order: 1
   featured: true
 

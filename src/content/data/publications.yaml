@@ -3,7 +3,9 @@
 # Desde 2026-09-28 las nuevas se agregan solas cada lunes (scripts/sync-publications.mjs).
 # `pdf`: solo versiones de acceso abierto legales (OpenAlex best_oa_location). Sin PDF → se muestra el DOI.
 # Excluidos a propósito: duplicados (edición alemana de Angewandte, preprints ya publicados, ChemInform,
-# portadas, erratas), datasets y registros de Zenodo/Figshare que no son artículos (fotos, cartas, guías).
+# portadas, erratas), datasets y registros de Zenodo/Figshare que no son trabajos (fotos, datos).
+# Del perfil de Figshare del Dr. (2026-10-10) se agregaron la ponencia del L Congreso Nacional de Física
+# (2007) y el capítulo de divulgación «Química con la computadora» (PICNICH 2024); sus fotos van a la Galería.
 # researchAreas: asignación BORRADOR por desarrollo. Validar con el PI (D-14).
 
 2026-flores-estrella-anaerobic:
@@ -2237,12 +2239,40 @@
 
 2009-mendoza-tiniba:
   title: "Tiniba: Programas para el cálculo en paralelo de respuestas ópticas en semiconductores usando un clúster de cómputo"
+  # Autores, número y fecha según la ficha documental del registro publicada en Figshare (2026-08-30).
   authors:
-    - "Bernardo Mendoza Santoyo"
     - "José Luis Cabellos Quiroz"
+    - "Bernardo Mendoza Santoyo"
     - "Tonatiuh Rangel Gordillo"
-  journal: "Registro INDAUTOR (México)"
+  journal: "Registro INDAUTOR 03-2009-120114033400-01 (México)"
   year: 2009
+  date: "2009-12-11"
+  url: "https://doi.org/10.6084/m9.figshare.33389989"
   type: software
   researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2007-cabellos-injection-current-cnf:
+  title: "Optical injection current on semiconductor surfaces"
+  authors:
+    - "José Luis Cabellos"
+  journal: "L Congreso Nacional de Física, Sociedad Mexicana de Física (Boca del Río, Veracruz)"
+  year: 2007
+  date: "2007-10-29"
+  # Ponencia oral; el registro de Figshare contiene la carta de aceptación.
+  url: "https://doi.org/10.6084/m9.figshare.33873139"
+  type: conference
+  researchAreas: [optical-properties]
+  members: [jose-luis-cabellos]
+
+2024-cabellos-quimica-computadora:
+  title: "Química con la computadora"
+  authors:
+    - "José Luis Cabellos Quiroz"
+  journal: "PICNICH 2024 · Divulgación científica para niñas y niños"
+  year: 2024
+  doi: "10.6084/m9.figshare.33387283"
+  pdf: "https://ndownloader.figshare.com/files/68283772"
+  type: chapter
+  researchAreas: []
   members: [jose-luis-cabellos]

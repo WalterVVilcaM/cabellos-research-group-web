@@ -15,8 +15,8 @@
   // Se mantiene la dirección *.workers.dev mientras se verifica el dominio.
   "workers_dev": true,
   "vars": {
-    // "true" = vista previa: se muestran las notas de prueba. Se quita antes del lanzamiento (Gate 8).
-    "SHOW_TEST_NOTES": "true",
+    // "true" muestra las notas de prueba (is_test = 1). En producción va en "false" (desde 2026-10-10).
+    "SHOW_TEST_NOTES": "false",
     // Panel /admin (ADR-013). Sin ACCESS_TEAM_DOMAIN y ACCESS_AUD el panel responde 503 (cerrado).
     // Dominio del equipo de Zero Trust, p. ej. "https://<equipo>.cloudflareaccess.com".
     "ACCESS_TEAM_DOMAIN": "https://cabellos.cloudflareaccess.com",

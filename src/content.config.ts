@@ -75,6 +75,7 @@ const members = defineCollection({
           scopus: z.string().optional(),
           website: z.url().optional(),
           frontiersLoop: z.url().optional(),
+          figshare: z.url().optional(),
         })
         .default({}),
       order: z.number().int().default(100),

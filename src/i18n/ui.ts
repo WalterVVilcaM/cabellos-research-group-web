@@ -158,8 +158,13 @@ const es = {
 
   'gallery.title': 'Galería',
   'gallery.description': 'Galería de fotografías del Cabellos Research Group.',
-  'gallery.lead': 'Fotografías del grupo, congresos, talleres y la vida en el laboratorio.',
+  'gallery.lead': 'Fotografías del grupo y del archivo del Dr. Cabellos: congresos, encuentros y la vida en el laboratorio.',
   'gallery.empty': 'Estamos preparando esta sección. Muy pronto compartiremos aquí nuestras fotografías.',
+  'gallery.enlarge': 'Ver en grande',
+  'gallery.photo': 'Foto',
+  'gallery.source': 'Fuente',
+  'gallery.viewer': 'Visor de fotografías',
+  'gallery.close': 'Cerrar',
 
   'nav.notes': 'Notas',
   'notes.title': 'Notas',
@@ -421,8 +426,13 @@ const en: Dictionary = {
 
   'gallery.title': 'Gallery',
   'gallery.description': 'Photo gallery of the Cabellos Research Group.',
-  'gallery.lead': 'Photos of the group, conferences, workshops and life in the lab.',
+  'gallery.lead': 'Photos of the group and from Dr. Cabellos’s archive: conferences, encounters and life in the lab.',
   'gallery.empty': 'We are preparing this section. Our photos will be available here soon.',
+  'gallery.enlarge': 'View larger',
+  'gallery.photo': 'Photo',
+  'gallery.source': 'Source',
+  'gallery.viewer': 'Photo viewer',
+  'gallery.close': 'Close',
 
   'nav.notes': 'Notes',
   'notes.title': 'Notes',
