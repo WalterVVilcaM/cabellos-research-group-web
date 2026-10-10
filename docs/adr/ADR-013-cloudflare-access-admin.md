@@ -9,11 +9,11 @@ El panel permite crear, editar, publicar y borrar notas y archivos. No se implem
 ## Decisión
 1. **Todo lo privado vive bajo `/admin`**: el panel (`/admin/…`) y su API (`/admin/api/…`). Así basta **una aplicación de Access** de tipo *self-hosted* para el dominio del Worker con la ruta `admin`.
 2. **Política de Access:** *Allow* por correo (hoy solo el del responsable técnico; el del Dr. se agrega después), con inicio de sesión por **código de un solo uso** enviado al correo.
-3. **Defensa en profundidad en el Worker** (`src/middleware.ts`, `src/utils/admin-auth.ts`): en cada petición a `/admin` se verifica el JWT de Access (`Cf-Access-Jwt-Assertion` o la cookie `CF_Authorization`) con la biblioteca `jose`: firma con las claves públicas del equipo (`/cdn-cgi/access/certs`), emisor = dominio del equipo, audiencia = AUD de la aplicación, vigencia. Después, el correo debe estar en `ADMIN_EMAILS`.
+3. **Defensa en profundidad en el Worker** (`src/middleware.ts`, `src/utils/admin-auth.ts`): en cada petición a `/admin` se verifica el JWT de Access (`Cf-Access-Jwt-Assertion` o la cookie `CF_Authorization`) con la biblioteca `jose`: firma con las claves públicas del equipo (`/cdn-cgi/access/certs`), emisor = dominio del equipo, audiencia = AUD de la aplicación, vigencia. `ADMIN_EMAILS` es opcional (ver la actualización del 2026-10-10): si se define, el correo además debe estar en esa lista.
 4. **Falla cerrado:** sin `ACCESS_TEAM_DOMAIN` y `ACCESS_AUD` el panel responde 503; token ausente o inválido → 401; correo no autorizado → 403.
 5. Respuestas del panel con `Cache-Control: no-store`, `X-Robots-Tag: noindex`, `X-Frame-Options: DENY`, `Referrer-Policy: same-origin`. `robots.txt` excluye `/admin/`. Los formularios POST quedan protegidos contra CSRF por la verificación de origen de Astro.
 6. **Desarrollo local:** con `ADMIN_DEV_EMAIL` en `.dev.vars` (no se versiona) y solo en `localhost`/`127.0.0.1` se omite Access.
-7. Las variables (`ACCESS_TEAM_DOMAIN`, `ACCESS_AUD`, `ADMIN_EMAILS`) no son secretos y van en `wrangler.jsonc`.
+7. Las variables (`ACCESS_TEAM_DOMAIN`, `ACCESS_AUD` y, si se usa, `ADMIN_EMAILS`) no son secretos y van en `wrangler.jsonc`.
 
 ## Alternativas consideradas
 - Access para todo el Worker ("Protect this Worker"): haría privado el sitio público.
@@ -21,7 +21,7 @@ El panel permite crear, editar, publicar y borrar notas y archivos. No se implem
 - Confiar solo en Access sin verificar el JWT: si algún día cambia una ruta o un dominio, el panel quedaría abierto.
 
 ## Consecuencias positivas
-- Sin contraseñas que guardar; alta y baja de editores desde el panel de Access y `ADMIN_EMAILS`.
+- Sin contraseñas que guardar; alta y baja de editores solo desde la política de Access.
 - Si Access se desconfigura, el panel se cierra en lugar de abrirse.
 
 ## Consecuencias negativas
@@ -33,3 +33,7 @@ Probado en local con claves generadas y un JWKS local: token válido → 200 (ca
 
 ## Fecha
 2026-09-30
+
+## Actualización 2026-10-10 — correos solo en Access
+
+Tener la lista de correos en dos lugares (política de Access y `ADMIN_EMAILS`) causó un error real: un correo agregado solo en Access recibía el código, entraba y el panel respondía «Tu correo no tiene permiso», y la sesión de 24 h repetía el mensaje en cada visita. Decisión: la lista vive solo en la política «Correos del panel» (Include → Emails; login con One-time PIN). El Worker sigue verificando firma, emisor, audiencia y vigencia del JWT, de modo que no es posible entrar sin pasar por esta aplicación de Access. `ADMIN_EMAILS` queda como restricción opcional y se retira de `wrangler.jsonc`. La pantalla de acceso denegado muestra el correo con que se entró y un botón para cerrar la sesión de Access (`/cdn-cgi/access/logout`).

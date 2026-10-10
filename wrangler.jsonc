@@ -6,6 +6,14 @@
   "name": "cabellos-research-group",
   "compatibility_date": "2026-09-01",
   "observability": { "enabled": true },
+  // Dominio propio (zona activa en la misma cuenta). Cloudflare crea los registros DNS y el certificado.
+  // www se redirige a la raíz con una Redirect Rule de la zona (se ejecuta antes del Worker).
+  "routes": [
+    { "pattern": "cabellosresearchgroup.org", "custom_domain": true },
+    { "pattern": "www.cabellosresearchgroup.org", "custom_domain": true }
+  ],
+  // Se mantiene la dirección *.workers.dev mientras se verifica el dominio.
+  "workers_dev": true,
   "vars": {
     // "true" = vista previa: se muestran las notas de prueba. Se quita antes del lanzamiento (Gate 8).
     "SHOW_TEST_NOTES": "true",
@@ -13,9 +21,9 @@
     // Dominio del equipo de Zero Trust, p. ej. "https://<equipo>.cloudflareaccess.com".
     "ACCESS_TEAM_DOMAIN": "https://cabellos.cloudflareaccess.com",
     // Etiqueta "Application Audience (AUD)" de la aplicación de Access del panel.
-    "ACCESS_AUD": "f3297e8de08da91d3d32c889da81d04e63b64e2b5db508827963cec010a80a2f",
-    // Correos con permiso (también deben estar en la política de Access), separados por comas.
-    "ADMIN_EMAILS": "waltervvilcam@gmail.com,jose.cabellos@uptapachula.edu.mx"
+    "ACCESS_AUD": "f3297e8de08da91d3d32c889da81d04e63b64e2b5db508827963cec010a80a2f"
+    // Los correos con permiso se administran solo en Zero Trust → Policies → «Correos del panel».
+    // Opcional: "ADMIN_EMAILS": "a@x.com,b@y.com" restringe además a esos correos (ADR-013).
   },
   "d1_databases": [
     {
