@@ -6,11 +6,11 @@
   "name": "cabellos-research-group",
   "compatibility_date": "2026-09-01",
   "observability": { "enabled": true },
-  // Dominio propio (zona activa en la misma cuenta). Cloudflare crea los registros DNS y el certificado.
-  // www se redirige a la raíz con una Redirect Rule de la zona (se ejecuta antes del Worker).
+  // Dominio propio (zona activa en la misma cuenta). Cloudflare crea el registro DNS y el certificado.
+  // www NO va aquí: es un registro DNS AAAA 100:: con proxy y una Redirect Rule de la zona lo manda
+  // a la raíz (con www como dominio del Worker, la regla no se aplica).
   "routes": [
-    { "pattern": "cabellosresearchgroup.org", "custom_domain": true },
-    { "pattern": "www.cabellosresearchgroup.org", "custom_domain": true }
+    { "pattern": "cabellosresearchgroup.org", "custom_domain": true }
   ],
   // Se mantiene la dirección *.workers.dev mientras se verifica el dominio.
   "workers_dev": true,
