@@ -25,9 +25,18 @@
   issue: "5"
   pages: "855"
   doi: "10.3390/pr14050855"
+  pdf: "https://www.mdpi.com/2227-9717/14/5/855/pdf"
   type: article
   researchAreas: []
   members: [jose-luis-cabellos]
+  cover:
+    image: ../../assets/publications/2026-anaerobic-fig1.webp
+    figure: "Fig. 1"
+    alt:
+      es: "Esquema del proceso continuo de digestión anaerobia: tanque de alimentación, digestor anaerobio con calefacción, filtración y recirculación del efluente, y medición de biogás, ácidos grasos volátiles y DQO/COT conectada a un controlador."
+      en: "Schematic of the continuous anaerobic digestion process: feed tank, heated anaerobic digester, effluent filtration and recycle, and biogas, volatile fatty acid and COD/TOC measurements wired to a controller."
+    license: "CC BY 4.0"
+    licenseUrl: "https://creativecommons.org/licenses/by/4.0/"
 
 2025-munguia-arvayo-subnanostructured:
   title: "An Overview of Subnanostructured Metallic Systems"
@@ -549,6 +558,14 @@
   type: article
   researchAreas: [optical-properties]
   members: [jose-luis-cabellos]
+  cover:
+    image: ../../assets/publications/2026-shift-current-fig1.webp
+    figure: "Fig. 1"
+    alt:
+      es: "Estructuras de bandas electrónicas de nueve semiconductores III–V con estructura zincblenda (AlAs, AlP, AlSb, InAs, InP, InSb, GaAs, GaP y GaSb); la banda prohibida está sombreada y una flecha roja marca la transición de menor energía."
+      en: "Electronic band structures of nine zincblende III–V semiconductors (AlAs, AlP, AlSb, InAs, InP, InSb, GaAs, GaP and GaSb); the band gap is shaded and a red arrow marks the lowest-energy transition."
+    license: "CC BY-NC-ND 4.0"
+    licenseUrl: "https://creativecommons.org/licenses/by-nc-nd/4.0/"
 
 2026-castillo-quevedo-alsb:
   title: "Unveiling AlSb as a Promising Zincblende Semiconductor for Visible-Light Shift-Current Generation"
@@ -566,6 +583,14 @@
   type: preprint
   researchAreas: [optical-properties]
   members: [jose-luis-cabellos]
+  cover:
+    image: ../../assets/publications/2026-alsb-fig8.webp
+    figure: "Fig. 8"
+    alt:
+      es: "Estructura de bandas electrónicas del AlSb zincblenda (izquierda) y su densidad de estados parcial (derecha), con el nivel de Fermi como referencia."
+      en: "Electronic band structure of zincblende AlSb (left) and its partial density of states (right), referenced to the Fermi level."
+    license: "CC BY-NC-ND 4.0"
+    licenseUrl: "https://creativecommons.org/licenses/by-nc-nd/4.0/"
 
 2026-lopez-martinez-graphane-spin:
   title: "First-principles calculation of the optical spin injection in graphane and fluorographene"
@@ -583,6 +608,14 @@
   type: article
   researchAreas: [optical-properties]
   members: [jose-luis-cabellos]
+  cover:
+    image: ../../assets/publications/2026-graphane-fig1.webp
+    figure: "Fig. 1"
+    alt:
+      es: "Las cuatro configuraciones estudiadas de grafano y fluorografeno —silla (A), bote (B), zigzag (C) y sillón (D)— en vista superior y lateral, con la celda unitaria marcada con línea punteada."
+      en: "The four graphane and fluorographene configurations studied — chair (A), boat (B), zigzag (C) and armchair (D) — in top and side view, with the unit cell outlined by a dashed line."
+    license: "CC BY-NC-ND 4.0"
+    licenseUrl: "https://creativecommons.org/licenses/by-nc-nd/4.0/"
 
 2026-cabellos-momentum-matrix:
   title: "A Practical Derivation of Momentum Matrix Elements from ABINIT Wavefunctions"
@@ -592,6 +625,7 @@
   year: 2026
   date: "2026-09-07"
   doi: "10.6084/m9.figshare.33456970"
+  pdf: "https://ndownloader.figshare.com/files/68285953"
   type: preprint
   researchAreas: [optical-properties]
   members: [jose-luis-cabellos]
@@ -654,6 +688,16 @@
   type: article
   researchAreas: []
   members: [jose-luis-cabellos]
+  cover:
+    image: ../../assets/publications/2026-microplastics-ga.webp
+    figure:
+      es: "Resumen gráfico"
+      en: "Graphical abstract"
+    alt:
+      es: "Resumen gráfico: contaminación por microplásticos en agua embotellada en México. Muestra la metodología (filtración y microscopía), micrografías de fibras y los resultados: todas las marcas analizadas contenían microplásticos (39.3 ± 14.6 partículas/L) y los niños tienen la mayor exposición (228.2 partículas/kg/año)."
+      en: "Graphical abstract: microplastic contamination in bottled water in Mexico. It shows the methodology (filtration and microscopy), micrographs of fibres and the results: every brand analysed contained microplastics (39.3 ± 14.6 particles/L) and children have the highest exposure (228.2 particles/kg/year)."
+    license: "CC BY-NC-ND 4.0"
+    licenseUrl: "https://creativecommons.org/licenses/by-nc-nd/4.0/"
 
 2025-avila-sierra-lysine:
   title: "Theoretical Study of the Stabilization of Lysine Through Pseudocyclic Conformation"

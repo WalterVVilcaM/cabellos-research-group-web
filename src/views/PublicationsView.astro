@@ -2,6 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/ui/PageHeader.astro';
 import PublicationItem from '../components/content/PublicationItem.astro';
+import PublicationCard from '../components/content/PublicationCard.astro';
+import { site } from '../config/site';
 import ExternalLink from '../components/ui/ExternalLink.astro';
 import { useTranslations, sectionAlternates, type Lang } from '../i18n/utils';
 import {
@@ -9,6 +11,7 @@ import {
   getMembers,
   groupByYear,
   getStats,
+  getResearch,
   isVenue,
 } from '../utils/content';
 
@@ -17,11 +20,14 @@ interface Props {
 }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const [pubs, members, stats] = await Promise.all([
+const [pubs, members, stats, research] = await Promise.all([
   getPublications(),
   getMembers(),
   getStats(),
+  getResearch(),
 ]);
+/** Color de cada línea (`--line-N` según su orden) para el recuadro de las fichas sin figura. */
+const lineColor = new Map(research.map((r) => [r.id, `--line-${r.data.order}`]));
 const years = groupByYear(pubs);
 const pi = members.find((m) => m.data.role === 'pi');
 const scholarUrl = pi?.data.links.googleScholar
@@ -84,11 +90,24 @@ const journalCounts = [...pubs.filter(isVenue).reduce((m, p) => m.set(p.data.jou
             {years.map(([year, items]) => (
               <section aria-labelledby={`y${year}`} class="year" data-year-group>
                 <h2 id={`y${year}`} class="year__title">{year}</h2>
-                <ul role="list">
-                  {items.map((p) => (
-                    <PublicationItem pub={p} lang={lang} highlight={highlight} />
-                  ))}
-                </ul>
+                {year === site.showcaseYear ? (
+                  <ul role="list" class="pcards">
+                    {items.map((p) => (
+                      <PublicationCard
+                        pub={p}
+                        lang={lang}
+                        highlight={highlight}
+                        lineColor={p.data.researchAreas[0] ? lineColor.get(p.data.researchAreas[0].id) : undefined}
+                      />
+                    ))}
+                  </ul>
+                ) : (
+                  <ul role="list">
+                    {items.map((p) => (
+                      <PublicationItem pub={p} lang={lang} highlight={highlight} />
+                    ))}
+                  </ul>
+                )}
               </section>
             ))}
           </div>
@@ -198,6 +217,10 @@ const journalCounts = [...pubs.filter(isVenue).reduce((m, p) => m.set(p.data.jou
       top: calc(var(--header-h) + var(--space-6));
       align-self: start;
     }
+  }
+  .pcards {
+    display: grid;
+    gap: var(--space-4);
   }
   .year__title {
     font-family: var(--font-body);

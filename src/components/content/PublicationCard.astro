@@ -1,0 +1,385 @@
+---
+/**
+ * Ficha de publicación con figura, título, autores, revista y botones PDF / DOI
+ * (diseño adaptado de thz.org.mx). Se usa solo en el año `site.showcaseYear`.
+ * Sin figura con licencia abierta, el recuadro muestra el tipo de trabajo y la revista
+ * con el color de su línea de investigación.
+ */
+import { Image } from 'astro:assets';
+import Icon from '../ui/Icon.astro';
+import RichText from '../ui/RichText.astro';
+import { useTranslations, type Lang } from '../../i18n/utils';
+import type { NumberedPublication } from '../../utils/content';
+
+interface Props {
+  pub: NumberedPublication;
+  lang: Lang;
+  highlight?: string[];
+  /** Variable CSS del color de la línea (p. ej. `--line-4`); sin línea, verde del sitio. */
+  lineColor?: string;
+}
+const { pub, lang, highlight = [], lineColor } = Astro.props;
+const t = useTranslations(lang);
+const d = pub.data;
+const norm = (s: string) =>
+  s
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase();
+const hl = new Set(highlight.map(norm));
+const doiHref = d.doi ? `https://doi.org/${d.doi}` : undefined;
+const href = doiHref ?? d.url;
+const plainTitle = d.title.replace(/[_^]\{([^}]*)\}/g, '$1');
+const citation = [
+  `${d.authors.join(', ')}.`,
+  `${plainTitle}.`,
+  `${d.journal}${d.volume ? ` ${d.volume}` : ''}${d.issue ? `(${d.issue})` : ''}${d.pages ? `, ${d.pages}` : ''} (${d.year}).`,
+  href ?? '',
+]
+  .join(' ')
+  .trim();
+const searchText = norm([plainTitle, d.authors.join(' '), d.journal, d.year, d.doi ?? ''].join(' '));
+const lines = d.researchAreas.map((r) => r.id).join(' ');
+const typeKey = {
+  article: 'pubs.type.article',
+  review: 'pubs.type.review',
+  chapter: 'pubs.type.chapter',
+  conference: 'pubs.type.conference',
+  preprint: 'pubs.type.preprint',
+  thesis: 'pubs.type.thesis',
+  software: 'pubs.type.software',
+  other: null,
+} as const;
+const typeLabel = typeKey[d.type] ? t(typeKey[d.type]!) : null;
+const cover = d.cover;
+const figure = cover ? (typeof cover.figure === 'string' ? cover.figure : cover.figure[lang]) : '';
+const tone = lineColor ? `var(${lineColor})` : 'var(--color-primary)';
+---
+
+<li class="pcard" id={`pub-${pub.id}`} data-pub data-search={searchText} data-lines={lines} data-year={d.year} style={`--tone: ${tone}`}>
+  {
+    cover ? (
+      <figure class="pcard__fig">
+        <div class="pcard__frame">
+          <Image
+            src={cover.image}
+            alt={cover.alt[lang]}
+            widths={[320, 640]}
+            sizes="(min-width: 700px) 15rem, calc(100vw - 4rem)"
+            loading="lazy"
+            class="pcard__img"
+          />
+        </div>
+        <figcaption class="pcard__credit">
+          {t('pubs.coverCredit', { fig: figure })} ·{' '}
+          <a href={cover.licenseUrl} rel="license" title={t('pubs.coverLicense')}>
+            {cover.license}
+          </a>
+        </figcaption>
+      </figure>
+    ) : (
+      <div class="pcard__fig pcard__fig--blank" aria-hidden="true">
+        <div class="pcard__frame pcard__frame--blank">
+          <span class="pcard__kind">{typeLabel ?? d.year}</span>
+          <span class="pcard__journal" lang="en">{d.journal}</span>
+          <span class="pcard__year">{d.year}</span>
+        </div>
+      </div>
+    )
+  }
+  <div class="pcard__body">
+    <h3 class="pcard__title" lang="en">
+      {href ? (
+        <a href={href} rel="noopener noreferrer" target="_blank"><RichText text={d.title} /><span class="visually-hidden"> {t('a11y.external')}</span></a>
+      ) : (
+        <RichText text={d.title} />
+      )}
+    </h3>
+    <p class="pcard__authors">
+      {
+        d.authors.map((a, i) => (
+          <>
+            {hl.has(norm(a)) ? <strong>{a}</strong> : a}
+            {i < d.authors.length - 1 ? ', ' : '.'}
+          </>
+        ))
+      }
+    </p>
+    <p class="pcard__source">
+      <cite lang="en">{d.journal}</cite>
+      {d.volume && <span class="pcard__vol"> {d.volume}</span>}
+      {d.issue && <span>({d.issue})</span>}
+      {d.pages && <span>, {d.pages}</span>}
+      <span> ({d.year})</span>
+      {typeLabel && d.type !== 'article' && <span class="pcard__badge">{typeLabel}</span>}
+    </p>
+    <p class="pcard__actions">
+      {
+        d.pdf && (
+          <a href={d.pdf} class="pcard__btn pcard__btn--solid" rel="noopener noreferrer" target="_blank">
+            <Icon name="file" size={16} />
+            {t('pubs.pdf')}
+            <span class="visually-hidden"> {t('a11y.external')}</span>
+          </a>
+        )
+      }
+      {
+        href && (
+          <a href={href} class:list={['pcard__btn', d.pdf ? 'pcard__btn--line' : 'pcard__btn--solid']} rel="noopener noreferrer" target="_blank">
+            {doiHref ? t('pubs.doi') : t('pubs.web')}
+            <Icon name="external" size={14} />
+            <span class="visually-hidden"> {t('a11y.external')}</span>
+          </a>
+        )
+      }
+      <button type="button" class="pcard__copy" data-copy={citation} data-done={t('pubs.copied')}>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" /><path d="M10.5 3.5v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" /></svg>
+        <span data-label aria-live="polite">{t('pubs.copy')}</span>
+      </button>
+    </p>
+  </div>
+</li>
+
+<style>
+  .pcard {
+    display: grid;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition:
+      box-shadow var(--duration) var(--ease),
+      border-color var(--duration) var(--ease);
+  }
+  .pcard:hover {
+    border-color: color-mix(in srgb, var(--tone) 35%, var(--color-border));
+    box-shadow: var(--shadow-md);
+  }
+  .pcard[hidden] {
+    display: none;
+  }
+  @media (min-width: 700px) {
+    .pcard {
+      grid-template-columns: 15rem minmax(0, 1fr);
+      gap: var(--space-6);
+      padding: var(--space-6);
+    }
+  }
+
+  /* Figura */
+  .pcard__fig {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0;
+    min-width: 0;
+  }
+  .pcard__frame {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 10;
+    padding: var(--space-2);
+    background: #fff;
+    border: 1px solid rgb(16 24 20 / 0.08);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  @media (min-width: 700px) {
+    .pcard__frame {
+      aspect-ratio: 4 / 3;
+    }
+  }
+  .pcard__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .pcard__credit {
+    font-size: var(--text-xs);
+    line-height: 1.4;
+    color: var(--color-text-muted);
+  }
+  .pcard__credit a {
+    color: inherit;
+  }
+  .pcard__credit a:hover {
+    color: var(--color-primary);
+  }
+
+  /* Recuadro sin figura: tipo de trabajo y revista sobre el color de la línea */
+  .pcard__frame--blank {
+    place-items: stretch;
+    grid-template-rows: auto 1fr auto;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    background:
+      radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--tone) 22%, transparent), transparent 60%),
+      color-mix(in srgb, var(--tone) 9%, #fff);
+    border-color: color-mix(in srgb, var(--tone) 22%, #fff);
+    border-left: 4px solid var(--tone);
+    aspect-ratio: auto;
+  }
+  @media (min-width: 700px) {
+    .pcard__frame--blank {
+      aspect-ratio: 4 / 3;
+    }
+  }
+  .pcard__kind {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--tone);
+  }
+  .pcard__journal {
+    align-self: center;
+    font-family: var(--font-heading);
+    font-size: var(--text-base);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--color-text);
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .pcard__year {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Texto */
+  .pcard__body {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .pcard__title {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0;
+  }
+  .pcard__title a {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-primary) 35%, transparent);
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+  }
+  .pcard__title a:hover {
+    color: var(--color-primary);
+    text-decoration-color: currentColor;
+  }
+  .pcard__title :global(sub),
+  .pcard__title :global(sup) {
+    font-size: 0.7em;
+    line-height: 0;
+  }
+  .pcard__authors {
+    font-size: var(--text-sm);
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+  .pcard__authors strong {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+  .pcard__source {
+    font-size: var(--text-sm);
+  }
+  .pcard__source cite {
+    font-style: normal;
+    font-weight: 500;
+    color: var(--color-primary);
+  }
+  .pcard__vol {
+    font-weight: 600;
+  }
+  .pcard__badge {
+    display: inline-block;
+    margin-left: var(--space-2);
+    padding: 0 var(--space-2);
+    border: var(--border);
+    border-radius: var(--radius-pill);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    vertical-align: 1px;
+  }
+
+  /* Botones */
+  .pcard__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+  .pcard__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-width: 6.5rem;
+    min-height: 42px;
+    padding: 0 var(--space-4);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition:
+      background var(--duration-fast) var(--ease),
+      color var(--duration-fast) var(--ease);
+  }
+  .pcard__btn--solid {
+    background: var(--color-primary);
+    color: #fff;
+  }
+  .pcard__btn--solid:hover {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    color: #fff;
+  }
+  .pcard__btn--line {
+    background: #fff;
+    color: var(--color-primary);
+  }
+  .pcard__btn--line:hover {
+    background: var(--color-surface-alt);
+  }
+  .pcard__copy {
+    display: none;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: 42px;
+    padding: 0 var(--space-3);
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    cursor: pointer;
+  }
+  :global(html.js) .pcard__copy {
+    display: inline-flex;
+  }
+  .pcard__copy:hover {
+    color: var(--color-primary);
+    background: var(--color-surface-alt);
+  }
+  .pcard__copy.is-done {
+    color: var(--color-success);
+  }
+</style>
+
+<script>
+  import '../../scripts/copy-citation';
+</script>

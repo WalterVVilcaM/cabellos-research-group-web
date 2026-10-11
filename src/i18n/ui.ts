@@ -155,6 +155,11 @@ const es = {
   'pubs.featured': 'Destacada',
   'pubs.scholar': 'Perfil completo en Google Scholar',
   'pubs.pdf': 'PDF',
+  'pubs.doi': 'DOI',
+  'pubs.web': 'Sitio web',
+  'pubs.type.article': 'Artículo',
+  'pubs.coverCredit': '{fig} del trabajo',
+  'pubs.coverLicense': 'Licencia de la figura',
 
   'gallery.title': 'Galería',
   'gallery.description': 'Galería de fotografías del Cabellos Research Group.',
@@ -423,6 +428,11 @@ const en: Dictionary = {
   'pubs.featured': 'Featured',
   'pubs.scholar': 'Full profile on Google Scholar',
   'pubs.pdf': 'PDF',
+  'pubs.doi': 'DOI',
+  'pubs.web': 'Website',
+  'pubs.type.article': 'Article',
+  'pubs.coverCredit': '{fig} from this work',
+  'pubs.coverLicense': 'Figure licence',
 
   'gallery.title': 'Gallery',
   'gallery.description': 'Photo gallery of the Cabellos Research Group.',

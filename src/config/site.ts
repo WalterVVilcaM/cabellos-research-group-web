@@ -46,6 +46,11 @@ export const site = {
     source: 'Google Scholar',
     updated: '2026-09-28',
   },
+  /**
+   * Año de Publicaciones que se muestra en fichas con figura, PDF y DOI (diseño tipo
+   * thz.org.mx). Los demás años siguen como lista de citas. `null` lo desactiva.
+   */
+  showcaseYear: 2026 as number | null,
 } as const;
 
 export type Site = typeof site;

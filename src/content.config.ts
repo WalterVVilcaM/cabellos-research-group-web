@@ -87,7 +87,7 @@ const members = defineCollection({
 /** Publicaciones: neutrales al idioma (no se traducen títulos ni revistas). */
 const publications = defineCollection({
   loader: file('src/content/data/publications.yaml'),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     authors: z.array(z.string()).min(1),
     journal: z.string(),
@@ -108,6 +108,19 @@ const publications = defineCollection({
     featured: z.boolean().default(false),
     researchAreas: z.array(reference('research')).default([]),
     members: z.array(reference('members')).default([]),
+    /**
+     * Figura del propio trabajo que acompaña la ficha en el año destacado (`showcaseYear`).
+     * Solo de trabajos con licencia abierta; se muestra completa, sin recortes, con su licencia.
+     */
+    cover: z
+      .object({
+        image: image(),
+        figure: z.union([z.string(), localized]),
+        alt: localized,
+        license: z.string(),
+        licenseUrl: z.url(),
+      })
+      .optional(),
   }),
 });
 
