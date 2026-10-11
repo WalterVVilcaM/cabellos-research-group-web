@@ -24,6 +24,7 @@ Cuando una decisión afecta arquitectura, sería costosa de revertir, modifica r
 | [ADR-012](./ADR-012-r2-file-storage.md) | Archivos de Notes en R2, servidos por el Worker | NOTES-F4 | Aprobado |
 | [ADR-013](./ADR-013-cloudflare-access-admin.md) | Panel /admin con Cloudflare Access y verificación del JWT | NOTES-F6 | Aprobado |
 | [ADR-014](./ADR-014-notes-editor.md) | Editor Markdown con barra de formato y vista previa | NOTES-F5 | Aprobado |
+| [ADR-015](./ADR-015-gallery-admin.md) | Galería administrable desde el panel (D1 + R2, fotos reducidas en el navegador) | Galería | Aprobado |
 
 ## Plantilla
 

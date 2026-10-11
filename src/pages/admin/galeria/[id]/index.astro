@@ -1,0 +1,192 @@
+---
+/** Panel: editar una foto de la Galería, publicarla u ocultarla y eliminarla (ADR-015). */
+export const prerender = false;
+import AdminLayout from '../../../../layouts/AdminLayout.astro';
+import GalleryForm from '../../../../components/admin/GalleryForm.astro';
+import {
+  deletePhoto,
+  getAdminPhoto,
+  parseForm,
+  savePhoto,
+  setPhotoStatus,
+  validate,
+  type FieldErrors,
+} from '../../../../utils/admin-gallery';
+import { sectionPath, withBase } from '../../../../i18n/utils';
+
+const id = Number(Astro.params.id);
+const photo = Number.isInteger(id) ? await getAdminPhoto(id) : undefined;
+if (!photo) return new Response('Foto no encontrada', { status: 404 });
+
+let draft = photo.draft;
+let errors: FieldErrors = {};
+let flash: string | null = null;
+const here = withBase(`/admin/galeria/${id}/`);
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const action = String(form.get('action') ?? '');
+  if (action === 'publish-now' || action === 'unpublish') {
+    const to = action === 'publish-now' ? 'published' : 'draft';
+    await setPhotoStatus(id, to);
+    return Astro.redirect(`${here}?ok=${to === 'published' ? 'publicada' : 'oculta'}`, 303);
+  }
+  if (action === 'delete') {
+    if (form.get('confirm') === 'si') {
+      await deletePhoto(photo.row);
+      return Astro.redirect(withBase('/admin/galeria/?ok=eliminada'), 303);
+    }
+    flash = 'Para eliminarla, marca la casilla «Sí, eliminar esta foto».';
+    Astro.response.status = 422;
+  } else {
+    const parsed = parseForm(form, photo.draft);
+    const checked = await validate(parsed, false);
+    draft = parsed.draft;
+    errors = checked.errors;
+    if (Object.keys(errors).length === 0) {
+      try {
+        await savePhoto(parsed, checked.files, Astro.locals.adminEmail ?? '', {
+          id,
+          status: photo.draft.status,
+          previous: photo.row,
+        });
+        return Astro.redirect(`${here}?ok=guardada`, 303);
+      } catch (e) {
+        console.error('Galería: no se pudieron guardar los cambios', e);
+        flash = 'No se pudieron guardar los cambios. Inténtalo de nuevo en un momento.';
+      }
+    }
+    Astro.response.status = 422;
+  }
+}
+
+const messages: Record<string, string> = {
+  publicada: 'Foto publicada: ya se ve en la galería del sitio.',
+  guardada: 'Cambios guardados.',
+  oculta: 'La foto ya no se ve en el sitio. Puedes volver a publicarla cuando quieras.',
+};
+const ok = Astro.url.searchParams.get('ok');
+const published = photo.draft.status === 'published';
+---
+
+<AdminLayout title={photo.draft.caption} current="gallery">
+  <div class="head">
+    <div>
+      <p class="crumb"><a href={withBase('/admin/galeria/')}>Galería</a> ›</p>
+      <h1>{photo.draft.caption}</h1>
+      <p class="meta">
+        <span class={`status status--${photo.draft.status}`}>{published ? 'Publicada' : 'Sin publicar'}</span>
+        <span class="muted">Actualizada: {new Date(photo.updatedAt).toLocaleString('es-MX', { timeZone: 'America/Mexico_City', dateStyle: 'medium', timeStyle: 'short' })}</span>
+      </p>
+    </div>
+    <div class="head__links">
+      {published && <a class="admin-btn" href={sectionPath('gallery', 'es')} target="_blank" rel="noopener">Ver en el sitio</a>}
+      <a class="admin-btn" href={photo.imageUrl} target="_blank" rel="noopener">Ver foto completa</a>
+    </div>
+  </div>
+
+  {ok && messages[ok] && <p class="admin-flash" role="status">{messages[ok]}</p>}
+  {flash && <p class="admin-flash admin-flash--error" role="alert">{flash}</p>}
+
+  <GalleryForm draft={draft} errors={errors} photo={photo} />
+
+  <section class="admin-card state" aria-labelledby="state-title">
+    <h2 id="state-title">Publicar, ocultar o eliminar</h2>
+    <div class="state__row">
+      <form method="post">
+        {
+          published ? (
+            <button class="admin-btn" name="action" value="unpublish">Ocultar del sitio</button>
+          ) : (
+            <button class="admin-btn admin-btn--primary" name="action" value="publish-now">Publicar foto</button>
+          )
+        }
+      </form>
+      <p>{published ? 'Deja de verse en la galería, pero se queda aquí para publicarla después.' : 'Aparece de inmediato en la galería del sitio.'}</p>
+    </div>
+    <form method="post" class="danger">
+      <p><strong>Eliminar para siempre.</strong> Se borran la foto y sus datos; no se puede deshacer.</p>
+      <label class="check">
+        <input type="checkbox" name="confirm" value="si" required /> Sí, eliminar esta foto
+      </label>
+      <div>
+        <button class="admin-btn admin-btn--danger" name="action" value="delete">Eliminar foto</button>
+      </div>
+    </form>
+  </section>
+</AdminLayout>
+
+<style>
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+  .head h1 {
+    overflow-wrap: anywhere;
+  }
+  .head__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .crumb {
+    font-size: var(--text-sm);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+  }
+  .state {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 56rem;
+  }
+  .state h2 {
+    font-size: var(--text-lg);
+  }
+  .state__row {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: center;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .state__row .admin-btn {
+    width: 100%;
+  }
+  @media (max-width: 559px) {
+    .state__row {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+    .state__row .admin-btn {
+      min-height: 48px;
+    }
+  }
+  .danger {
+    display: grid;
+    gap: var(--space-3);
+    padding-top: var(--space-4);
+    border-top: var(--border);
+    font-size: var(--text-sm);
+  }
+  .check {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    cursor: pointer;
+  }
+  .check input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-error);
+  }
+</style>

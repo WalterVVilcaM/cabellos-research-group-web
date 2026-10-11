@@ -16,7 +16,7 @@ export default defineConfig({
   site: SITE,
   base: BASE_PATH,
   trailingSlash: 'always',
-  // Cloudflare Workers: todo el sitio es estático salvo Notes, que se lee de D1 (ADR-011).
+  // Cloudflare Workers: todo el sitio es estático salvo Notes y la Galería, que se leen de D1 (ADR-011, ADR-015).
   // Imágenes optimizadas en el build (sin Cloudflare Images) y sin sesiones (sin KV).
   adapter: cloudflare({ imageService: 'compile' }),
   session: false,
@@ -28,11 +28,11 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      // Fuera del sitemap: la 404 y las rutas anteriores a v1.8, que solo redirigen (ADR-007).
+      // Fuera del sitemap: la 404, el panel /admin y las rutas anteriores a v1.8, que solo redirigen (ADR-007).
       // Las notas (bajo demanda, desde D1) van en /sitemap-notes.xml.
       filter: (page) => {
         const path = new URL(page).pathname.slice(BASE_PATH.replace(/\/$/, '').length);
-        return !path.startsWith('/404') && !OLD_ROUTES.test(path);
+        return !path.startsWith('/404') && !path.startsWith('/admin/') && !OLD_ROUTES.test(path);
       },
       i18n: { defaultLocale: 'en', locales: { en: 'en', es: 'es' } },
     }),

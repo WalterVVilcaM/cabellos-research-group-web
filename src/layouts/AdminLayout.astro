@@ -1,12 +1,12 @@
 ---
-/** Diseño del panel de Notes (solo español, sin indexar). Ver src/middleware.ts. */
+/** Diseño del panel (Notas y Galería; solo español, sin indexar). Ver src/middleware.ts. */
 import '../styles/global.css';
 import { Font } from 'astro:assets';
 import { withBase } from '../i18n/utils';
 
 interface Props {
   title: string;
-  current?: 'home' | 'notes' | 'new';
+  current?: 'home' | 'notes' | 'new' | 'gallery';
   /** Más ancho para el editor con vista previa en vivo. */
   wide?: boolean;
 }
@@ -16,6 +16,7 @@ const nav = [
   { key: 'home', label: 'Inicio', href: withBase('/admin/') },
   { key: 'notes', label: 'Notas', href: withBase('/admin/notas/') },
   { key: 'new', label: 'Nueva nota', href: withBase('/admin/notas/nueva/') },
+  { key: 'gallery', label: 'Galería', href: withBase('/admin/galeria/') },
 ] as const;
 ---
 
@@ -27,13 +28,13 @@ const nav = [
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <Font cssVariable="--font-sans" preload={[{ weight: '400', style: 'normal' }]} />
-    <title>{title} · Panel de Notas</title>
+    <title>{title} · Panel del sitio</title>
   </head>
   <body class="admin">
     <a class="skip-link" href="#main">Saltar al contenido</a>
     <header class="admin-header" data-admin-header>
       <div class:list={['container admin-header__inner', { 'admin-main--wide': wide }]}>
-        <a href={withBase('/admin/')} class="admin-brand">Panel <span>· Notas</span></a>
+        <a href={withBase('/admin/')} class="admin-brand">Panel <span>· Notas y Galería</span></a>
         <button type="button" class="admin-menu-btn" aria-expanded="false" aria-controls="admin-menu" data-menu-btn hidden>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
           Menú
@@ -53,7 +54,7 @@ const nav = [
             </ul>
           </nav>
           <div class="admin-user">
-            <a href={withBase('/notes/')} target="_blank" rel="noopener">Ver sitio</a>
+            <a href={withBase('/')} target="_blank" rel="noopener">Ver sitio</a>
             {email && <span class="admin-user__email" title={email}>{email}</span>}
             <a href="/cdn-cgi/access/logout">Salir</a>
           </div>

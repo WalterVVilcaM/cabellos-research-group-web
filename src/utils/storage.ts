@@ -8,6 +8,7 @@
  */
 import { env } from 'cloudflare:workers';
 import { notesConfig } from '../config/notes';
+import { galleryStorageUsage } from './gallery';
 
 /** Tope del total almacenado: por debajo de los 10 GB gratuitos de R2 (D-N9). */
 export const STORAGE_LIMIT_BYTES = 9.5 * 1024 ** 3;
@@ -24,12 +25,15 @@ export class UploadError extends Error {
   }
 }
 
-/** Bytes ocupados según la base de datos (fuente de verdad de los adjuntos). */
+/** Bytes ocupados según la base de datos: PDF de Notes más fotos de la Galería (ADR-015). */
 export async function storageUsage(): Promise<number> {
-  const row = await env.DB.prepare(
-    "SELECT COALESCE(SUM(size_bytes), 0) AS used FROM attachments WHERE storage_key LIKE 'r2:%'",
-  ).first<{ used: number }>();
-  return row?.used ?? 0;
+  const [row, gallery] = await Promise.all([
+    env.DB.prepare(
+      "SELECT COALESCE(SUM(size_bytes), 0) AS used FROM attachments WHERE storage_key LIKE 'r2:%'",
+    ).first<{ used: number }>(),
+    galleryStorageUsage(),
+  ]);
+  return (row?.used ?? 0) + gallery;
 }
 
 /** "Mi presentación FINAL (2).pdf" → "mi-presentacion-final-2". */

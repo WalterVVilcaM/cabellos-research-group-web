@@ -1,0 +1,46 @@
+---
+/** Panel: subir una foto a la Galería (ADR-015). */
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import GalleryForm from '../../../components/admin/GalleryForm.astro';
+import { emptyDraft, parseForm, savePhoto, validate, type FieldErrors, type GalleryDraft } from '../../../utils/admin-gallery';
+import { withBase } from '../../../i18n/utils';
+
+let draft: GalleryDraft = emptyDraft();
+let errors: FieldErrors = {};
+let flash: string | null = null;
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const parsed = parseForm(form, draft);
+  const checked = await validate(parsed, true);
+  draft = parsed.draft;
+  errors = checked.errors;
+  if (Object.keys(errors).length === 0 && checked.files) {
+    const status = form.get('action') === 'publish' ? 'published' : 'draft';
+    try {
+      const id = await savePhoto(parsed, checked.files, Astro.locals.adminEmail ?? '', { status });
+      return Astro.redirect(withBase(`/admin/galeria/${id}/?ok=${status === 'published' ? 'publicada' : 'guardada'}`), 303);
+    } catch (e) {
+      console.error('Galería: no se pudo guardar la foto', e);
+      flash = 'No se pudo guardar la foto. Vuelve a elegirla e inténtalo de nuevo en un momento.';
+    }
+  }
+  Astro.response.status = 422;
+}
+---
+
+<AdminLayout title="Subir foto" current="gallery">
+  <div>
+    <p class="crumb"><a href={withBase('/admin/galeria/')}>Galería</a> ›</p>
+    <h1>Subir foto</h1>
+  </div>
+  {flash && <p class="admin-flash admin-flash--error" role="alert">{flash}</p>}
+  <GalleryForm draft={draft} errors={errors} />
+</AdminLayout>
+
+<style>
+  .crumb {
+    font-size: var(--text-sm);
+  }
+</style>

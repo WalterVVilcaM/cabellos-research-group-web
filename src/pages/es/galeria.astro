@@ -1,5 +1,9 @@
 ---
+export const prerender = false; // Se lee de D1 en cada visita (ADR-015)
 import View from '../../views/GalleryView.astro';
+import { loadGallery } from '../../utils/gallery';
+
+const photos = await loadGallery('es', Astro.url.origin);
 ---
 
-<View lang="es" />
+<View lang="es" photos={photos} />

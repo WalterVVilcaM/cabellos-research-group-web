@@ -1,7 +1,8 @@
 /**
  * Fotografías del sitio.
- * `heroGallery`: carrusel de la página de inicio.
- * `galleryPhotos`: página Galería (las más recientes primero).
+ * `heroGallery`: carrusel de la página de inicio (fijo en el código).
+ * La página Galería se administra desde el panel (/admin/galeria/, ADR-015) y se lee de D1:
+ * aquí solo quedan sus opciones (licencias, recorte, derechos) y `gallerySeed`, las fotos iniciales.
  *
  * Fotografías del hero de la página de inicio.
  * PROVISIONALES: tomadas de las notas públicas de uptapachula.edu.mx (crédito UPTap).
@@ -15,11 +16,6 @@ import tallerMicroscopia1 from '../assets/gallery/taller-microscopia-1.webp';
 import campusExplanada from '../assets/gallery/campus-explanada.webp';
 import examenMaestria from '../assets/gallery/examen-maestria.webp';
 import tallerMicroscopia3 from '../assets/gallery/taller-microscopia-3.webp';
-// Archivo personal del Dr. Cabellos publicado en Figshare (CC BY 4.0).
-import cabellosStallman2008 from '../assets/gallery/cabellos-stallman-2008.webp';
-import cabellosLeon2008 from '../assets/gallery/cabellos-leon-2008.webp';
-import osi7A from '../assets/gallery/osi7-jackson-hole-2007-a.webp';
-import osi7B from '../assets/gallery/osi7-jackson-hole-2007-b.webp';
 
 type L = { es: string; en: string };
 export interface GalleryPhoto {
@@ -31,12 +27,8 @@ export interface GalleryPhoto {
   sourceUrl: string;
   /** Licencia de la foto, si se publicó con una (p. ej. CC BY 4.0). */
   license?: { name: string; url: string };
-  /** Lugar donde se tomó (Galería). */
-  place?: L;
   focus?: string;
 }
-
-const CC_BY = { name: 'CC BY 4.0', url: 'https://creativecommons.org/licenses/by/4.0/' };
 
 export const heroGallery: GalleryPhoto[] = [
   {
@@ -101,13 +93,71 @@ export const heroGallery: GalleryPhoto[] = [
   },
 ];
 
+/* ——— Galería (panel) ——— */
+
+/** Licencias que se pueden mostrar al pie de una foto. `none` = no se muestra licencia. */
+export const galleryLicenses = {
+  none: { label: 'Sin licencia (no se muestra)', name: '', url: '' },
+  'cc-by-4.0': { label: 'CC BY 4.0', name: 'CC BY 4.0', url: 'https://creativecommons.org/licenses/by/4.0/' },
+  'cc-by-sa-4.0': { label: 'CC BY-SA 4.0', name: 'CC BY-SA 4.0', url: 'https://creativecommons.org/licenses/by-sa/4.0/' },
+  cc0: { label: 'CC0 (dominio público)', name: 'CC0 1.0', url: 'https://creativecommons.org/publicdomain/zero/1.0/' },
+} as const;
+export type GalleryLicense = keyof typeof galleryLicenses;
+export const galleryLicenseIds = Object.keys(galleryLicenses) as GalleryLicense[];
+
+/** Qué parte de la foto se ve en la cuadrícula (el marco es 4:3). */
+export const galleryFocus = {
+  center: { label: 'Centro', position: '50% 50%' },
+  top: { label: 'Arriba', position: '50% 22%' },
+  bottom: { label: 'Abajo', position: '50% 72%' },
+} as const;
+export type GalleryFocus = keyof typeof galleryFocus;
+export const galleryFocusIds = Object.keys(galleryFocus) as GalleryFocus[];
+
+/** Por qué se puede publicar la foto (obligatorio al subirla). */
+export const galleryRights = {
+  own: 'La tomé yo o alguien del grupo',
+  permission: 'Tengo permiso de quien la tomó',
+  'open-license': 'Está publicada con una licencia abierta (por ejemplo, Creative Commons)',
+} as const;
+export type GalleryRights = keyof typeof galleryRights;
+export const galleryRightsIds = Object.keys(galleryRights) as GalleryRights[];
+
+/** Tamaños que prepara el navegador del editor antes de subir (lado mayor, en píxeles). */
+export const galleryImageSizes = { full: 2000, thumb: 960 } as const;
+/** Topes del servidor: con JavaScript las fotos llegan ya reducidas; sin él, el original. */
+export const galleryMaxBytes = { full: 10 * 1024 * 1024, thumb: 3 * 1024 * 1024 } as const;
+
+export interface GallerySeedPhoto {
+  /** Identificador estable: evita importar dos veces la misma foto. */
+  id: string;
+  /** Archivo en public/gallery-seed/. */
+  file: string;
+  width: number;
+  height: number;
+  alt: L;
+  caption: L;
+  place?: L;
+  year: number;
+  credit: string;
+  sourceUrl: string;
+  license: GalleryLicense;
+  rights: GalleryRights;
+  focus: GalleryFocus;
+}
+
 /**
- * Página Galería. Fotos del archivo del Dr. Cabellos publicadas por él en Figshare con licencia CC BY 4.0
- * (perfil https://figshare.com/authors/Jose_Luis_Cabellos/24669280). Orden: las más recientes primero.
+ * Fotos iniciales de la Galería: archivo del Dr. Cabellos publicado por él en Figshare con licencia CC BY 4.0
+ * (perfil https://figshare.com/authors/Jose_Luis_Cabellos/24669280). La primera visita a la Galería o al panel
+ * las copia a R2 y D1 (una sola vez). Mientras eso no ocurra, o si D1 falla, la Galería las muestra desde aquí.
+ * Orden: las más recientes primero.
  */
-export const galleryPhotos: GalleryPhoto[] = [
+export const gallerySeed: GallerySeedPhoto[] = [
   {
-    image: cabellosStallman2008,
+    id: 'cabellos-stallman-2008',
+    file: 'cabellos-stallman-2008.webp',
+    width: 1448,
+    height: 1086,
     alt: {
       es: 'Richard Stallman, con camisa roja, de pie junto al Dr. José Luis Cabellos en un salón de la Universidad Iberoamericana León, con banderas al fondo.',
       en: 'Richard Stallman, in a red shirt, standing next to Dr. José Luis Cabellos in a hall at Universidad Iberoamericana León, with flags in the background.',
@@ -120,10 +170,15 @@ export const galleryPhotos: GalleryPhoto[] = [
     year: 2008,
     credit: 'José Luis Cabellos',
     sourceUrl: 'https://doi.org/10.6084/m9.figshare.33942058',
-    license: CC_BY,
+    license: 'cc-by-4.0',
+    rights: 'own',
+    focus: 'center',
   },
   {
-    image: cabellosLeon2008,
+    id: 'cabellos-leon-2008',
+    file: 'cabellos-leon-2008.webp',
+    width: 839,
+    height: 629,
     alt: {
       es: 'El Dr. Cabellos, durante su doctorado, escribe un análisis estructural a mano junto a un monitor que muestra un modelo molecular.',
       en: 'Dr. Cabellos, during his PhD, writes a structural analysis by hand next to a monitor showing a molecular model.',
@@ -136,10 +191,15 @@ export const galleryPhotos: GalleryPhoto[] = [
     year: 2008,
     credit: 'José Luis Cabellos',
     sourceUrl: 'https://doi.org/10.6084/m9.figshare.33826726',
-    license: CC_BY,
+    license: 'cc-by-4.0',
+    rights: 'own',
+    focus: 'center',
   },
   {
-    image: osi7A,
+    id: 'osi7-jackson-hole-2007-a',
+    file: 'osi7-jackson-hole-2007-a.webp',
+    width: 1011,
+    height: 599,
     alt: {
       es: 'Foto de grupo de unos sesenta participantes sobre el pasto, con bosque al fondo, en el congreso Optics of Surfaces and Interfaces VII.',
       en: 'Group photo of about sixty participants on the grass, with a forest behind them, at the Optics of Surfaces and Interfaces VII meeting.',
@@ -152,11 +212,15 @@ export const galleryPhotos: GalleryPhoto[] = [
     year: 2007,
     credit: 'José Luis Cabellos',
     sourceUrl: 'https://doi.org/10.6084/m9.figshare.33473407',
-    license: CC_BY,
-    focus: '50% 70%',
+    license: 'cc-by-4.0',
+    rights: 'own',
+    focus: 'bottom',
   },
   {
-    image: osi7B,
+    id: 'osi7-jackson-hole-2007-b',
+    file: 'osi7-jackson-hole-2007-b.webp',
+    width: 1146,
+    height: 599,
     alt: {
       es: 'Otra foto de grupo del congreso Optics of Surfaces and Interfaces VII, con montañas y bosque al fondo.',
       en: 'Another group photo of the Optics of Surfaces and Interfaces VII meeting, with mountains and forest in the background.',
@@ -169,7 +233,8 @@ export const galleryPhotos: GalleryPhoto[] = [
     year: 2007,
     credit: 'José Luis Cabellos',
     sourceUrl: 'https://doi.org/10.6084/m9.figshare.33457075',
-    license: CC_BY,
-    focus: '50% 70%',
+    license: 'cc-by-4.0',
+    rights: 'own',
+    focus: 'bottom',
   },
 ];

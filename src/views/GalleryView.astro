@@ -2,27 +2,24 @@
 /**
  * Galería (VIEW-008). Cuadrícula de fotos con pie (lugar, año, crédito y licencia).
  * Al hacer clic, la foto se abre en grande en un <dialog>; sin JavaScript, el enlace abre la imagen.
- * Datos en src/config/gallery.ts (galleryPhotos).
+ * Las fotos se administran desde el panel (/admin/galeria/) y se leen de D1 en cada visita (ADR-015):
+ * la página recibe `photos` ya normalizadas (src/utils/gallery.ts → loadGallery).
  */
-import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/ui/PageHeader.astro';
 import ExternalLink from '../components/ui/ExternalLink.astro';
-import { galleryPhotos } from '../config/gallery';
+import type { GalleryItem } from '../utils/gallery';
 import { useTranslations, sectionAlternates, type Lang } from '../i18n/utils';
 
 interface Props {
   lang: Lang;
+  photos: GalleryItem[];
 }
-const { lang } = Astro.props;
+const { lang, photos } = Astro.props;
 const t = useTranslations(lang);
-
-const photos = await Promise.all(
-  galleryPhotos.map(async (p) => ({
-    ...p,
-    full: await getImage({ src: p.image, width: Math.min(p.image.width, 1600), format: 'webp', quality: 82 }),
-  })),
-);
+const many = photos.length > 4;
+/** Atributo lang solo cuando el texto está en el otro idioma (falta la traducción). */
+const langAttr = (l: Lang) => (l === lang ? undefined : l);
 ---
 
 <BaseLayout
@@ -40,34 +37,38 @@ const photos = await Promise.all(
         photos.length === 0 ? (
           <p class="empty muted">{t('gallery.empty')}</p>
         ) : (
-          <ul class="grid" role="list" data-many={photos.length > 4 ? '' : undefined}>
+          <ul class="grid" role="list" data-many={many ? '' : undefined}>
             {photos.map((p, i) => (
               <li>
                 <figure class="card">
                   <a
                     class="frame"
-                    href={p.full.src}
+                    href={p.full.url}
                     data-lightbox={i}
-                    data-full={p.full.src}
-                    data-alt={p.alt[lang]}
-                    data-caption={`${p.caption[lang]} · ${p.place ? `${p.place[lang]}, ` : ''}${p.year}`}
-                    aria-label={`${t('gallery.enlarge')}: ${p.caption[lang]}`}
+                    data-full={p.full.url}
+                    data-alt={p.alt.text}
+                    data-caption={`${p.caption.text} · ${p.place ? `${p.place.text}, ` : ''}${p.year}`}
+                    aria-label={`${t('gallery.enlarge')}: ${p.caption.text}`}
                   >
-                    <Image
-                      src={p.image}
-                      alt={p.alt[lang]}
-                      widths={[480, 720, 960, 1200]}
-                      sizes={photos.length > 4 ? '(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw' : '(min-width: 700px) 50vw, 100vw'}
-                      style={p.focus ? `object-position: ${p.focus}` : undefined}
+                    <img
+                      src={p.thumb.url}
+                      srcset={p.full.width > p.thumb.width ? `${p.thumb.url} ${p.thumb.width}w, ${p.full.url} ${p.full.width}w` : undefined}
+                      sizes={many ? '(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw' : '(min-width: 700px) 50vw, 100vw'}
+                      alt={p.alt.text}
+                      lang={langAttr(p.alt.lang)}
+                      width={p.width}
+                      height={p.height}
+                      style={`object-position: ${p.objectPosition}`}
                       loading={i < 3 ? 'eager' : 'lazy'}
+                      decoding="async"
                     />
                   </a>
                   <figcaption>
                     <span class="meta">
-                      {p.place && <>{p.place[lang]} · </>}
+                      {p.place && <span lang={langAttr(p.place.lang)}>{p.place.text} · </span>}
                       {p.year}
                     </span>
-                    <span class="title">{p.caption[lang]}</span>
+                    <span class="title" lang={langAttr(p.caption.lang)}>{p.caption.text}</span>
                     <span class="credit">
                       {t('gallery.photo')}: {p.credit}
                       {p.license && (
@@ -78,10 +79,14 @@ const photos = await Promise.all(
                           </ExternalLink>
                         </>
                       )}
-                      {' · '}
-                      <ExternalLink href={p.sourceUrl} lang={lang}>
-                        {t('gallery.source')}
-                      </ExternalLink>
+                      {p.sourceUrl && (
+                        <>
+                          {' · '}
+                          <ExternalLink href={p.sourceUrl} lang={lang}>
+                            {t('gallery.source')}
+                          </ExternalLink>
+                        </>
+                      )}
                     </span>
                   </figcaption>
                 </figure>

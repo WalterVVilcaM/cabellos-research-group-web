@@ -1,13 +1,15 @@
 ---
-/** Panel de Notes: inicio (NOTES-F5). Protegido por src/middleware.ts + Cloudflare Access. */
+/** Panel: inicio (Notas y Galería). Protegido por src/middleware.ts + Cloudflare Access. */
 export const prerender = false;
 import AdminLayout from '../../layouts/AdminLayout.astro';
 import { listAdminNotes, statusCounts } from '../../utils/admin-notes';
 import { STORAGE_LIMIT_BYTES, storageUsage } from '../../utils/storage';
+import { galleryCounts } from '../../utils/admin-gallery';
 import { formatBytes } from '../../utils/notes';
 import { withBase } from '../../i18n/utils';
 
-const [counts, recent, used] = await Promise.all([statusCounts(), listAdminNotes(undefined, 5), storageUsage()]);
+const [gallery, counts, recent] = await Promise.all([galleryCounts(), statusCounts(), listAdminNotes(undefined, 5)]);
+const used = await storageUsage();
 const pct = Math.min(100, (used / STORAGE_LIMIT_BYTES) * 100);
 const statusLabel = { draft: 'Borrador', published: 'Publicada', archived: 'Archivada' } as const;
 ---
@@ -15,18 +17,22 @@ const statusLabel = { draft: 'Borrador', published: 'Publicada', archived: 'Arch
 <AdminLayout title="Inicio" current="home">
   <div class="dash-head">
     <div>
-      <h1>Panel de notas</h1>
-      <p class="muted">Aquí se escriben y publican las notas de la sección «Notes / Notas» del sitio.</p>
+      <h1>Panel del sitio</h1>
+      <p class="muted">Aquí se publican las notas de la sección «Notes / Notas» y las fotos de la Galería.</p>
     </div>
-    <a href={withBase('/admin/notas/nueva/')} class="admin-btn admin-btn--primary">+ Nueva nota</a>
+    <div class="dash-actions">
+      <a href={withBase('/admin/notas/nueva/')} class="admin-btn admin-btn--primary">+ Nueva nota</a>
+      <a href={withBase('/admin/galeria/nueva/')} class="admin-btn">+ Subir foto</a>
+    </div>
   </div>
 
   <ul role="list" class="stats">
     <li class="admin-card"><a href={withBase('/admin/notas/?estado=published')}><strong>{counts.published}</strong> publicadas</a></li>
     <li class="admin-card"><a href={withBase('/admin/notas/?estado=draft')}><strong>{counts.draft}</strong> borradores</a></li>
     <li class="admin-card"><a href={withBase('/admin/notas/?estado=archived')}><strong>{counts.archived}</strong> archivadas</a></li>
+    <li class="admin-card"><a href={withBase('/admin/galeria/')}><strong>{gallery.published}</strong> fotos en la galería{gallery.draft > 0 && ` (+${gallery.draft} sin publicar)`}</a></li>
     <li class="admin-card">
-      <span><strong>{formatBytes(used, 'es')}</strong> de 9.5 GB en archivos</span>
+      <span><strong>{formatBytes(used, 'es')}</strong> de 9.5 GB en archivos (PDF y fotos)</span>
       <span class="meter" role="img" aria-label={`${pct.toFixed(1)} % del espacio usado`}><span style={`width:${Math.max(pct, used > 0 ? 1 : 0)}%`}></span></span>
     </li>
   </ul>
@@ -59,6 +65,11 @@ const statusLabel = { draft: 'Borrador', published: 'Publicada', archived: 'Arch
     align-items: center;
     gap: var(--space-4);
   }
+  .dash-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
   .stats {
     display: grid;
     gap: var(--space-4);
@@ -76,11 +87,14 @@ const statusLabel = { draft: 'Borrador', published: 'Publicada', archived: 'Arch
     .stats strong {
       font-size: var(--text-xl);
     }
-    .stats li:last-child {
+    .stats li:nth-child(n + 4) {
       grid-column: 1 / -1;
     }
-    .dash-head .admin-btn {
+    .dash-actions {
       width: 100%;
+    }
+    .dash-head .admin-btn {
+      flex: 1 1 auto;
       min-height: 48px;
     }
   }
