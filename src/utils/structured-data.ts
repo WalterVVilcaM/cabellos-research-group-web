@@ -8,7 +8,7 @@
  * Solo el investigador principal se describe como persona; las mascotas del equipo no.
  */
 import { site } from '../config/site';
-import { memberPath, sectionPath, type Lang } from '../i18n/utils';
+import { memberPath, sectionPath, withBase, type Lang } from '../i18n/utils';
 import type { Member, Research } from './content';
 
 const ORG_ID = `${site.url}/#organization`;
@@ -18,7 +18,20 @@ const personId = (member: Member) => `${site.url}${memberPath(member.id, 'en')}#
 
 const absolute = (path: string, base: URL) => new URL(path, base).href;
 
-/** Universidad Politécnica de Tapachula, con la dirección pública del campus. */
+/** Dirección pública del campus de la UPTap (el grupo trabaja ahí). */
+function campusAddress() {
+  const i = site.institution;
+  return {
+    '@type': 'PostalAddress',
+    ...(site.contact.streetAddress && { streetAddress: site.contact.streetAddress }),
+    addressLocality: i.city,
+    addressRegion: i.state,
+    postalCode: i.postalCode,
+    addressCountry: 'MX',
+  };
+}
+
+/** Universidad Politécnica de Tapachula. */
 function university() {
   const i = site.institution;
   return {
@@ -27,14 +40,7 @@ function university() {
     name: i.name,
     alternateName: i.shortName,
     url: i.url,
-    address: {
-      '@type': 'PostalAddress',
-      ...(site.contact.streetAddress && { streetAddress: site.contact.streetAddress }),
-      addressLocality: i.city,
-      addressRegion: i.state,
-      postalCode: i.postalCode,
-      addressCountry: 'MX',
-    },
+    address: campusAddress(),
   };
 }
 
@@ -86,6 +92,9 @@ function organization(lang: Lang, base: URL, pi?: Member) {
     name: site.brand,
     alternateName: site.descriptiveName[lang],
     url: absolute(sectionPath('home', lang), base),
+    // Google trata ResearchOrganization como negocio local y sugiere dirección e imagen.
+    image: absolute(withBase('/og-image.png'), base),
+    address: campusAddress(),
     parentOrganization: { '@id': UNIVERSITY_ID },
     ...(site.contact.email && { email: `mailto:${site.contact.email}` }),
     ...(site.contact.phoneIntl && { telephone: site.contact.phoneIntl }),
