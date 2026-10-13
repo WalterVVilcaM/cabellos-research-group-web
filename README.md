@@ -3,8 +3,7 @@
 Sitio académico bilingüe (ES/EN) del Cabellos Research Group, Universidad Politécnica de Tapachula.
 
 - **Stack:** Astro 7 (estático; Notes bajo demanda) + TypeScript + Content Collections + Cloudflare Workers y D1
-- **Dominio previsto:** cabellosresearchgroup.org (Cloudflare Workers)
-- **Vista previa:** https://cabellos-research-group.cabellos.workers.dev/ (Cloudflare Workers, ADR-010). La copia de GitHub Pages quedó congelada.
+- **Sitio:** https://cabellosresearchgroup.org/ (Cloudflare Workers, ADR-010). La dirección `cabellos-research-group.cabellos.workers.dev` solo redirige al dominio (ADR-016). La copia de GitHub Pages quedó congelada.
 - **Documento rector:** [`docs/00-orquestador-maestro.md`](docs/00-orquestador-maestro.md) · índice en [`docs/README.md`](docs/README.md)
 
 ## Requisitos

@@ -5,6 +5,12 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "cabellos-research-group",
   "compatibility_date": "2026-09-01",
+  // Entrada propia (ADR-016): redirige *.workers.dev al dominio y luego llama al manejador de Astro.
+  "main": "./src/worker.ts",
+  // run_worker_first: toda petición, también la de páginas estáticas, entra primero al Worker
+  // (si no, workers.dev serviría el HTML sin pasar por la redirección). El binding ASSETS es el
+  // que usa el adaptador; al declararlo aquí, el adaptador ya no lo agrega por su cuenta.
+  "assets": { "binding": "ASSETS", "run_worker_first": true },
   "observability": { "enabled": true },
   // Dominio propio (zona activa en la misma cuenta). Cloudflare crea el registro DNS y el certificado.
   // www NO va aquí: es un registro DNS AAAA 100:: con proxy y una Redirect Rule de la zona lo manda
@@ -12,7 +18,8 @@
   "routes": [
     { "pattern": "cabellosresearchgroup.org", "custom_domain": true }
   ],
-  // Se mantiene la dirección *.workers.dev mientras se verifica el dominio.
+  // La dirección *.workers.dev sigue activa solo para redirigir (301) al dominio propio (ADR-016).
+  // Cuando el buscador ya muestre cabellosresearchgroup.org, se puede poner en false.
   "workers_dev": true,
   "vars": {
     // "true" muestra las notas de prueba (is_test = 1). En producción va en "false" (desde 2026-10-10).

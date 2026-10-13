@@ -25,6 +25,7 @@ Cuando una decisión afecta arquitectura, sería costosa de revertir, modifica r
 | [ADR-013](./ADR-013-cloudflare-access-admin.md) | Panel /admin con Cloudflare Access y verificación del JWT | NOTES-F6 | Aprobado |
 | [ADR-014](./ADR-014-notes-editor.md) | Editor Markdown con barra de formato y vista previa | NOTES-F5 | Aprobado |
 | [ADR-015](./ADR-015-gallery-admin.md) | Galería administrable desde el panel (D1 + R2, fotos reducidas en el navegador) | Galería | Aprobado |
+| [ADR-016](./ADR-016-workers-dev-redirect.md) | Redirección 301 de *.workers.dev al dominio propio | Dominio | Aprobado |
 
 ## Plantilla
 
