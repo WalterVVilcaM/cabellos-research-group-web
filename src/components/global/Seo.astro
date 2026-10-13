@@ -35,12 +35,22 @@ const hreflangAlternates = hreflang === undefined ? alternates : hreflang;
 const t = useTranslations(lang);
 const base = Astro.site ?? new URL(site.url);
 const canonical = new URL(canonicalPath ?? Astro.url.pathname, base).href;
-const fullTitle = title === site.brand ? title : `${title} · ${site.brand}`;
+// Buscadores: título ≤ 70 caracteres y descripción ≤ 160 (Bing marca error si se pasan).
+// Si el título con la marca es muy largo, va solo; si ya empieza con la marca (inicio), se respeta.
+const withBrand = `${title} · ${site.brand}`;
+const fullTitle =
+  title === site.brand || title.startsWith(`${site.brand} ·`) || withBrand.length > 70 ? title : withBrand;
+// Al recortar no se deja colgando una palabra cortada ni un artículo o preposición.
+const DANGLING = /[\s,;:]+(?:de|del|la|las|el|los|y|e|o|a|al|en|con|para|por|que|the|of|and|or|to|in|on|for|with|a|an)$/i;
+const metaDescription =
+  description.length <= 160
+    ? description
+    : `${description.slice(0, 158).replace(/[\s,;:]+\S*$/, '').replace(DANGLING, '').replace(DANGLING, '')}…`;
 const ogImage = new URL(withBase('/og-image.png'), base).href;
 ---
 
 <title>{fullTitle}</title>
-<meta name="description" content={description} />
+<meta name="description" content={metaDescription} />
 {noindex && <meta name="robots" content="noindex" />}
 {!noindex && <link rel="canonical" href={canonical} />}
 {
@@ -55,7 +65,7 @@ const ogImage = new URL(withBase('/og-image.png'), base).href;
 <meta property="og:site_name" content={site.brand} />
 <meta property="og:type" content={ogType} />
 <meta property="og:title" content={fullTitle} />
-<meta property="og:description" content={description} />
+<meta property="og:description" content={metaDescription} />
 <meta property="og:url" content={canonical} />
 <meta property="og:locale" content={ogLocale ?? t('meta.ogLocale')} />
 <meta property="og:image" content={ogImage} />

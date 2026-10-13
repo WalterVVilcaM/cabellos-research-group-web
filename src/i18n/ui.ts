@@ -27,8 +27,11 @@ const es = {
   'nav.close': 'Cerrar',
 
   'home.title': 'Química computacional de clústeres y materiales',
+  /** Título del inicio para buscadores (va después de la marca; ≤ 70 caracteres en total). */
+  'home.metaTitle': 'Química computacional de clústeres',
+  /** ≤ 160 caracteres. También es la descripción del grupo en los datos estructurados. */
   'home.description':
-    'Cabellos Research Group, Universidad Politécnica de Tapachula: predicción estructural de clústeres, termodinámica estadística, enlace químico y propiedades ópticas desde primeros principios.',
+    'Química computacional en la Universidad Politécnica de Tapachula: predicción estructural de clústeres, termodinámica, enlace químico y propiedades ópticas.',
   'home.purpose':
     'Predecimos la estructura de clústeres y materiales y explicamos sus propiedades a temperatura finita con métodos de primeros principios.',
   'home.ctaResearch': 'Nuestra investigación',
@@ -300,8 +303,9 @@ const en: Dictionary = {
   'nav.close': 'Close',
 
   'home.title': 'Computational chemistry of clusters and materials',
+  'home.metaTitle': 'Computational chemistry of clusters',
   'home.description':
-    'Cabellos Research Group, Universidad Politécnica de Tapachula: cluster structure prediction, statistical thermodynamics, chemical bonding and optical properties from first principles.',
+    'Computational chemistry group at Universidad Politécnica de Tapachula: cluster structure prediction, thermodynamics, chemical bonding and optical properties.',
   'home.purpose':
     'We predict the structure of clusters and materials and explain their properties at finite temperature using first-principles methods.',
   'home.ctaResearch': 'Our research',
