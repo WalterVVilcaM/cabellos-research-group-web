@@ -12,6 +12,7 @@ import { useTranslations, sectionPath, sectionAlternates, researchPath, memberPa
 import { getResearch, getPublications, getMembers, getStats, shortAuthors, isVenue } from '../utils/content';
 import ExternalLink from '../components/ui/ExternalLink.astro';
 import ctaPhoto from '../assets/gallery/campus-explanada.webp';
+import { homeJsonLd } from '../utils/structured-data';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
@@ -30,9 +31,10 @@ const statItems: { value: number; label: string; note?: string; href?: string; l
   { value: stats.coauthors, label: t('about.statCoauthors') },
   { value: stats.activeYears, label: t('about.statYears'), note: stats.from && stats.to ? `${stats.from}–${stats.to}` : '' },
 ].filter((s) => s.value > 0);
+const jsonLd = homeJsonLd(lang, Astro.site ?? new URL(site.url), t('home.description'), research, pi);
 ---
 
-<BaseLayout lang={lang} title={t('home.title')} description={t('home.description')} alternates={sectionAlternates('home')} current="home">
+<BaseLayout lang={lang} title={t('home.title')} description={t('home.description')} alternates={sectionAlternates('home')} current="home" jsonLd={jsonLd}>
   <section class="hero" aria-labelledby="intro-title">
     <div class="container hero__grid">
       <div class="hero__text">

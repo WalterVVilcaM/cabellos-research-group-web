@@ -17,6 +17,7 @@ import {
   publicationsByMember,
   type Member,
 } from '../utils/content';
+import { memberJsonLd } from '../utils/structured-data';
 
 interface Props {
   lang: Lang;
@@ -53,6 +54,7 @@ const links = [
   },
   d.links.website && { label: 'Web', href: d.links.website },
 ].filter(Boolean) as { label: string; value?: string; href: string }[];
+const jsonLd = memberJsonLd(member, lang, Astro.site ?? new URL(site.url), research);
 ---
 
 <BaseLayout
@@ -62,6 +64,7 @@ const links = [
   alternates={{ es: memberPath(member.id, 'es'), en: memberPath(member.id, 'en') }}
   current="team"
   ogType="profile"
+  jsonLd={jsonLd}
 >
   <header class="profile-header">
     <div class="container">
