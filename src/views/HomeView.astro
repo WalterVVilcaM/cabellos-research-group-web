@@ -58,7 +58,7 @@ const jsonLd = homeJsonLd(lang, Astro.site ?? new URL(site.url), t('home.descrip
               <Image src={pi.data.photo} alt="" width={56} height={56} widths={[56, 112]} sizes="56px" class="pi-chip__img" />
             )}
             <span class="pi-chip__body">
-              <span class="pi-chip__name">{[pi.data.academicTitle, pi.data.name].filter(Boolean).join(' ')}</span>
+              <span class="pi-chip__name">{[pi.data.academicTitle, pi.data.name].filter(Boolean).join(' ')}</span>{' '}
               <span class="pi-chip__role">{pi.data.position[lang]}{pi.data.distinctions[0] && <> · {pi.data.distinctions[0][lang].replace(/^.*\((SNII)\),?\s*/, '$1 ')}</>}</span>
             </span>
             <Icon name="arrow-right" size={18} />

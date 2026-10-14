@@ -63,7 +63,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   <div class="pc__bar">
     <p class="pc__caption" data-caption-out>
       <span class="pc__num" data-num aria-hidden="true">{pad(1)}<span class="pc__total">/{pad(total)}</span></span>
-      <span class="pc__text" data-text>{`${photos[0]!.caption[lang]}\u00a0·\u00a0${photos[0]!.year}`}</span>
+      <span class="pc__text" data-text>{`${photos[0]!.caption[lang]}\u00a0·\u00a0${photos[0]!.year}`}</span>{' '}
       <span class="pc__credit">{t('carousel.photo')}: {photos[0]!.credit}</span>
     </p>
     <ol class="pc__ticks" role="list" data-ticks>
