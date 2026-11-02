@@ -2320,3 +2320,25 @@
   type: chapter
   researchAreas: []
   members: [jose-luis-cabellos]
+
+# Agregada automáticamente el 2026-11-02 (revisar researchAreas)
+2026-flores-estrella-anaerobic-2:
+  title: "Anaerobic Digestion of the Soluble Organic Fraction of Municipal Solid Waste Under Inhibition Conditions: Biomass State Observer and Control"
+  authors:
+    - "René Alejandro Flores-Estrella"
+    - "Rubén Fernando Gutiérrez-Hernández"
+    - "Hugo Alejandro Nájera-Aguilar"
+    - "José Luis Cabellos"
+    - "Jesús Mauricio Ernesto Hernández-Méndez"
+    - "Abumalé Cruz-Salomón"
+    - "Victor Alcaraz-Gonzalez"
+  journal: "Fermentation"
+  year: 2026
+  date: "2026-10-30"
+  volume: "12"
+  issue: "11"
+  pages: "507"
+  doi: "10.3390/fermentation12110507"
+  type: article
+  researchAreas: []
+  members: [jose-luis-cabellos]
